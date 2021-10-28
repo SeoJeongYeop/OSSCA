@@ -1,3 +1,5 @@
 GITHUBDB.py
 __pycache__
 *.json
+*.pdf
+*.docx
