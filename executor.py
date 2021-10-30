@@ -14,7 +14,7 @@ if __name__ == "__main__":
         num = input(">>>")
         if(num=='1'):
             try :
-                tableNameList = ["github_overview","github_repo_contributor","github_repo_stats", "github_repo_stats_yymm","github_stats_yymm","student_tab"]
+                tableNameList = ["github_overview","github_repo_commits","github_repo_contributor","github_repo_stats", "github_repo_stats_yymm","github_stats_yymm","student_tab"]
                 for tableName in tableNameList :
                     cv.saveJson(tableName)
             except Exception as e:
@@ -50,7 +50,9 @@ if __name__ == "__main__":
             try:
                 print("input contributor name")
                 name = input(">>>")
-                contributorDict[name].showContribution()
+                print("How should it print out? 1. Compact 2. Normal 3. Detail")
+                how = input(">>>")
+                contributorDict[name].showContribution(how)
             except Exception as e:
                 print("error8: ",e)
         elif(num=='9'):
