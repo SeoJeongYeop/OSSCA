@@ -87,7 +87,7 @@ def linkRepo(contributorDict:dict):
             # seperate 2: owner and contributor
             print("######## seperate 2: owner and contributor #########")
             if(repo_stats["contributors_count"] == 1):
-                print("1 contributor link owner_repo")
+                print("1. contributor link owner_repo")
                 contributorDict[repo_stats["github_id"]].link_owner_repo(repo_stats)
             else :
                 com = 0
@@ -100,7 +100,8 @@ def linkRepo(contributorDict:dict):
                             contributorDict[repo_contributor["github_id"]].link_owner_repo(repo_stats)
                             print("2-1. link owner repo owner's name equal ", repo_contributor["owner_id"])
                             print(">> ", len(contributorDict[repo_contributor["github_id"]].owner_repositories))
-                        elif repo_stats["github_id"] == repo_contributor["github_id"] :
+                        else :
+                        #repo_stats["github_id"] == repo_contributor["github_id"] :
                             contributorDict[repo_contributor["github_id"]].link_contributor_repo(repo_stats)
                             print("2-2. link contributor_repo ", repo_contributor["github_id"])
                             print(">> ", len(contributorDict[repo_contributor["github_id"]].contributor_repositories))
@@ -114,7 +115,89 @@ def linkRepo(contributorDict:dict):
     with open("./data/github_repo_except.json",'w', encoding="utf-8") as expt:
         expt.write(json.dumps(exceptList, ensure_ascii=False))
     return contributorDict
+def analyzeCommits(contributorDict:dict):
+    # commit 데이터에서 기여자를 뽑아오면 exception이 너무 많이 생김
+    # key값이 있는지 먼저 확인
+    print("analyzeCommits", type(contributorDict))
+    with open("./data/github_repo_commits.json",'r', encoding="utf-8") as commits:
+        commits_data = json.load(commits)
+    exception = []
+    result=[]
+    for commit in commits_data:
+        try :
+            if commit["github_id"] in contributorDict:
+                for repository in contributorDict[commit["github_id"]].indie_repositories:
+                    if repository.repo_name == commit["repo_name"]:
+                        resultDict=dict()
+                        print("[indie/id] commits: ",commit["github_id"], "commits: ",commit["author_github"]," commits repo: ",commit["repo_name"])
+                        resultDict["type"] = "indie/id"
+                        resultDict["commit_github_id"] = commit["github_id"]
+                        resultDict["commit_author_github"] = commit["author_github"]
+                        resultDict["commit_repo_name"] = commit["repo_name"]
+                        resultDict["additions"] = commit["additions"]
+                        resultDict["deletions"] = commit["deletions"]
+                        result.append(resultDict)
 
+                        repository.addEdits(commit["additions"], commit["deletions"])
+
+                for repository in contributorDict[commit["github_id"]].team_repositories:
+                    if repository.repo_name == commit["repo_name"]:
+                        resultDict=dict()
+                        print("[team/id] commits: ",commit["github_id"], "commits: ",commit["author_github"]," commits repo: ",commit["repo_name"])
+                        resultDict["type"] = "team/id"
+                        resultDict["commit_github_id"] = commit["github_id"]
+                        resultDict["commit_author_github"] = commit["author_github"]
+                        resultDict["commit_repo_name"] = commit["repo_name"]
+                        resultDict["additions"] = commit["additions"]
+                        resultDict["deletions"] = commit["deletions"]
+                        result.append(resultDict)
+
+                        repository.addEdits(commit["additions"], commit["deletions"])
+            elif commit["author_github"] in contributorDict:
+                for repository in contributorDict[commit["author_github"]].indie_repositories:
+                    if repository.repo_name == commit["repo_name"]:
+                        resultDict=dict()
+                        print("[indie/author] commits: ",commit["github_id"], "commits: ",commit["author_github"]," commits repo: ",commit["repo_name"])
+                        resultDict["type"] = "indie/author"
+                        resultDict["commit_github_id"] = commit["github_id"]
+                        resultDict["commit_author_github"] = commit["author_github"]
+                        resultDict["commit_repo_name"] = commit["repo_name"]
+                        resultDict["additions"] = commit["additions"]
+                        resultDict["deletions"] = commit["deletions"]
+                        result.append(resultDict)
+
+                        repository.addEdits(commit["additions"], commit["deletions"])
+                for repository in contributorDict[commit["author_github"]].team_repositories:
+                    if repository.repo_name == commit["repo_name"]:
+                        resultDict=dict()
+                        print("[team/author] commits: ",commit["github_id"], "commits: ",commit["author_github"]," commits repo: ",commit["repo_name"])
+                        resultDict["type"] = "team/author"
+                        resultDict["commit_github_id"] = commit["github_id"]
+                        resultDict["commit_author_github"] = commit["author_github"]
+                        resultDict["commit_repo_name"] = commit["repo_name"]
+                        resultDict["additions"] = commit["additions"]
+                        resultDict["deletions"] = commit["deletions"]
+                        result.append(resultDict)
+
+                        repository.addEdits(commit["additions"], commit["deletions"])
+        except Exception as e:
+            exception.append(commit)
+            print("error analyze commit: ", e)
+        # owner and contributor skip now
+
+    with open(f"./data/github_exception_commits.json", 'w', encoding="utf-8") as jsonfile:
+        try:
+            jsonfile.write(json.dumps(exception, ensure_ascii=False))
+        except Exception as e:
+            print(e)
+    with open(f"./data/github_commits_log.json", 'w', encoding="utf-8") as jsonfile:
+        try:
+            jsonfile.write(json.dumps(result, ensure_ascii=False))
+        except Exception as e:
+            print(e)
+    print("done!!")
+
+        
 def yieldScore(contributorDict:dict):
     print("yieldScore", type(contributorDict))
     
