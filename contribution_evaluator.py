@@ -51,7 +51,67 @@ def saveTotalJson(contributorDict):
         except Exception as e:
             print(e)
     print("done!!")
-        
+def savePeriodData():
+    with open("./data/github_stats_yymm.json", 'r', encoding="utf-8") as yymm:
+        period_data = json.load(yymm)
+    
+    #github id가 정렬되어 같은 이름은 연속해서 나온다고 가정
+    resultList = []
+    idDict = dict()
+    periodDict = dict()
+    dataDict = dict()
+    initialize_dataDict(dataDict)
+    p1 = period_data[0]
+    github_id = p1["github_id"]
+    year = p1["start_yymm"][0:4]
+    #print("[0] ",github_id, year)
+    for period in period_data :
+        try :
+            if github_id != period['github_id'] :
+                # save and initialize
+                periodDict[year] = dataDict
+                dataDict = dict()
+                year = period["start_yymm"][0:4]
+                initialize_dataDict(dataDict)
+                # save and initialize
+                idDict[github_id] = periodDict
+                resultList.append(idDict)
+                periodDict = dict()
+                github_id = period['github_id']
+            if year != period["start_yymm"][0:4] :
+                # save and initialize
+                periodDict[year] = dataDict
+                dataDict = dict()
+                year = period["start_yymm"][0:4]
+                initialize_dataDict(dataDict)
+            # print("star")
+            # print(period["stars"])
+            dataDict["stars"] += period["stars"]
+            dataDict["num_of_cr_repos"] += period["num_of_cr_repos"]
+            dataDict["num_of_co_repos"] += period["num_of_co_repos"]
+            dataDict["num_of_commits"] += period["num_of_commits"]
+            dataDict["num_of_PRs"] += period["num_of_PRs"]
+            dataDict["num_of_issues"] += period["num_of_issues"]
+        except Exception as e:
+            print("period ",e)
+    periodDict[year] = dataDict
+    idDict[github_id] = periodDict
+    resultList.append(idDict[github_id])
+
+    with open(f"./data/github_yearly.json", 'w', encoding="utf-8") as jsonfile:
+        try:
+            jsonfile.write(json.dumps(resultList, ensure_ascii=False))
+        except Exception as e:
+            print(e)
+    print("done!!")
+def initialize_dataDict(dataDict:dict):
+    dataDict["stars"] = 0
+    dataDict["num_of_cr_repos"] = 0
+    dataDict["num_of_co_repos"] = 0
+    dataDict["num_of_commits"] = 0
+    dataDict["num_of_PRs"] = 0
+    dataDict["num_of_issues"] = 0
+    return dataDict
 def makeContributor():
     print("make contributor")
     with open("./data/github_overview.json",'r', encoding="utf-8") as overview:
@@ -137,7 +197,6 @@ def analyzeCommits(contributorDict:dict):
                         resultDict["additions"] = commit["additions"]
                         resultDict["deletions"] = commit["deletions"]
                         result.append(resultDict)
-
                         repository.addEdits(commit["additions"], commit["deletions"])
 
                 for repository in contributorDict[commit["github_id"]].team_repositories:
@@ -145,6 +204,32 @@ def analyzeCommits(contributorDict:dict):
                         resultDict=dict()
                         print("[team/id] commits: ",commit["github_id"], "commits: ",commit["author_github"]," commits repo: ",commit["repo_name"])
                         resultDict["type"] = "team/id"
+                        resultDict["commit_github_id"] = commit["github_id"]
+                        resultDict["commit_author_github"] = commit["author_github"]
+                        resultDict["commit_repo_name"] = commit["repo_name"]
+                        resultDict["additions"] = commit["additions"]
+                        resultDict["deletions"] = commit["deletions"]
+                        result.append(resultDict)
+                        repository.addEdits(commit["additions"], commit["deletions"])
+
+                for repository in contributorDict[commit["github_id"]].owner_repositories:
+                    if repository.repo_name == commit["repo_name"]:
+                        resultDict=dict()
+                        print("[owner/id] commits: ",commit["github_id"], "commits: ",commit["author_github"]," commits repo: ",commit["repo_name"])
+                        resultDict["type"] = "owner/id"
+                        resultDict["commit_github_id"] = commit["github_id"]
+                        resultDict["commit_author_github"] = commit["author_github"]
+                        resultDict["commit_repo_name"] = commit["repo_name"]
+                        resultDict["additions"] = commit["additions"]
+                        resultDict["deletions"] = commit["deletions"]
+                        result.append(resultDict)
+                        repository.addEdits(commit["additions"], commit["deletions"])
+
+                for repository in contributorDict[commit["github_id"]].contributor_repositories:
+                    if repository.repo_name == commit["repo_name"]:
+                        resultDict=dict()
+                        print("[contributor/id] commits: ",commit["github_id"], "commits: ",commit["author_github"]," commits repo: ",commit["repo_name"])
+                        resultDict["type"] = "contributor/id"
                         resultDict["commit_github_id"] = commit["github_id"]
                         resultDict["commit_author_github"] = commit["author_github"]
                         resultDict["commit_repo_name"] = commit["repo_name"]
@@ -165,8 +250,8 @@ def analyzeCommits(contributorDict:dict):
                         resultDict["additions"] = commit["additions"]
                         resultDict["deletions"] = commit["deletions"]
                         result.append(resultDict)
-
                         repository.addEdits(commit["additions"], commit["deletions"])
+
                 for repository in contributorDict[commit["author_github"]].team_repositories:
                     if repository.repo_name == commit["repo_name"]:
                         resultDict=dict()
@@ -178,8 +263,34 @@ def analyzeCommits(contributorDict:dict):
                         resultDict["additions"] = commit["additions"]
                         resultDict["deletions"] = commit["deletions"]
                         result.append(resultDict)
-
                         repository.addEdits(commit["additions"], commit["deletions"])
+
+                for repository in contributorDict[commit["author_github"]].owner_repositories:
+                    if repository.repo_name == commit["repo_name"]:
+                        resultDict=dict()
+                        print("[owner/author] commits: ",commit["github_id"], "commits: ",commit["author_github"]," commits repo: ",commit["repo_name"])
+                        resultDict["type"] = "owner/author"
+                        resultDict["commit_github_id"] = commit["github_id"]
+                        resultDict["commit_author_github"] = commit["author_github"]
+                        resultDict["commit_repo_name"] = commit["repo_name"]
+                        resultDict["additions"] = commit["additions"]
+                        resultDict["deletions"] = commit["deletions"]
+                        result.append(resultDict)
+                        repository.addEdits(commit["additions"], commit["deletions"])
+
+                for repository in contributorDict[commit["author_github"]].contributor_repositories:
+                    if repository.repo_name == commit["repo_name"]:
+                        resultDict=dict()
+                        print("[contributor/author] commits: ",commit["github_id"], "commits: ",commit["author_github"]," commits repo: ",commit["repo_name"])
+                        resultDict["type"] = "contributor/author"
+                        resultDict["commit_github_id"] = commit["github_id"]
+                        resultDict["commit_author_github"] = commit["author_github"]
+                        resultDict["commit_repo_name"] = commit["repo_name"]
+                        resultDict["additions"] = commit["additions"]
+                        resultDict["deletions"] = commit["deletions"]
+                        result.append(resultDict)
+                        repository.addEdits(commit["additions"], commit["deletions"])
+
         except Exception as e:
             exception.append(commit)
             print("error analyze commit: ", e)
