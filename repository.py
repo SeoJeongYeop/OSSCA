@@ -22,9 +22,19 @@ class Repository:
             self.readme = stats["readme"]
             self.proj_short_desc = stats["proj_short_desc"]
 
+            self.additions = 0
+            self.deletions = 0
+            self.contributor_commits_count = 0
+            # code_edits
             self.repo_score = 0
         except Exception as e:
             print("repo ",e)
+    def addEdits(self, addition, deletion):
+        self.additions += addition
+        self.deletions += deletion
+        self.code_edits += addition
+        self.code_edits += deletion
+        self.contributor_commits_count += 1
     def showCompact(self):
         try: 
             strFormat = "%-20s"
@@ -71,6 +81,9 @@ class Repository:
         print(strFormat %("license"),self.license)
         print(strFormat %("readme"),self.readme)
         print(strFormat %("proj_short_desc"),self.proj_short_desc)
+        print(strFormat %("additions"),self.additions)
+        print(strFormat %("deletions"),self.deletions)
+        print(strFormat %("contributor_commits"),self.contributor_commits_count)
         print("")
 
     def calculateRepoScore(self):

@@ -29,6 +29,10 @@ class Contributor:
         self.indie_release_count = 0
         self.indie_readme = 0
 
+        self.indie_additions = 0
+        self.indie_deletions = 0
+        self.indie_contributor_commits_count = 0
+
         self.team_stargazers_count = 0
         self.team_forks_count = 0
         self.team_commits_count = 0
@@ -41,6 +45,10 @@ class Contributor:
         self.team_contributor_count = 0
         self.team_release_count = 0
         self.team_readme = 0
+
+        self.team_additions = 0
+        self.team_deletions = 0
+        self.team_contributor_commits_count = 0
 
         self.owner_stargazers_count = 0
         self.owner_forks_count = 0
@@ -55,6 +63,10 @@ class Contributor:
         self.owner_release_count = 0
         self.owner_readme = 0
 
+        self.owner_additions = 0
+        self.owner_deletions = 0
+        self.owner_contributor_commits_count = 0
+
         self.contributor_stargazers_count = 0
         self.contributor_forks_count = 0
         self.contributor_commits_count = 0
@@ -67,6 +79,10 @@ class Contributor:
         self.contributor_contributor_count = 0
         self.contributor_release_count = 0
         self.contributor_readme = 0
+
+        self.contributor_additions = 0
+        self.contributor_deletions = 0
+        self.contributor_contributor_commits_count = 0
 
         self.excellent_contributor_score = 0
         self.owner_activity_score = 0
@@ -154,6 +170,11 @@ class Contributor:
         indie_contributors_count = 0
         indie_release_count = 0
         indie_readme = 0
+
+        indie_additions = 0
+        indie_deletions = 0
+        indie_contributor_commits_count = 0
+
         for indie in self.indie_repositories:
             print("indie ",indie.commits_count)
             indie_stargazers_count += indie.stargazers_count
@@ -168,6 +189,9 @@ class Contributor:
             indie_contributors_count += indie.contributors_count
             indie_release_count += indie.release_count
             indie_readme += indie.readme
+            indie_additions += indie.additions
+            indie_deletions += indie.deletions
+            indie_contributor_commits_count += indie.contributor_commits_count
 
         self.indie_stargazers_count = indie_stargazers_count
         self.indie_forks_count = indie_forks_count
@@ -182,6 +206,10 @@ class Contributor:
         self.indie_release_count = indie_release_count
         self.indie_readme = indie_readme
 
+        self.indie_additions = indie_additions
+        self.indie_deletions = indie_deletions
+        self.indie_contributor_commits_count = indie_contributor_commits_count
+
         team_stargazers_count = 0
         team_forks_count = 0
         team_commits_count = 0
@@ -194,6 +222,10 @@ class Contributor:
         team_contributors_count = 0
         team_release_count = 0
         team_readme = 0
+
+        team_additions = 0
+        team_deletions = 0
+        team_contributor_commits_count = 0
         for team in self.team_repositories:
             print("team ",team.commits_count)
             team_stargazers_count += team.stargazers_count
@@ -208,6 +240,11 @@ class Contributor:
             team_contributors_count += team.contributors_count
             team_release_count += team.release_count
             team_readme += team.readme
+
+            team_additions += team.additions
+            team_deletions += team.deletions
+            team_contributor_commits_count += team.contributor_commits_count
+
         self.team_stargazers_count = team_stargazers_count
         self.team_forks_count = team_forks_count
         self.team_commits_count = team_commits_count
@@ -220,6 +257,11 @@ class Contributor:
         self.team_contributors_count = team_contributors_count
         self.team_release_count = team_release_count
         self.team_readme = team_readme
+
+        self.team_additions = team_additions
+        self.team_deletions = team_deletions
+        self.team_contributor_commits_count = team_contributor_commits_count
+
         ##### Seperate 2: owner and contributor #####
         owner_stargazers_count = 0
         owner_forks_count = 0
@@ -233,6 +275,10 @@ class Contributor:
         owner_contributors_count = 0
         owner_release_count = 0
         owner_readme = 0
+
+        owner_additions = 0
+        owner_deletions = 0
+        owner_contributor_commits_count = 0
         for owner in self.owner_repositories:
             print("owner ",owner.commits_count)
             owner_stargazers_count += owner.stargazers_count
@@ -248,6 +294,10 @@ class Contributor:
             owner_release_count += owner.release_count
             owner_readme += owner.readme
 
+            owner_additions += owner.additions
+            owner_deletions += owner.deletions
+            owner_contributor_commits_count += owner.contributor_commits_count
+
         self.owner_stargazers_count = owner_stargazers_count
         self.owner_forks_count = owner_forks_count
         self.owner_commits_count = owner_commits_count
@@ -261,6 +311,10 @@ class Contributor:
         self.owner_release_count = owner_release_count
         self.owner_readme = owner_readme
 
+        self.owner_additions = owner_additions
+        self.owner_deletions = owner_deletions
+        self.owner_contributor_commits_count = owner_contributor_commits_count
+
         contributor_stargazers_count = 0
         contributor_forks_count = 0
         contributor_commits_count = 0
@@ -273,6 +327,10 @@ class Contributor:
         contributor_contributors_count = 0
         contributor_release_count = 0
         contributor_readme = 0
+
+        contributor_additions = 0
+        contributor_deletions = 0
+        contributor_contributor_commits_count = 0
         print("contributor len ", len(self.contributor_repositories))
         for contributor in self.contributor_repositories:
             print("contributor ",contributor.commits_count)
@@ -289,6 +347,10 @@ class Contributor:
             contributor_release_count += contributor.release_count
             contributor_readme += contributor.readme
 
+            contributor_additions += contributor.additions
+            contributor_deletions += contributor.deletions
+            contributor_contributor_commits_count += contributor.contributor_commits_count
+
         self.contributor_stargazers_count = contributor_stargazers_count
         self.contributor_forks_count = contributor_forks_count
         self.contributor_commits_count = contributor_commits_count
@@ -301,6 +363,10 @@ class Contributor:
         self.contributor_contributors_count = contributor_contributors_count
         self.contributor_release_count = contributor_release_count
         self.contributor_readme = contributor_readme
+
+        self.contributor_additions = contributor_additions
+        self.contributor_deletions = contributor_deletions
+        self.contributor_contributor_commits_count = contributor_contributor_commits_count
 
     def getTotalContribution(self):
         result = dict()
@@ -327,6 +393,10 @@ class Contributor:
         result["indie_release_count"] = self.indie_release_count
         result["indie_readme"] = self.indie_readme
 
+        result["indie_additions"] = self.indie_additions
+        result["indie_deletions"] = self.indie_deletions
+        result["indie_contributor_commits_count"] = self.indie_contributor_commits_count
+
         result["team_stargazers_count"] = self.team_stargazers_count
         result["team_forks_count"] = self.team_forks_count
         result["team_commits_count"] = self.team_commits_count
@@ -339,6 +409,10 @@ class Contributor:
         result["team_contributor_count"] = self.team_contributor_count
         result["team_release_count"] = self.team_release_count
         result["team_readme"] = self.team_readme
+
+        result["team_additions"] = self.team_additions
+        result["team_deletions"] = self.team_deletions
+        result["team_contributor_commits_count"] = self.team_contributor_commits_count
 
         result["owner_stargazers_count"] = self.owner_stargazers_count
         result["owner_forks_count"] = self.owner_forks_count
@@ -353,6 +427,10 @@ class Contributor:
         result["owner_release_count"] = self.owner_release_count
         result["owner_readme"] = self.owner_readme
 
+        result["owner_additions"] = self.owner_additions
+        result["owner_deletions"] = self.owner_deletions
+        result["owner_contributor_commits_count"] = self.owner_contributor_commits_count
+
         result["contributor_stargazers_count"] = self.contributor_stargazers_count
         result["contributor_forks_count"] = self.contributor_forks_count
         result["contributor_commits_count"] = self.contributor_commits_count
@@ -366,6 +444,10 @@ class Contributor:
         result["contributor_release_count"] = self.contributor_release_count
         result["contributor_readme"] = self.contributor_readme
 
+        result["contributor_additions"] = self.contributor_additions
+        result["contributor_deletions"] = self.contributor_deletions
+        result["contributor_contributor_commits_count"] = self.contributor_contributor_commits_count
+
         result["total_stargazers_count"] = self.indie_stargazers_count+self.team_stargazers_count
         result["total_forks_count"] = self.indie_forks_count+self.team_forks_count
         result["total_commits_count"] = self.indie_commits_count+self.team_commits_count
@@ -378,6 +460,11 @@ class Contributor:
         result["total_contributor_count"] = self.indie_contributor_count+self.team_contributor_count
         result["total_release_count"] = self.indie_release_count+self.team_release_count
         result["total_readme"] = self.indie_readme+self.team_readme
+
+        result["total_additions"] = self.indie_additions + self.team_additions
+        result["total_deletions"] = self.indie_deletions + self.team_deletions
+        result["total_contributor_commits_count"] = self.indie_contributor_commits_count + self.team_contributor_commits_count
+
         
         return result 
     
@@ -434,3 +521,5 @@ class Contributor:
             if repo_score < ret :
                 repo_score = ret
                 print(repo.repo_name, " has ", repo.repo_score)
+
+        self.owner_activity_score = repo_score
