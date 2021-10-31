@@ -7,10 +7,12 @@ if __name__ == "__main__":
         print("2: Fetch input table and save json file")
         print("3: Json make contributor object")
         print("4: Contributor link repository data")
-        print("5: Merge Json data and save json file")
-        print("6: evaluate opensource score")
+        print("5: anlyze commits data")
+        print("6: Merge Json data and save json file")
+        
         print("8: Show contributor data")
-        print("9: quit")
+        print("9: evaluate opensource score")
+        print("q: quit")
         num = input(">>>")
         if(num=='1'):
             try :
@@ -38,14 +40,15 @@ if __name__ == "__main__":
                 print("error4: ",e)
         elif(num=='5'):
             try:
-                cv.saveTotalJson(contributorDict)
+                cv.analyzeCommits(contributorDict)
             except Exception as e:
                 print("error5: ",e)
         elif(num=='6'):
             try:
-                cv.yieldScore(contributorDict)
+                cv.saveTotalJson(contributorDict)
             except Exception as e:
                 print("error6: ",e)
+        
         elif(num=='8'):
             try:
                 print("input contributor name")
@@ -56,6 +59,11 @@ if __name__ == "__main__":
             except Exception as e:
                 print("error8: ",e)
         elif(num=='9'):
+            try:
+                cv.yieldScore(contributorDict)
+            except Exception as e:
+                print("error9: ",e)
+        elif(num=='q'):
             print("Bye!")
             break
         else:
