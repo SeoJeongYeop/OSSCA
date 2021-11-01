@@ -161,9 +161,12 @@ if __name__ == "__main__":
                     try:
                         print("input contributor name")
                         name = input(">>>")
+                        print("input year")
+                        year = input(">>>")
                         print("How should it print out? 1. Compact 2. Normal 3. Detail")
                         how = input(">>>")
-                        contributorDict[name].showContribution(how)
+                        yearObj = periodDict[year]
+                        yearObj[name].showContribution(how)
                     except Exception as e:
                         print("error9: ",e)
                 elif(num=='q'):

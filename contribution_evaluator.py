@@ -64,7 +64,6 @@ def savePeriodData():
     p1 = period_data[0]
     github_id = p1["github_id"]
     year = p1["start_yymm"][0:4]
-    #print("[0] ",github_id, year)
     for period in period_data :
         try :
             if github_id != period['github_id'] :
@@ -84,8 +83,6 @@ def savePeriodData():
                 dataDict = dict()
                 year = period["start_yymm"][0:4]
                 initialize_dataDict(dataDict)
-            # print("star")
-            # print(period["stars"])
             dataDict["stars"] += period["stars"]
             dataDict["num_of_cr_repos"] += period["num_of_cr_repos"]
             dataDict["num_of_co_repos"] += period["num_of_co_repos"]
@@ -161,7 +158,6 @@ def linkRepo(contributorDict:dict):
                             print("2-1. link owner repo owner's name equal ", repo_contributor["owner_id"])
                             print(">> ", len(contributorDict[repo_contributor["github_id"]].owner_repositories))
                         else :
-                        #repo_stats["github_id"] == repo_contributor["github_id"] :
                             contributorDict[repo_contributor["github_id"]].link_contributor_repo(repo_stats)
                             print("2-2. link contributor_repo ", repo_contributor["github_id"])
                             print(">> ", len(contributorDict[repo_contributor["github_id"]].contributor_repositories))
@@ -294,7 +290,6 @@ def analyzeCommits(contributorDict:dict):
         except Exception as e:
             exception.append(commit)
             print("error analyze commit: ", e)
-        # owner and contributor skip now
 
     with open(f"./data/github_exception_commits.json", 'w', encoding="utf-8") as jsonfile:
         try:
@@ -307,7 +302,6 @@ def analyzeCommits(contributorDict:dict):
         except Exception as e:
             print(e)
     print("done!!")
-
         
 def yieldScore(contributorDict:dict):
     print("yieldScore", type(contributorDict))
