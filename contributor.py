@@ -474,10 +474,11 @@ class Contributor:
         self.owner_activity_score = 0
         self.contributor_activity_score = 0
         self.additional_score = 0
-        print("cal star")
+        print("star")
         if self.stars >= 50 :
             #우수 오픈소스 기여자 62? 50?
             self.excellent_contributor_score = 5
+            return 0
         elif self.stars < 3 :
             self.additional_score += 0
         elif self.stars < 10 :
@@ -491,11 +492,10 @@ class Contributor:
         elif self.stars < 50 :
             self.additional_score += 1.0
 
-        print("cal contribution")
+        print("contribution")
         contribution = self.owner_commits_count + self.owner_prs_count + self.contributor_commits_count + self.contributor_prs_count + self.total_issues
         
         if contribution < 10 :
-            #우수 오픈소스 기여자 62? 50?
             self.additional_score += 0
         elif contribution <50 :
             self.additional_score += 0.2
@@ -508,13 +508,13 @@ class Contributor:
         elif contribution >= 500 :
             self.additional_score += 1.0
 
-        print("cal contributor activity")
+        print("contributor activity")
         if self.contributor_open_issue_count >= 1 :
-            self.contributor_activity_score += 1.5
+            self.contributor_activity_score = 1.5
         elif self.contributor_prs_count >= 1 :
-            self.contributor_activity_score += 1.5
+            self.contributor_activity_score = 1.5
 
-        print("cal owner activity")
+        print("owner activity")
         repo_score = 0
         for repo in self.owner_repositories :
             ret = repo.calculateRepoScore()
