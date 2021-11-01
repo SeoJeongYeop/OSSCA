@@ -88,7 +88,7 @@ class Repository:
 
     def calculateRepoScore(self):
         print("cal repo score")
-        if self.commits_count >= 2 :
+        if self.commits_count >= 2 and self.code_edits >= 500:
             self.repo_score += 0.5
         else :
             return 0
