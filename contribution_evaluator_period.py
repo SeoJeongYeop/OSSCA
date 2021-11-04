@@ -1,5 +1,16 @@
 import json
 from contributor import Contributor
+import pymysql
+import GITHUBDB
+import time
+
+githubDB = pymysql.connect(
+    user=GITHUBDB.SQL_USER,
+    password=GITHUBDB.SQL_PW,
+    host = GITHUBDB.SQL_HOST,
+    port=GITHUBDB.SQL_PORT,
+    db=GITHUBDB.SQL_DB,
+)
 
 def saveTotalJson(contributorDict:dict, year:str):
     print("saveTotalJson fucntion")
@@ -227,29 +238,45 @@ def analyzeCommits(contributorDict:dict, year:str):
     print("done!!")
 
 def yieldScore(contributorDict:dict, year:str):
-    print("yieldScore", type(contributorDict))
-    
     with open("./data/github_overview.json",'r', encoding="utf-8") as overview:
         overview_data = json.load(overview)
     scoreList = []
-    print("yieldScore", type(contributorDict))
     
     for overview in overview_data:
-        print("for ", overview["github_id"])
         try :
             resultDict = dict()
-            print(contributorDict[overview["github_id"]].stars)
-            contributorDict[overview["github_id"]].yieldScore()
+            best_repo = contributorDict[overview["github_id"]].yieldScore()
             
             resultDict["github_id"] = overview["github_id"]
-            print(overview["github_id"])
             resultDict["excellent_contributor_score"] = contributorDict[overview["github_id"]].excellent_contributor_score
-            print(resultDict["excellent_contributor_score"])
             resultDict["owner_activity_score"] = contributorDict[overview["github_id"]].owner_activity_score
             resultDict["contributor_activity_score"] = contributorDict[overview["github_id"]].contributor_activity_score
+            resultDict["star_score"] = contributorDict[overview["github_id"]].star_score
+            resultDict["contribution_score"] = contributorDict[overview["github_id"]].contribution_score
             resultDict["additional_score"] = contributorDict[overview["github_id"]].additional_score
             resultDict["total_score"] = resultDict["excellent_contributor_score"] + resultDict["owner_activity_score"] + resultDict["contributor_activity_score"] + resultDict["additional_score"]
             scoreList.append(resultDict)
+
+            print("#### insert into ####")
+            try :
+                print("#data: ",str(year+resultDict["github_id"]), str(resultDict["github_id"]), int(year), int(resultDict["excellent_contributor_score"]), str(best_repo["best_repo"]), float(best_repo["guideline_score"]), float(best_repo["code_score"]), float(best_repo["other_project_score"]), float(resultDict["contributor_activity_score"]), float(resultDict["star_score"]), float(resultDict["contribution_score"]))
+            except Exception as e :
+                print("print data error ",e)
+            try:
+                cursor = githubDB.cursor(pymysql.cursors.DictCursor)
+
+
+                insert_sql = '''INSERT INTO github_score(yid, github_id, year, excellent_contributor, best_repo, guideline_score, code_score, other_project_score, contributor_score, star_score, contribution_score) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'''
+                insert_arg = [str(year+resultDict["github_id"]), str(resultDict["github_id"]), int(year), int(resultDict["excellent_contributor_score"]), str(best_repo["best_repo"]), float(best_repo["guideline_score"]), float(best_repo["code_score"]), float(best_repo["other_project_score"]), float(resultDict["contributor_activity_score"]), float(resultDict["star_score"]), float(resultDict["contribution_score"])]
+                print("#insert_sql ",insert_sql, "#insert_arg ", insert_arg)
+                cursor.execute(insert_sql, insert_arg)
+                githubDB.commit()
+                time.sleep(0.1)
+                print("done!!")
+
+            except Exception as e:
+                print("insert error ", e)
+
         except Exception as e:
             print(e)
             pass

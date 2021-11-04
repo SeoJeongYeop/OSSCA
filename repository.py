@@ -88,12 +88,23 @@ class Repository:
 
     def calculateRepoScore(self):
         print("cal repo score")
+        repo_data = dict();
+        repo_data["best_repo"] = self.repo_name
+        repo_data["code_score"] = 0
+        repo_data["guideline_score"] = 0
+        repo_data["other_project_score"] = 0
+        repo_data["repo_score"] = 0
         if self.commits_count >= 2 and self.code_edits >= 500:
             self.repo_score += 0.5
+            repo_data["code_score"] = 0.5;
         else :
-            return 0
+            # 이 조건 만족 못하면 아예 제외
+            return repo_data
         if self.license is not None and self.readme is not None and self.proj_short_desc is not None:
             self.repo_score += 0.5
+            repo_data["guideline_score"] = 0.5
         if self.dependencies != 0 :
             self.repo_score += 0.5
-        return self.repo_score
+            repo_data["other_project_score"] = 0.5
+        repo_data["repo_score"] = repo_data["code_score"] + repo_data["guideline_score"] + repo_data["other_project_score"]
+        return repo_data

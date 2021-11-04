@@ -88,6 +88,8 @@ class Contributor:
         self.owner_activity_score = 0
         self.contributor_activity_score = 0
         self.additional_score = 0
+        self.star_score = 0
+        self.contribution_score = 0
         try :
             print("total_commit: ",self.total_commits)
         except Exception as e:
@@ -474,39 +476,43 @@ class Contributor:
         self.owner_activity_score = 0
         self.contributor_activity_score = 0
         self.additional_score = 0
+        self.star_score = 0
+        self.contribution_score = 0
         print("star")
         if self.stars >= 50 :
             #우수 오픈소스 기여자 62? 50?
             self.excellent_contributor_score = 5
             return 0
         elif self.stars < 3 :
-            self.additional_score += 0
+            self.star_score += 0
         elif self.stars < 10 :
-            self.additional_score += 0.2
+            self.star_score += 0.2
         elif self.stars < 20 :
-            self.additional_score += 0.4
+            self.star_score += 0.4
         elif self.stars < 30 :
-            self.additional_score += 0.6
+            self.star_score += 0.6
         elif self.stars < 40 :
-            self.additional_score += 0.8
+            self.star_score += 0.8
         elif self.stars < 50 :
-            self.additional_score += 1.0
+            self.star_score += 1.0
 
         print("contribution")
         contribution = self.owner_commits_count + self.owner_prs_count + self.contributor_commits_count + self.contributor_prs_count + self.total_issues
         
         if contribution < 10 :
-            self.additional_score += 0
-        elif contribution <50 :
-            self.additional_score += 0.2
+            self.contribution_score += 0
+        elif contribution < 50 :
+            self.contribution_score += 0.2
         elif contribution < 100 :
-            self.additional_score += 0.4
+            self.contribution_score += 0.4
         elif contribution < 200 :
-            self.additional_score += 0.6
+            self.contribution_score += 0.6
         elif contribution < 500 :
-            self.additional_score += 0.8
+            self.contribution_score += 0.8
         elif contribution >= 500 :
-            self.additional_score += 1.0
+            self.contribution_score += 1.0
+
+        self.additional_score = self.star_score + self.contribution_score
 
         print("contributor activity")
         if self.contributor_open_issue_count >= 1 :
@@ -516,10 +522,19 @@ class Contributor:
 
         print("owner activity")
         repo_score = 0
+        best_repo = dict()
+        best_repo["best_repo"] = "None"
+        best_repo["code_score"] = 0
+        best_repo["guideline_score"] = 0
+        best_repo["other_project_score"] = 0
+        best_repo["repo_score"] = 0
         for repo in self.owner_repositories :
-            ret = repo.calculateRepoScore()
+            retJson = repo.calculateRepoScore()
+            ret = retJson["repo_score"]
             if repo_score < ret :
                 repo_score = ret
                 print(repo.repo_name, " has ", repo.repo_score)
+                best_repo = retJson
 
         self.owner_activity_score = repo_score
+        return best_repo
