@@ -5,3 +5,4 @@ __pycache__
 *.docx
 node_modules
 config.js
+!package.json

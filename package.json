@@ -1,0 +1,22 @@
+{
+  "name": "ossca",
+  "version": "0.1.0",
+  "description": "open source software contribution analysis",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SeoJeongYeop/OSSCA.git"
+  },
+  "author": "jeongyeop",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SeoJeongYeop/OSSCA/issues"
+  },
+  "homepage": "https://github.com/SeoJeongYeop/OSSCA#readme",
+  "dependencies": {
+    "express-generator": "^4.2.0"
+  }
+}
