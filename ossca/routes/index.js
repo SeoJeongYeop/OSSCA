@@ -12,11 +12,23 @@ and year=2021;`;
     if (error) {
       console.log(error);
     }
-    console.log({
-      title: "Express",
-      table: result.row,
-      size: result.row.length,
-    });
+    for(i=0;i<result.row.length;i++){
+      result.row[i].total_score = (
+        result.row[i].excellent_contributor
+        +result.row[i].guideline_score
+        +result.row[i].code_score
+        +result.row[i].other_project_score
+        +result.row[i].contributor_score
+        +result.row[i].star_score
+        +result.row[i].contribution_score).toFixed(1)
+      result.row[i].owner_score = (
+        result.row[i].guideline_score
+        +result.row[i].code_score
+        +result.row[i].other_project_score).toFixed(1)
+      result.row[i].additional_score = (
+        result.row[i].star_score
+        +result.row[i].contribution_score).toFixed(1)
+    }
     console.log(result.row.length);
     res.render("index", {
       title: "Express",

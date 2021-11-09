@@ -1,47 +1,31 @@
 extends layout
 
 block content
+  script(type="text/javascript", src="/javascripts/overview.js")
   h1= title
   p Welcome to #{title}
   .container 
-    .filter-input
-      img#filterImg(src="/images/filter.svg", alt="filter")
-      select#filterKey(name="filter-key")
-        option.filter-key(value="col0", selected) name 
-        option.filter-key(value="col1") github id 
-        option.filter-key(value="col2") year
-        option.filter-key(value="col3") total score  
-        option.filter-key(value="col4") exellent contributor
-        option.filter-key(value="col5") owner score
-        option.filter-key(value="col6") contributor score
-        option.filter-key(value="col7") additional score
-      select#comp(name="comp")
-        option.comp-opt(value="=", selected) =
-      input#condition(type="text")
-      button#filterSubmit Filter
-    #filterItem
-    table#scoreTable
-      thead
+    table#scoreTable.table.table-striped.table-hover
+      thead.table-light
         tr 
-          th.sort-key(data-column="col0", data-order="none") name 
-          th.sort-key(data-column="col1", data-order="none") github id 
-          th.sort-key(data-column="col2", data-order="none") year 
-          th.sort-key(data-column="col3", data-order="none") total score 
-          th.sort-key(data-column="col4", data-order="none") exellent contributor 
-          th.sort-key(data-column="col5", data-order="none") owner score
-          th.sort-key(data-column="col6", data-order="none") contributor score
-          th.sort-key(data-column="col7",data-order="none") additional score
+          th name 
+          th github id 
+          th year 
+          th total score 
+          th exellent contributor 
+          th owner score
+          th contributor score
+          th additional score
       tbody
         -console.log("???");
         -for(let i=0; i<size;i++)
           tr
-            td.ns 이름 #{i}
-            td.ns= table[i].github_id
+            td 이름 #{i}
+            td 
+              a(href="users/"+table[i].github_id) #{table[i].github_id}
             td.ns= table[i].year
-            td.sc= (table[i].excellent_contributor+table[i].guideline_score+table[i].code_score+table[i].other_project_score+table[i].contributor_score+table[i].star_score+table[i].contribution_score).toFixed(1)
+            td.sc= table[i].total_score
             td.sc= table[i].excellent_contributor
-            td.sc= table[i].guideline_score+table[i].code_score+table[i].other_project_score
+            td.sc= table[i].owner_score
             td.sc= table[i].contributor_score
-            td.sc= table[i].star_score+table[i].contribution_score
-    p ossca
-  
+            td.sc= table[i].additional_score
