@@ -1,8 +1,18 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 body {
   padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 14px;
+  font-family: "Roboto", sans-serif;
 }
 
 a {
-  color: #00B7FF;
+  color: #00b7ff;
+}
+.nav-link {
+  font-family: "Roboto", sans-serif;
+}
+h5.card-title {
+  font: 16px;
+  font-family: "Noto Sans KR", sans-serif;
+  font-weight: 500;
 }
