@@ -3,6 +3,7 @@ __pycache__
 *.json
 *.pdf
 *.docx
+*.sql
 node_modules
 config.js
 !package.json
