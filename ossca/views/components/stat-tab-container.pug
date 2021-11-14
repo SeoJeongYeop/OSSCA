@@ -1,12 +1,22 @@
 .tab-container
-    ul#pills-tab.nav.nav-pills.mb-3(role="tablist")
-      li.nav-item(role="presentation") 
-        button#pills-score-tab.nav-link.active(data-bs-toggle="pill",data-bs-target="#pills-score", type="button", role="tab", aria-controls="pills-score", aria-selected="true") Score
-      li.nav-item(role="presentation") 
-        button#pills-commits-tab.nav-link(data-bs-toggle="pill",data-bs-target="#pills-commits", type="button", role="tab", aria-controls="pills-commits", aria-selected="true") Commits 
-      li.nav-item(role="presentation")  
-        button#pills-stars-tab.nav-link(data-bs-toggle="pill",data-bs-target="#pills-stars", type="button", role="tab", aria-controls="pills-stars", aria-selected="true") Stars 
-      li.nav-item(role="presentation")  
-        button#pills-followers-tab.nav-link(data-bs-toggle="pill",data-bs-target="#pills-followers", type="button", role="tab", aria-controls="pills-followers", aria-selected="true") followers
-      li.nav-item(role="presentation")  
-        button#pills-followings-tab.nav-link(data-bs-toggle="pill",data-bs-target="#pills-followings", type="button", role="tab", aria-controls="pills-followings", aria-selected="true") followings
+  ul#pills-tab.nav.nav-pills.mb-3(role="tablist")
+    li.nav-item(role="presentation") 
+      button#pills-score-tab.nav-link.active(data-bs-toggle="pill",data-bs-target="#pills-score", type="button", role="tab", aria-controls="pills-score", aria-selected="true") Score
+    li.nav-item(role="presentation") 
+      button#pills-commits-tab.nav-link(data-bs-toggle="pill",data-bs-target="#pills-commits", type="button", role="tab", aria-controls="pills-commits", aria-selected="true") Commits 
+    li.nav-item(role="presentation")  
+      button#pills-stars-tab.nav-link(data-bs-toggle="pill",data-bs-target="#pills-stars", type="button", role="tab", aria-controls="pills-stars", aria-selected="true") Stars 
+    li.nav-item(role="presentation")  
+      button#pills-followers-tab.nav-link(data-bs-toggle="pill",data-bs-target="#pills-followers", type="button", role="tab", aria-controls="pills-followers", aria-selected="true") followers
+    li.nav-item(role="presentation")  
+      button#pills-followings-tab.nav-link(data-bs-toggle="pill",data-bs-target="#pills-followings", type="button", role="tab", aria-controls="pills-followings", aria-selected="true") followings
+  .dropdown
+    button#dropdownMenuButton1.btn.btn-primary.dropdown-toggle.me-2(type="button", data-bs-toggle="dropdown", aria-expanded="false") 2021 
+    ul.dropdown-menu(aria-labelledby="dropdownMenuButton1")
+      li
+        button#dropdownBtn2021.dropdown-item 2021
+      li 
+        button#dropdownBtn2020.dropdown-item 2020
+      li 
+        button#dropdownBtn2019.dropdown-item 2019
+    

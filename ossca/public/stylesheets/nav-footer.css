@@ -39,6 +39,17 @@ nav {
 .nav-list li a:hover {
   color: red;
 }
+.tab-container {
+  display: flex;
+  justify-content: space-between;
+}
+.dropdown-item {
+  text-align: right !important;
+}
+.dropdown-menu {
+  transform: translate(-2px, 40px) !important;
+  min-width: 80px !important;
+}
 
 footer {
   border-top: solid 2px black;
