@@ -10,7 +10,7 @@ var chartRouter = require("./routes/chart");
 var app = express();
 let port = process.env.PORT;
 if (port == null || port == "") {
-  port = 8000;
+  port = 8081;
 }
 
 // view engine setup
