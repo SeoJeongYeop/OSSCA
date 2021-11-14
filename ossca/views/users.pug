@@ -1,0 +1,53 @@
+extend layout 
+
+mixin repo_card(user, repo)
+  .card.m-1
+    .card-body
+      a(href='https://github.com/'+repo.github_id+'/'+repo.repo_name, style='text-decoration: none;')
+        h2.card-title.fw-bold.text-body #{repo.repo_name}
+      table.table.text-center
+        thead
+          tr
+            th Code Score
+            th Guideline Score
+            th OpenSource Score
+        tbody 
+          tr 
+            td #{repo.code_score}
+            td #{repo.guideline_score}
+            td #{repo.other_project_score}
+
+block content 
+  h1= title
+  .container 
+    .row
+      .col-3
+        table.table.table-bordered
+          tbody 
+            tr
+              td(scope='row') 이름
+              td #{user.name}
+            tr
+              td(scope='row') 학번
+              td #{user.id}
+            tr
+              td(scope='row') 대학
+              td #{user.college}
+            tr
+              td(scope='row') 학과
+              td #{user.dept}
+            tr
+              td(scope='row') GitHub
+              td 
+                a(href='https://github.com/' + user.github_id) #{user.github_id}
+            tr
+              td(scope='row') Email
+              td #{user.email}
+      .col-8
+        -for(let i = 0; i < repos.length / 2; i++)
+          .row 
+            .col-6
+              +repo_card(user, repos[i * 2])
+            if(repos.length > i*2+1)
+              .col-6
+                +repo_card(user, repos[i * 2 + 1])
