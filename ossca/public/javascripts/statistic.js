@@ -1,5 +1,5 @@
 window.onload = function () {
-  let port = "8000";
+  let port = "8081";
 
   const promise = fetch(`http://localhost:${port}/chart`)
     .then((response) => {
@@ -110,7 +110,7 @@ window.onload = function () {
       let annualStarDist = document
         .getElementById("annualStarDist")
         .getContext("2d");
-      const cc9 = [
+      const cc10 = [
         "#003f5c",
         "#2f4b7c",
         "#665191",
@@ -120,6 +120,7 @@ window.onload = function () {
         "#ff7c43",
         "#ff9327",
         "#ffa600",
+        "#ffe913",
       ];
       const cc5 = ["#4245cb", "#db20ac", "#ff4470", "#ff9a2f", "#ffe913"];
       const cc3 = ["#4245cb", "#ff4470", "#ffe913"];
@@ -129,7 +130,7 @@ window.onload = function () {
         "pie",
         scoreDistLabel,
         distribution,
-        cc9,
+        cc10,
         {}
       );
       let totalScoreLineChart = makeChart(
@@ -137,7 +138,7 @@ window.onload = function () {
         "line",
         ["0", "0.5", "1.0", "1.5", "2.0", "2.5", "3.0", "3.5", "4.0", "4.5"],
         distribution,
-        cc9,
+        cc10,
         {}
       );
 
@@ -292,7 +293,7 @@ window.onload = function () {
           "pie",
           scoreDistLabel,
           distribution,
-          cc9,
+          cc10,
           {}
         );
         totalScoreLineChart.destroy();
@@ -301,7 +302,7 @@ window.onload = function () {
           "line",
           ["0", "0.5", "1.0", "1.5", "2.0", "2.5", "3.0", "3.5", "4.0", "4.5"],
           distribution,
-          cc9,
+          cc10,
           {}
         );
         yearScoreChart.destroy();
