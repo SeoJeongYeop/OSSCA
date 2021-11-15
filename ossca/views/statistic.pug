@@ -4,8 +4,6 @@ block content
   script(type="text/javascript", src="/javascripts/statistic.js")
   //- chart.js를 node로 설치했으나 사용법을 모르겠어서 그냥 import
   script(type="text/javascript", src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.0/chart.min.js")
-  h1= title
-  p Welcome to #{title}
   include components/stat-tab-container
   .row 
     .col-md-3 
@@ -26,8 +24,6 @@ block content
         p#totalRepo.card-text 
   #pills-tabContent.container.tab-content
     #pills-score.tab-pane.fade.show.active(role="tabpanel",aria-labelledby="pills-score-tab")
-      h2 pills-score-tab
-      
       .row 
         .col-md-6 
           .card
@@ -54,7 +50,6 @@ block content
             canvas#annualScoreDist
 
     #pills-commits.tab-pane.fade(role="tabpanel",aria-labelledby="pills-commits-tab")
-      h2 pills-commits-tab
       .row 
         .col-md-6 
           .card
@@ -79,7 +74,6 @@ block content
             h5.card-title 연도별 커밋분포
             canvas#annualCommitDist
     #pills-stars.tab-pane.fade(role="tabpanel",aria-labelledby="pills-stars-tab")
-      h2 pills-stars-tab
       .row 
         .col-md-6 
           .card
@@ -103,56 +97,56 @@ block content
           .card
             h5.card-title 연도별 Star분포
             canvas#annualStarDist
-    #pills-followers.tab-pane.fade(role="tabpanel",aria-labelledby="pills-followers-tab")
-      h2 pills-followers-tab
+    #pills-pr.tab-pane.fade(role="tabpanel",aria-labelledby="pills-pr-tab")
+      h2 pills-pr-tab
       .row 
         .col-md-6 
           .card
-            h5.card-title 전체 Follower 분포
-            canvas#totalFollowerDist 
+            h5.card-title 전체 PR 분포
+            canvas#totalPRDist 
         .col-md-6
           .card
-            h5.card-title Follower 수별 퍼센티지
-            #perFollower.text-flex
+            h5.card-title PR 개수별 퍼센티지
+            #perPR.text-flex
             
       .row
         .col-md-4
           .card
-            h5.card-title 학년별 Follower분포
-            canvas#yearFollowerDist
+            h5.card-title 학년별 PR분포
+            canvas#yearPRDist
         .col-md-4
           .card
-            h5.card-title 학과별 Follower분포
-            canvas#deptFollowerDist
+            h5.card-title 학과별 PR분포
+            canvas#deptPRDist
         .col-md-4
           .card
-            h5.card-title 연도별 Follower분포
-            canvas#annualFollowerDist
-    #pills-followings.tab-pane.fade(role="tabpanel",aria-labelledby="pills-followings-tab")
-      h2 pills-followings-tab
+            h5.card-title 연도별 PR분포
+            canvas#annualPRDist
+    #pills-issue.tab-pane.fade(role="tabpanel",aria-labelledby="pills-issue-tab")
+      h2 pills-issue-tab
       .row 
         .col-md-6 
           .card
-            h5.card-title 전체 Following분포
-            canvas#totalFollowingDist 
+            h5.card-title 전체 Issue분포
+            canvas#totalIssueDist 
         .col-md-6
           .card
-            h5.card-title Following 개수별 퍼센티지
-            #perFollowing.text-flex
+            h5.card-title Issue 개수별 퍼센티지
+            #perIssue.text-flex
             
       .row
         .col-md-4
           .card
-            h5.card-title 학년별 Following분포
-            canvas#yearFollowingDist
+            h5.card-title 학년별 Issue분포
+            canvas#yearIssueDist
         .col-md-4
           .card
-            h5.card-title 학과별 Following분포
-            canvas#deptFollowingDist
+            h5.card-title 학과별 Issue분포
+            canvas#deptIssueDist
         .col-md-4
           .card
-            h5.card-title 연도별 Following분포
-            canvas#annualFollowingDist
+            h5.card-title 연도별 Issue분포
+            canvas#annualIssueDist
   script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js",integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf",crossorigin="anonymous")
       
     
