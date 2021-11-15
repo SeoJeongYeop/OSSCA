@@ -107,10 +107,10 @@ def analyzeCommits(contributorDict:dict, year:str):
     exception = []
     result=[]
     for commit in commits_data:
-        try :
-            if commit["github_id"] in contributorDict:
+        if commit["github_id"] in contributorDict:
+            try :
                 for repository in contributorDict[commit["github_id"]].indie_repositories:
-                    if commit["commit_date"][0:4] == year :
+                    if commit["committer_date"][0:4] == year :
                         if repository.repo_name == commit["repo_name"]:
                             resultDict=dict()
                             print("[indie/id] commits: ",commit["github_id"], "commits: ",commit["author_github"]," commits repo: ",commit["repo_name"])
@@ -122,9 +122,12 @@ def analyzeCommits(contributorDict:dict, year:str):
                             resultDict["deletions"] = commit["deletions"]
                             result.append(resultDict)
                             repository.addEdits(commit["additions"], commit["deletions"])
-
+            except Exception as e:
+                exception.append(commit)
+                print("error github id indie repo: ", e)
+            try:
                 for repository in contributorDict[commit["github_id"]].team_repositories:
-                    if commit["commit_date"][0:4] == year :
+                    if commit["committer_date"][0:4] == year :
                         if repository.repo_name == commit["repo_name"]:
                             resultDict=dict()
                             print("[team/id] commits: ",commit["github_id"], "commits: ",commit["author_github"]," commits repo: ",commit["repo_name"])
@@ -136,9 +139,12 @@ def analyzeCommits(contributorDict:dict, year:str):
                             resultDict["deletions"] = commit["deletions"]
                             result.append(resultDict)
                             repository.addEdits(commit["additions"], commit["deletions"])
-
+            except Exception as e:
+                exception.append(commit)
+                print("error github id team repo: ", e)
+            try:
                 for repository in contributorDict[commit["github_id"]].owner_repositories:
-                    if commit["commit_date"][0:4] == year :
+                    if commit["committer_date"][0:4] == year :
                         if repository.repo_name == commit["repo_name"]:
                             resultDict=dict()
                             print("[owner/id] commits: ",commit["github_id"], "commits: ",commit["author_github"]," commits repo: ",commit["repo_name"])
@@ -150,9 +156,12 @@ def analyzeCommits(contributorDict:dict, year:str):
                             resultDict["deletions"] = commit["deletions"]
                             result.append(resultDict)
                             repository.addEdits(commit["additions"], commit["deletions"])
-
+            except Exception as e:
+                exception.append(commit)
+                print("error github id owner repo: ", e)
+            try:
                 for repository in contributorDict[commit["github_id"]].contributor_repositories:
-                    if commit["commit_date"][0:4] == year :
+                    if commit["committer_date"][0:4] == year :
                         if repository.repo_name == commit["repo_name"]:
                             resultDict=dict()
                             print("[contributor/id] commits: ",commit["github_id"], "commits: ",commit["author_github"]," commits repo: ",commit["repo_name"])
@@ -164,10 +173,14 @@ def analyzeCommits(contributorDict:dict, year:str):
                             resultDict["deletions"] = commit["deletions"]
                             result.append(resultDict)
                             repository.addEdits(commit["additions"], commit["deletions"])
+            except Exception as e:
+                exception.append(commit)
+                print("error github id contributor repo: ", e)
 
-            elif commit["author_github"] in contributorDict:
+        elif commit["author_github"] in contributorDict:
+            try:
                 for repository in contributorDict[commit["author_github"]].indie_repositories:
-                    if commit["commit_date"][0:4] == year :
+                    if commit["committer_date"][0:4] == year :
                         if repository.repo_name == commit["repo_name"]:
                             resultDict=dict()
                             print("[indie/author] commits: ",commit["github_id"], "commits: ",commit["author_github"]," commits repo: ",commit["repo_name"])
@@ -179,9 +192,12 @@ def analyzeCommits(contributorDict:dict, year:str):
                             resultDict["deletions"] = commit["deletions"]
                             result.append(resultDict)
                             repository.addEdits(commit["additions"], commit["deletions"])
-
+            except Exception as e:
+                exception.append(commit)
+                print("error author indie repo: ", e)
+            try:
                 for repository in contributorDict[commit["author_github"]].team_repositories:
-                    if commit["commit_date"][0:4] == year :
+                    if commit["committer_date"][0:4] == year :
                         if repository.repo_name == commit["repo_name"]:
                             resultDict=dict()
                             print("[team/author] commits: ",commit["github_id"], "commits: ",commit["author_github"]," commits repo: ",commit["repo_name"])
@@ -193,9 +209,13 @@ def analyzeCommits(contributorDict:dict, year:str):
                             resultDict["deletions"] = commit["deletions"]
                             result.append(resultDict)
                             repository.addEdits(commit["additions"], commit["deletions"])
+            except Exception as e:
+                exception.append(commit)
+                print("error author team repo: ", e)
 
+            try:
                 for repository in contributorDict[commit["author_github"]].owner_repositories:
-                    if commit["commit_date"][0:4] == year :
+                    if commit["committer_date"][0:4] == year :
                         if repository.repo_name == commit["repo_name"]:
                             resultDict=dict()
                             print("[owner/author] commits: ",commit["github_id"], "commits: ",commit["author_github"]," commits repo: ",commit["repo_name"])
@@ -207,9 +227,13 @@ def analyzeCommits(contributorDict:dict, year:str):
                             resultDict["deletions"] = commit["deletions"]
                             result.append(resultDict)
                             repository.addEdits(commit["additions"], commit["deletions"])
+            except Exception as e:
+                exception.append(commit)
+                print("error author owner repo: ", e)
 
+            try:
                 for repository in contributorDict[commit["author_github"]].contributor_repositories:
-                    if commit["commit_date"][0:4] == year :
+                    if commit["committer_date"][0:4] == year :
                         if repository.repo_name == commit["repo_name"]:
                             resultDict=dict()
                             print("[contributor/author] commits: ",commit["github_id"], "commits: ",commit["author_github"]," commits repo: ",commit["repo_name"])
@@ -221,9 +245,10 @@ def analyzeCommits(contributorDict:dict, year:str):
                             resultDict["deletions"] = commit["deletions"]
                             result.append(resultDict)
                             repository.addEdits(commit["additions"], commit["deletions"])
-        except Exception as e:
-            exception.append(commit)
-            print("error analyze commit: ", e)
+            except Exception as e:
+                exception.append(commit)
+                print("error author contributor repo: ", e)
+
 
     with open(f"./year/github_exception_commits_{year}.json", 'w', encoding="utf-8") as jsonfile:
         try:

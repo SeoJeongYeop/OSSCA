@@ -1,16 +1,14 @@
 class Repository:
-    # watcher typo wacher
     def __init__(self, stats):
         try:
             self.repo_name = stats["repo_name"]
             self.stargazers_count = stats["stargazers_count"]
             self.forks_count = stats["forks_count"]
             self.commits_count = stats["commits_count"]
-            self.code_edits = stats["code_edits"]
             self.prs_count = stats["prs_count"]
             self.open_issue_count = stats["open_issue_count"]
             self.close_issue_count = stats["close_issue_count"]
-            self.watchers_count = stats["wachers_count"]
+            self.watchers_count = stats["watchers_count"]
             self.dependencies = stats["dependencies"]
             self.language = stats["language"]
             self.create_date = stats["create_date"]
@@ -21,7 +19,7 @@ class Repository:
             self.license = stats["license"]
             self.readme = stats["readme"]
             self.proj_short_desc = stats["proj_short_desc"]
-
+            self.code_edits = 0
             self.additions = 0
             self.deletions = 0
             self.contributor_commits_count = 0
@@ -29,12 +27,16 @@ class Repository:
             self.repo_score = 0
         except Exception as e:
             print("repo ",e)
+            
     def addEdits(self, addition, deletion):
-        self.additions += addition
-        self.deletions += deletion
-        self.code_edits += addition
-        self.code_edits += deletion
-        self.contributor_commits_count += 1
+        try:
+            self.additions += addition
+            self.deletions += deletion
+            self.code_edits += addition
+            self.code_edits += deletion
+            self.contributor_commits_count += 1
+        except Exception as e:
+            print("addEdits: ",e);
     def showCompact(self):
         try: 
             strFormat = "%-20s"
@@ -87,7 +89,6 @@ class Repository:
         print("")
 
     def calculateRepoScore(self):
-        print("cal repo score")
         repo_data = dict();
         repo_data["best_repo"] = self.repo_name
         repo_data["code_score"] = 0
