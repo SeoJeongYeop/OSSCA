@@ -17,13 +17,13 @@ window.onload = function () {
       let annual = 2021;
       let startAnnual = 2019;
       let distribution = json[`year${annual}`]["distribution"];
-      let yearData = json.year2021["year"];
+      let sidData = json.year2021["sid"];
       let deptData = json.year2021["dept"];
       let commitDist = json.year2021["commit_dist"];
-      let commitYearData = json.year2021["commit_year"];
+      let commitSidData = json.year2021["commit_sid"];
       let commitDeptData = json.year2021["commit_dept"];
       let starDist = json.year2021["star_dist"];
-      let starYearData = json.year2021["star_year"];
+      let starSidData = json.year2021["star_sid"];
       let starDeptData = json.year2021["star_dept"];
       const scoreDistLabel = [
         "0~0.5",
@@ -78,8 +78,8 @@ window.onload = function () {
       let totalScoreLineDist = document
         .getElementById("tatalScoreLineDist")
         .getContext("2d");
-      let yearScoreDist = document
-        .getElementById("yearScoreDist")
+      let sidScoreDist = document
+        .getElementById("sidScoreDist")
         .getContext("2d");
       let deptScoreDist = document
         .getElementById("deptScoreDist")
@@ -90,8 +90,8 @@ window.onload = function () {
       let totalCommitDist = document
         .getElementById("totalCommitDist")
         .getContext("2d");
-      let yearCommitDist = document
-        .getElementById("yearCommitDist")
+      let sidCommitDist = document
+        .getElementById("sidCommitDist")
         .getContext("2d");
       let deptCommitDist = document
         .getElementById("deptCommitDist")
@@ -102,9 +102,7 @@ window.onload = function () {
       let totalStarDist = document
         .getElementById("totalStarDist")
         .getContext("2d");
-      let yearStarDist = document
-        .getElementById("yearStarDist")
-        .getContext("2d");
+      let sidStarDist = document.getElementById("sidStarDist").getContext("2d");
       let deptStarDist = document
         .getElementById("deptStarDist")
         .getContext("2d");
@@ -143,11 +141,11 @@ window.onload = function () {
         {}
       );
 
-      let yearScoreChart = makeChart(
-        yearScoreDist,
+      let sidScoreChart = makeChart(
+        sidScoreDist,
         "bar",
-        ["1", "2", "3", "4", "5+"],
-        yearData,
+        ["21", "20", "19", "18", "17", "16"],
+        sidData,
         cc5,
         {}
       );
@@ -177,11 +175,11 @@ window.onload = function () {
         {}
       );
 
-      let yearCommitChart = makeChart(
-        yearCommitDist,
+      let sidCommitChart = makeChart(
+        sidCommitDist,
         "bar",
-        ["1", "2", "3", "4", "5+"],
-        commitYearData,
+        ["21", "20", "19", "18", "17", "16"],
+        commitSidData,
         cc5,
         {}
       );
@@ -211,11 +209,11 @@ window.onload = function () {
         {}
       );
 
-      let yearStarChart = makeChart(
-        yearStarDist,
+      let sidStarChart = makeChart(
+        sidStarDist,
         "bar",
-        ["1", "2", "3", "4", "5+"],
-        starYearData,
+        ["21", "20", "19", "18", "17", "16"],
+        starSidData,
         cc5,
         {}
       );
@@ -261,13 +259,13 @@ window.onload = function () {
       function setGraphData(annual) {
         document.getElementById("dropdownMenuButton1").textContent = annual;
         distribution = json[`year${annual}`]["distribution"];
-        yearData = json[`year${annual}`]["year"];
+        sidData = json[`year${annual}`]["sid"];
         deptData = json[`year${annual}`]["dept"];
         commitDist = json[`year${annual}`]["commit_dist"];
-        commitYearData = json[`year${annual}`]["commit_year"];
+        commitSidData = json[`year${annual}`]["commit_sid"];
         commitDeptData = json[`year${annual}`]["commit_dept"];
         starDist = json[`year${annual}`]["star_dist"];
-        starYearData = json[`year${annual}`]["star_year"];
+        starSidData = json[`year${annual}`]["star_sid"];
         starDeptData = json[`year${annual}`]["star_dept"];
       }
       function makeChart(dist, type, labels, data, color, option) {
@@ -306,12 +304,12 @@ window.onload = function () {
           cc10,
           {}
         );
-        yearScoreChart.destroy();
-        yearScoreChart = makeChart(
-          yearScoreDist,
+        sidScoreChart.destroy();
+        sidScoreChart = makeChart(
+          sidScoreDist,
           "bar",
-          ["1", "2", "3", "4", "5+"],
-          yearData,
+          ["21", "20", "19", "18", "17", "16"],
+          sidData,
           cc5,
           {}
         );
@@ -333,12 +331,12 @@ window.onload = function () {
           cc5,
           {}
         );
-        yearCommitChart.destroy();
-        yearCommitChart = makeChart(
-          yearCommitDist,
+        sidCommitChart.destroy();
+        sidCommitChart = makeChart(
+          sidCommitDist,
           "bar",
-          ["1", "2", "3", "4", "5+"],
-          commitYearData,
+          ["21", "20", "19", "18", "17", "16"],
+          commitSidData,
           cc5,
           {}
         );
@@ -360,12 +358,12 @@ window.onload = function () {
           cc5,
           {}
         );
-        yearStarChart.destroy();
-        yearStarChart = makeChart(
-          yearStarDist,
+        sidStarChart.destroy();
+        sidStarChart = makeChart(
+          sidStarDist,
           "bar",
-          ["1", "2", "3", "4", "5+"],
-          starYearData,
+          ["21", "20", "19", "18", "17", "16"],
+          starSidData,
           cc5,
           {}
         );

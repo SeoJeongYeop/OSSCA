@@ -28,8 +28,8 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
     let annual = [0, 0, 0];
     let annualCnt = [0, 0, 0];
     let size = [0, 0, 0];
-    let sidSize = [0, 0, 0, 0, 0, 0, 0];
-    let deptSize = [0, 0, 0];
+    let sidSize = create2DArray(3, 7);
+    let deptSize = create2DArray(3, 3);
     const startYear = 2019;
     const nowYear = 2021;
     // About Commit
@@ -64,15 +64,15 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
         ).toFixed(1);
         size[idx1] += 1;
         /* student id */
-        commitSid[idx1][idxId] += Row.commit_count;
+        commitSid[idx1][idxId] += Number(Row.commit_count);
         starSid[idx1][idxId] += Row.star_count;
         sid[idx1][idxId] += Number(Row.total_score);
-        sidSize[idxId] += 1;
+        sidSize[idx1][idxId] += 1;
         /* dept */
         commitDept[idx1][deptDict[Row.dept]] += Row.commit_count;
         starDept[idx1][deptDict[Row.dept]] += Row.star_count;
         dept[idx1][deptDict[Row.dept]] += Number(Row.total_score);
-        deptSize[idxId] += 1;
+        deptSize[idx1][deptDict[Row.dept]] += 1;
         if (Row.total_score < 0.5) {
           distribution[idx1][0] += 1;
         } else if (Row.total_score < 1) {
@@ -120,19 +120,27 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
         annual[idx1] += Number(Row.total_score);
         annualCnt[idx1] += 1;
       }
-      // console.log("sid1 ", sid[0], sid[1]);
-      // for (let i = 0; i < sid.length; i++) {
-      //   commitSid.map((val) => (val / sidSize[i]).toFixed(1));
-      //   starSid.map((val) => (val / sidSize[i]).toFixed(1));
-      // }
-      // console.log("sid2 ", sid[0], sid[1]);
-      // console.log("dept1 ", dept[0], dept[1], dept[2]);
-      // for (let i = 0; i < sid.length; i++) {
-      //   commitDept[i].map((val) => (val / deptSize[i]).toFixed(1));
-      //   starDept[i].map((val) => (val / deptSize[i]).toFixed(1));
-      // }
-      // console.log("dept2 ", dept[0], dept[1], dept[2]);
-      // response
+
+      // object 타입으로 map함수 사용불가
+      console.log("sid: ", commitSid, sid.length, sidSize);
+      for (let i = 0; i < nowYear - startYear + 1; i++) {
+        console.log(sid[i].length);
+        for (let j = 0; j < sid[i].length; j++) {
+          commitSid[i][j] = (commitSid[i][j] / sidSize[i][j]).toFixed(1);
+          starSid[i][j] = (starSid[i][j] / sidSize[i][j]).toFixed(1);
+          sid[i][j] = (sid[i][j] / sidSize[i][j]).toFixed(1);
+        }
+      }
+
+      for (let i = 0; i < nowYear - startYear + 1; i++) {
+        console.log(dept[i].length);
+        for (let j = 0; j < dept[i].length; j++) {
+          commitDept[i][j] = (commitDept[i][j] / deptSize[i][j]).toFixed(1);
+          starDept[i][j] = (starDept[i][j] / deptSize[i][j]).toFixed(1);
+          dept[i][j] = (dept[i][j] / deptSize[i][j]).toFixed(1);
+        }
+      }
+
       DB("GET", repoQuery, []).then(function (date, error) {
         totalRepo = date.row.length;
         for (i = 0; i < totalRepo; i++) {
