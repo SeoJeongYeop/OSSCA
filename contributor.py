@@ -132,6 +132,11 @@ class Contributor:
             for repo in self.contributor_repositories :
                 repo.show()
         elif how == '3' :
+            print("## score ##")
+            print(self.excellent_contributor_score)
+            print(self.owner_activity_score)
+            print(self.contributor_activity_score)
+            print(self.additional_score)
             print("## Indie repositories ##")
             for repo in self.indie_repositories :
                 repo.showDetail()
@@ -478,11 +483,19 @@ class Contributor:
         self.additional_score = 0
         self.star_score = 0
         self.contribution_score = 0
+        repo_score = 0
+        best_repo = dict()
+        best_repo["best_repo"] = "None"
+        best_repo["code_score"] = 0
+        best_repo["guideline_score"] = 0
+        best_repo["other_project_score"] = 0
+        best_repo["repo_score"] = 0
         print("star")
         if self.stars >= 50 :
             #우수 오픈소스 기여자 62? 50?
             self.excellent_contributor_score = 5
-            return 0
+            self.owner_activity_score = repo_score
+            return best_repo
         elif self.stars < 3 :
             self.star_score += 0
         elif self.stars < 10 :
@@ -521,13 +534,6 @@ class Contributor:
             self.contributor_activity_score = 1.5
 
         print("owner activity")
-        repo_score = 0
-        best_repo = dict()
-        best_repo["best_repo"] = "None"
-        best_repo["code_score"] = 0
-        best_repo["guideline_score"] = 0
-        best_repo["other_project_score"] = 0
-        best_repo["repo_score"] = 0
         for repo in self.owner_repositories :
             retJson = repo.calculateRepoScore()
             ret = retJson["repo_score"]
