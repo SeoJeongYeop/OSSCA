@@ -1,7 +1,9 @@
 window.onload = function () {
-  let port = "8000";
+  //const IP = "localhost";
+  const IP = "115.145.212.144";
+  const port = "8081";
 
-  const promise = fetch(`http://localhost:${port}/chart`)
+  const promise = fetch(`http://${IP}:${port}/chart`)
     .then((response) => {
       console.log(response);
       return response.json();
@@ -61,10 +63,9 @@ window.onload = function () {
           ).toFixed(1);
           pElement.setAttribute("class", "card-text dist-text");
           pElement.textContent = scoreDistLabel[i] + ": " + percent + "%";
-          console.log(((parseInt(percent) * 255) / 50).toFixed(0));
           pElement.style.color = `RGB(${(
             (parseInt(percent) * 255) /
-            25
+            20
           ).toFixed(0)},${parseInt(percent).toFixed(0)},0)`;
           perScore.appendChild(pElement);
         }
@@ -110,16 +111,17 @@ window.onload = function () {
       let annualStarDist = document
         .getElementById("annualStarDist")
         .getContext("2d");
-      const cc9 = [
-        "#003f5c",
-        "#2f4b7c",
-        "#665191",
-        "#a05195",
-        "#d45087",
-        "#f95d6a",
-        "#ff7c43",
-        "#ff9327",
-        "#ffa600",
+      const cc10 = [
+        "#4245cb",
+        "#743fc6",
+        "#b52eb5",
+        "#e1219e",
+        "#ff2e83",
+        "#ff5c5e",
+        "#ff8046",
+        "#ff9439",
+        "#ffbe1b",
+        "#ffe913",
       ];
       const cc5 = ["#4245cb", "#db20ac", "#ff4470", "#ff9a2f", "#ffe913"];
       const cc3 = ["#4245cb", "#ff4470", "#ffe913"];
@@ -129,7 +131,7 @@ window.onload = function () {
         "pie",
         scoreDistLabel,
         distribution,
-        cc9,
+        cc10,
         {}
       );
       let totalScoreLineChart = makeChart(
@@ -137,7 +139,7 @@ window.onload = function () {
         "line",
         ["0", "0.5", "1.0", "1.5", "2.0", "2.5", "3.0", "3.5", "4.0", "4.5"],
         distribution,
-        cc9,
+        cc10,
         {}
       );
 
@@ -292,7 +294,7 @@ window.onload = function () {
           "pie",
           scoreDistLabel,
           distribution,
-          cc9,
+          cc10,
           {}
         );
         totalScoreLineChart.destroy();
@@ -301,7 +303,7 @@ window.onload = function () {
           "line",
           ["0", "0.5", "1.0", "1.5", "2.0", "2.5", "3.0", "3.5", "4.0", "4.5"],
           distribution,
-          cc9,
+          cc10,
           {}
         );
         yearScoreChart.destroy();
