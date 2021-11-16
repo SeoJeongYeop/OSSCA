@@ -43,11 +43,8 @@ block content
             tr
               td(scope='row') Email
               td #{user.email}
-      .col-8
+      .col-9.d-flex.flex-wrap
         -for(let i = 0; i < repos.length / 2; i++)
-          .row 
-            .col-6
-              +repo_card(user, repos[i * 2])
-            if(repos.length > i*2+1)
-              .col-6
-                +repo_card(user, repos[i * 2 + 1])
+          +repo_card(user, repos[i * 2])
+          if(repos.length > i*2+1)
+            +repo_card(user, repos[i * 2 + 1])
