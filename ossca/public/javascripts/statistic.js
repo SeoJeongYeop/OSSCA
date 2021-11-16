@@ -2,7 +2,11 @@ window.onload = function () {
   //const IP = "localhost";
   const IP = "115.145.212.144";
   const port = "8081";
-
+  /* 미구현
+  - 연도별 분포
+  - 개수별 퍼센티지 텍스트
+  - eval or new function 사용한 코드 리팩토링
+  */
   const promise = fetch(`http://${IP}:${port}/chart`)
     .then((response) => {
       console.log(response);
@@ -14,6 +18,7 @@ window.onload = function () {
         return (value / json.annualCnt[idx]).toFixed(1);
       });
       //default annual setting 2021
+      let chartFactor = "score";
       let annual = 2021;
       let startAnnual = 2019;
       let distribution = json[`year${annual}`]["distribution"];
@@ -38,16 +43,7 @@ window.onload = function () {
         "4.5~5.0",
       ];
       setOverallStat(json);
-      const overGoal = document.getElementById("overGoal");
-      const overGoalcount =
-        distribution[6] + distribution[7] + distribution[8] + distribution[9];
-      overGoal.textContent =
-        String(overGoalcount) +
-        "/" +
-        json.size[annual - startAnnual] +
-        " " +
-        ((overGoalcount / json.size[annual - startAnnual]) * 100).toFixed(1) +
-        "%";
+
       setScoreDist();
       function setScoreDist() {
         const perScore = document.getElementById("perScore");
@@ -90,6 +86,9 @@ window.onload = function () {
       let totalCommitDist = document
         .getElementById("totalCommitDist")
         .getContext("2d");
+      let totalCommitLineDist = document
+        .getElementById("totalCommitLineDist")
+        .getContext("2d");
       let sidCommitDist = document
         .getElementById("sidCommitDist")
         .getContext("2d");
@@ -102,7 +101,11 @@ window.onload = function () {
       let totalStarDist = document
         .getElementById("totalStarDist")
         .getContext("2d");
+      let totalStarLineDist = document
+        .getElementById("totalStarLineDist")
+        .getContext("2d");
       let sidStarDist = document.getElementById("sidStarDist").getContext("2d");
+
       let deptStarDist = document
         .getElementById("deptStarDist")
         .getContext("2d");
@@ -124,9 +127,11 @@ window.onload = function () {
       const cc5 = ["#4245cb", "#db20ac", "#ff4470", "#ff9a2f", "#ffe913"];
       const cc3 = ["#4245cb", "#ff4470", "#ffe913"];
       //["0~1", "1~2", "2~3", "3~4", "4~5"]
+      // eval 이나 new function을 사용해 코드 수 줄이는 방법 사용 가능
       let totalScoreChart = makeChart(
         totalScoreDist,
         "pie",
+        chartFactor,
         scoreDistLabel,
         distribution,
         cc10,
@@ -135,6 +140,7 @@ window.onload = function () {
       let totalScoreLineChart = makeChart(
         totalScoreLineDist,
         "line",
+        chartFactor,
         ["0", "0.5", "1.0", "1.5", "2.0", "2.5", "3.0", "3.5", "4.0", "4.5"],
         distribution,
         cc10,
@@ -144,6 +150,7 @@ window.onload = function () {
       let sidScoreChart = makeChart(
         sidScoreDist,
         "bar",
+        chartFactor,
         ["21", "20", "19", "18", "17", "16"],
         sidData,
         cc5,
@@ -152,6 +159,7 @@ window.onload = function () {
       let deptScoreChart = makeChart(
         deptScoreDist,
         "bar",
+        chartFactor,
         ["소프트웨어", "글로벌융합", "컴퓨터공학"],
         deptData,
         cc3,
@@ -160,6 +168,7 @@ window.onload = function () {
       let annualScoreChart = makeChart(
         annualScoreDist,
         "line",
+        chartFactor,
         ["2019", "2020", "2021"],
         annual_mean,
         cc3,
@@ -169,6 +178,17 @@ window.onload = function () {
       let totalCommitChart = makeChart(
         totalCommitDist,
         "pie",
+        chartFactor,
+        ["0~100", "100~200", "200~300", "300~400", "400+"],
+        commitDist,
+        cc5,
+        {}
+      );
+
+      let totalCommitLineChart = makeChart(
+        totalCommitLineDist,
+        "line",
+        chartFactor,
         ["0~100", "100~200", "200~300", "300~400", "400+"],
         commitDist,
         cc5,
@@ -178,6 +198,7 @@ window.onload = function () {
       let sidCommitChart = makeChart(
         sidCommitDist,
         "bar",
+        chartFactor,
         ["21", "20", "19", "18", "17", "16"],
         commitSidData,
         cc5,
@@ -186,6 +207,7 @@ window.onload = function () {
       let deptCommitChart = makeChart(
         deptCommitDist,
         "bar",
+        chartFactor,
         ["소프트웨어", "글로벌융합", "컴퓨터공학"],
         commitDeptData,
         cc3,
@@ -194,6 +216,7 @@ window.onload = function () {
       let annualCommitChart = makeChart(
         annualCommitDist,
         "line",
+        chartFactor,
         ["2019", "2020", "2021"],
         annual_mean,
         [],
@@ -203,6 +226,17 @@ window.onload = function () {
       let totalStarChart = makeChart(
         totalStarDist,
         "pie",
+        chartFactor,
+        ["0", "1~2", "3~4", "5~6", "7+"],
+        starDist,
+        cc5,
+        {}
+      );
+
+      let totalStarLineChart = makeChart(
+        totalStarLineDist,
+        "line",
+        chartFactor,
         ["0", "1~2", "3~4", "5~6", "7+"],
         starDist,
         cc5,
@@ -212,6 +246,7 @@ window.onload = function () {
       let sidStarChart = makeChart(
         sidStarDist,
         "bar",
+        chartFactor,
         ["21", "20", "19", "18", "17", "16"],
         starSidData,
         cc5,
@@ -220,6 +255,7 @@ window.onload = function () {
       let deptStarChart = makeChart(
         deptStarDist,
         "bar",
+        chartFactor,
         ["소프트웨어", "글로벌융합", "컴퓨터공학"],
         starDeptData,
         cc3,
@@ -228,6 +264,7 @@ window.onload = function () {
       let annualStarChart = makeChart(
         annualStarDist,
         "line",
+        chartFactor,
         ["2019", "2020", "2021"],
         annual_mean,
         [],
@@ -238,24 +275,90 @@ window.onload = function () {
       const btn21 = document.getElementById("dropdownBtn2021");
       const btn20 = document.getElementById("dropdownBtn2020");
       const btn19 = document.getElementById("dropdownBtn2019");
+      const scoreTab = document.getElementById("pills-score-tab"); //#pills-score-tab
+      const commitTab = document.getElementById("pills-commits-tab");
+      const starTab = document.getElementById("pills-stars-tab");
+      const prTab = document.getElementById("pills-pr-tab");
+      const issueTab = document.getElementById("pills-issue-tab");
       btn21.addEventListener("click", function () {
         annual = 2021;
         setGraphData(annual);
         setScoreDist();
+        setOverallStat(json);
         reloadChart();
       });
       btn20.addEventListener("click", function () {
         annual = 2020;
         setGraphData(annual);
         setScoreDist();
+        setOverallStat(json);
         reloadChart();
       });
       btn19.addEventListener("click", function () {
         annual = 2019;
         setGraphData(annual);
         setScoreDist();
+        setOverallStat(json);
         reloadChart();
       });
+      scoreTab.addEventListener("click", function () {
+        chartFactor = "score";
+        reloadChart();
+      });
+      commitTab.addEventListener("click", function () {
+        console.log(chartFactor);
+        chartFactor = "commit";
+        console.log(chartFactor);
+        reloadChart();
+      });
+      starTab.addEventListener("click", function () {
+        chartFactor = "star";
+        reloadChart();
+      });
+      prTab.addEventListener("click", function () {
+        chartFactor = "pr";
+        reloadChart();
+      });
+      issueTab.addEventListener("click", function () {
+        chartFactor = "issue";
+        reloadChart();
+      });
+
+      function setOverallStat(json) {
+        // Overall statistic data: 3점 이상 비율, 총 커밋 수, 총 스타 수, 총 레포 수
+        const distribution = json[`year${annual}`]["distribution"];
+        const overGoal = document.getElementById("overGoal");
+        const overGoalcount =
+          distribution[6] + distribution[7] + distribution[8] + distribution[9];
+        overGoal.textContent =
+          String(overGoalcount) +
+          "/" +
+          json.size[annual - startAnnual] +
+          " " +
+          ((overGoalcount / json.size[annual - startAnnual]) * 100).toFixed(1) +
+          "%";
+        const totalCommit = document.getElementById("totalCommit");
+        const totalStar = document.getElementById("totalStar");
+        const totalRepo = document.getElementById("totalRepo");
+        let TC = 0; // sum total commit
+        let TS = 0; // sum total star
+        json.totalCommit.forEach((element) => {
+          TC += element;
+        });
+        json.totalStar.forEach((element) => {
+          TS += element;
+        });
+        totalCommit.textContent = String(
+          json.totalCommit[annual - startAnnual] + " / " + TC
+        );
+        totalStar.textContent = String(
+          json.totalStar[annual - startAnnual] + " / " + TS
+        );
+        totalRepo.textContent = String(
+          json.repoDist[-(annual - 2021)] + " / " + json.totalRepo
+        );
+      }
+
       function setGraphData(annual) {
         document.getElementById("dropdownMenuButton1").textContent = annual;
         distribution = json[`year${annual}`]["distribution"];
@@ -268,14 +371,14 @@ window.onload = function () {
         starSidData = json[`year${annual}`]["star_sid"];
         starDeptData = json[`year${annual}`]["star_dept"];
       }
-      function makeChart(dist, type, labels, data, color, option) {
+      function makeChart(dist, type, factor, labels, data, color, option) {
         const chart = new Chart(dist, {
           type: type,
           data: {
             labels: labels,
             datasets: [
               {
-                label: ["score"],
+                label: factor,
                 data: data,
                 backgroundColor: color,
               },
@@ -285,92 +388,138 @@ window.onload = function () {
         });
         return chart;
       }
-      function reloadChart() {
+      function destroyChart() {
         totalScoreChart.destroy();
+        totalScoreLineChart.destroy();
+        sidScoreChart.destroy();
+        deptScoreChart.destroy();
+
+        totalCommitChart.destroy();
+        totalCommitLineChart.destroy();
+        sidCommitChart.destroy();
+        deptCommitChart.destroy();
+
+        totalStarChart.destroy();
+        totalStarLineChart.destroy();
+        sidStarChart.destroy();
+        deptStarChart.destroy();
+      }
+      function reloadChart() {
+        destroyChart();
         totalScoreChart = makeChart(
           totalScoreDist,
           "pie",
+          chartFactor,
           scoreDistLabel,
           distribution,
           cc10,
           {}
         );
-        totalScoreLineChart.destroy();
+
         totalScoreLineChart = makeChart(
           totalScoreLineDist,
           "line",
+          chartFactor,
           ["0", "0.5", "1.0", "1.5", "2.0", "2.5", "3.0", "3.5", "4.0", "4.5"],
           distribution,
           cc10,
           {}
         );
-        sidScoreChart.destroy();
+
         sidScoreChart = makeChart(
           sidScoreDist,
           "bar",
+          chartFactor,
           ["21", "20", "19", "18", "17", "16"],
           sidData,
           cc5,
           {}
         );
-        deptScoreChart.destroy();
+
         deptScoreChart = makeChart(
           deptScoreDist,
           "bar",
+          chartFactor,
           ["소프트웨어", "글로벌융합", "컴퓨터공학"],
           deptData,
           cc3,
           {}
         );
-        totalCommitChart.destroy();
+
         totalCommitChart = makeChart(
           totalCommitDist,
           "pie",
+          chartFactor,
           ["0~100", "100~200", "200~300", "300~400", "400+"],
           commitDist,
           cc5,
           {}
         );
-        sidCommitChart.destroy();
+
+        totalCommitLineChart = makeChart(
+          totalCommitLineDist,
+          "line",
+          chartFactor,
+          ["0~100", "100~200", "200~300", "300~400", "400+"],
+          commitDist,
+          cc5,
+          {}
+        );
+
         sidCommitChart = makeChart(
           sidCommitDist,
           "bar",
+          chartFactor,
           ["21", "20", "19", "18", "17", "16"],
           commitSidData,
           cc5,
           {}
         );
-        deptCommitChart.destroy();
+
         deptCommitChart = makeChart(
           deptCommitDist,
           "bar",
+          chartFactor,
           ["소프트웨어", "글로벌융합", "컴퓨터공학"],
           commitDeptData,
           cc3,
           {}
         );
-        totalStarChart.destroy();
+
         totalStarChart = makeChart(
           totalStarDist,
           "pie",
+          chartFactor,
           ["0", "1~2", "3~4", "5~6", "7+"],
           starDist,
           cc5,
           {}
         );
-        sidStarChart.destroy();
+
+        totalStarLineChart = makeChart(
+          totalStarLineDist,
+          "line",
+          chartFactor,
+          ["0", "1~2", "3~4", "5~6", "7+"],
+          starDist,
+          cc5,
+          {}
+        );
+
         sidStarChart = makeChart(
           sidStarDist,
           "bar",
+          chartFactor,
           ["21", "20", "19", "18", "17", "16"],
           starSidData,
           cc5,
           {}
         );
-        deptStarChart.destroy();
+
         deptStarChart = makeChart(
           deptStarDist,
           "bar",
+          chartFactor,
           ["소프트웨어", "글로벌융합", "컴퓨터공학"],
           starDeptData,
           cc3,
@@ -379,16 +528,7 @@ window.onload = function () {
       }
     });
 };
-function setOverallStat(json) {
-  // Overall statistic data: 3점 이상 비율, 총 커밋 수, 총 스타 수, 총 레포 수
 
-  const totalCommit = document.getElementById("totalCommit");
-  const totalStar = document.getElementById("totalStar");
-  const totalRepo = document.getElementById("totalRepo");
-  totalCommit.textContent = String(json.totalCommit);
-  totalStar.textContent = String(json.totalStar);
-  totalRepo.textContent = String(json.totalRepo);
-}
 /*
 chart option example
 *****

@@ -59,6 +59,7 @@ block content
           .card
             h5.card-title 커밋 개수별 퍼센티지
             #perCommit.text-flex
+            canvas#totalCommitLineDist
             
       .row
         .col-md-4
@@ -83,6 +84,7 @@ block content
           .card
             h5.card-title Star 개수별 퍼센티지
             #perStar.text-flex
+            canvas#totalStarLineDist
             
       .row
         .col-md-4
@@ -98,7 +100,6 @@ block content
             h5.card-title 연도별 Star분포
             canvas#annualStarDist
     #pills-pr.tab-pane.fade(role="tabpanel",aria-labelledby="pills-pr-tab")
-      h2 pills-pr-tab
       .row 
         .col-md-6 
           .card
@@ -108,6 +109,7 @@ block content
           .card
             h5.card-title PR 개수별 퍼센티지
             #perPR.text-flex
+            canvas#totalPrLineDist
             
       .row
         .col-md-4
@@ -123,7 +125,6 @@ block content
             h5.card-title 연도별 PR분포
             canvas#annualPRDist
     #pills-issue.tab-pane.fade(role="tabpanel",aria-labelledby="pills-issue-tab")
-      h2 pills-issue-tab
       .row 
         .col-md-6 
           .card
@@ -133,6 +134,7 @@ block content
           .card
             h5.card-title Issue 개수별 퍼센티지
             #perIssue.text-flex
+            canvas#totalIssueLineDist
             
       .row
         .col-md-4

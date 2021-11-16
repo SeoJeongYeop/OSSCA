@@ -23,8 +23,8 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
     let distribution = create2DArray(3, 10);
     let dept = create2DArray(3, 3);
     let sid = create2DArray(3, 7);
-    let totalCommit = 0;
-    let totalStar = 0;
+    let totalCommit = [0, 0, 0];
+    let totalStar = [0, 0, 0];
     let annual = [0, 0, 0];
     let annualCnt = [0, 0, 0];
     let size = [0, 0, 0];
@@ -51,11 +51,12 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
       let idxId;
       for (i = 0; i < result.row.length; i++) {
         Row = result.row[i];
-        totalCommit += Row.commit_count;
-        totalStar += Row.star_count;
+
         idx1 = Row.year - startYear;
         idxId = nowYear - Math.floor(Row.id / 1000000);
 
+        totalCommit[idx1] += Row.commit_count;
+        totalStar[idx1] += Row.star_count;
         Row.total_score = (
           Row.excellent_contributor +
           Row.owner_score +
@@ -122,9 +123,7 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
       }
 
       // object 타입으로 map함수 사용불가
-      console.log("sid: ", commitSid, sid.length, sidSize);
       for (let i = 0; i < nowYear - startYear + 1; i++) {
-        console.log(sid[i].length);
         for (let j = 0; j < sid[i].length; j++) {
           commitSid[i][j] = (commitSid[i][j] / sidSize[i][j]).toFixed(1);
           starSid[i][j] = (starSid[i][j] / sidSize[i][j]).toFixed(1);
@@ -133,7 +132,6 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
       }
 
       for (let i = 0; i < nowYear - startYear + 1; i++) {
-        console.log(dept[i].length);
         for (let j = 0; j < dept[i].length; j++) {
           commitDept[i][j] = (commitDept[i][j] / deptSize[i][j]).toFixed(1);
           starDept[i][j] = (starDept[i][j] / deptSize[i][j]).toFixed(1);
@@ -148,7 +146,6 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
             nowYear -
             parseInt(date.row[i].create_date.toISOString().substring(0, 4));
           repoDist[idx] += 1;
-          //console.log(idx, repoDist[idx]);
         }
         try {
           //res.json
