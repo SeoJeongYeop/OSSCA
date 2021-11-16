@@ -189,7 +189,7 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
               commit_sid: commitSid[2],
               star_dist: starDist[2],
               star_dept: starDept[2],
-              star_Sid: starSid[2],
+              star_sid: starSid[2],
             },
 
             size: size,
