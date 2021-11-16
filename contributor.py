@@ -184,21 +184,38 @@ class Contributor:
 
         for indie in self.indie_repositories:
             print("indie ",indie.commits_count)
-            indie_stargazers_count += indie.stargazers_count
-            indie_forks_count += indie.forks_count
-            indie_commits_count += indie.commits_count
-            indie_code_edits += indie.code_edits
-            indie_prs_count += indie.prs_count
-            indie_open_issue_count += indie.open_issue_count
-            indie_close_issue_count += indie.close_issue_count
-            indie_watchers_count += indie.watchers_count
-            indie_dependencies += indie.dependencies
-            indie_contributors_count += indie.contributors_count
-            indie_release_count += indie.release_count
-            indie_readme += indie.readme
-            indie_additions += indie.additions
-            indie_deletions += indie.deletions
-            indie_contributor_commits_count += indie.contributor_commits_count
+
+            if indie.stargazers_count is not None:
+                indie_stargazers_count += indie.stargazers_count
+            if indie.forks_count is not None:
+                indie_forks_count += indie.forks_count
+            if indie.commits_count is not None:
+                indie_commits_count += indie.commits_count
+            if indie.code_edits is not None:
+                indie_code_edits += indie.code_edits
+            if indie.prs_count is not None:
+                indie_prs_count += indie.prs_count
+            if indie.open_issue_count is not None:
+                indie_open_issue_count += indie.open_issue_count
+            if indie.close_issue_count is not None:
+                indie_close_issue_count += indie.close_issue_count
+            if indie.watchers_count is not None:
+                indie_watchers_count += indie.watchers_count
+            if indie.dependencies is not None:
+                indie_dependencies += indie.dependencies
+            if indie.contributors_count is not None:
+                indie_contributors_count += indie.contributors_count
+            if indie.release_count is not None:
+                indie_release_count += indie.release_count
+            if indie.readme is not None:
+                indie_readme += indie.readme
+            if indie.additions is not None:
+                indie_additions += indie.additions
+            if indie.deletions is not None:
+                indie_deletions += indie.deletions
+            if indie.contributor_commits_count is not None:
+                indie_contributor_commits_count += indie.contributor_commits_count
+
 
         self.indie_stargazers_count = indie_stargazers_count
         self.indie_forks_count = indie_forks_count
@@ -235,22 +252,36 @@ class Contributor:
         team_contributor_commits_count = 0
         for team in self.team_repositories:
             print("team ",team.commits_count)
-            team_stargazers_count += team.stargazers_count
-            team_forks_count += team.forks_count
-            team_commits_count += team.commits_count
-            team_code_edits += team.code_edits
-            team_prs_count += team.prs_count
-            team_open_issue_count += team.open_issue_count
-            team_close_issue_count += team.close_issue_count
-            team_watchers_count += team.watchers_count
-            team_dependencies += team.dependencies
-            team_contributors_count += team.contributors_count
-            team_release_count += team.release_count
-            team_readme += team.readme
-
-            team_additions += team.additions
-            team_deletions += team.deletions
-            team_contributor_commits_count += team.contributor_commits_count
+            if team.stargazers_count is not None:
+                team_stargazers_count += team.stargazers_count
+            if team.forks_count is not None:
+                team_forks_count += team.forks_count
+            if team.commits_count is not None:
+                team_commits_count += team.commits_count
+            if team.code_edits is not None:
+                team_code_edits += team.code_edits
+            if team.prs_count is not None:
+                team_prs_count += team.prs_count
+            if team.open_issue_count is not None:
+                team_open_issue_count += team.open_issue_count
+            if team.close_issue_count is not None:
+                team_close_issue_count += team.close_issue_count
+            if team.watchers_count is not None:
+                team_watchers_count += team.watchers_count
+            if team.dependencies is not None:
+                team_dependencies += team.dependencies
+            if team.contributors_count is not None:
+                team_contributors_count += team.contributors_count
+            if team.release_count is not None:
+                team_release_count += team.release_count
+            if team.readme is not None:
+                team_readme += team.readme
+            if team.additions is not None:
+                team_additions += team.additions
+            if team.deletions is not None:
+                team_deletions += team.deletions
+            if team.contributor_commits_count is not None:
+                team_contributor_commits_count += team.contributor_commits_count
 
         self.team_stargazers_count = team_stargazers_count
         self.team_forks_count = team_forks_count
@@ -288,22 +319,36 @@ class Contributor:
         owner_contributor_commits_count = 0
         for owner in self.owner_repositories:
             print("owner ",owner.commits_count)
-            owner_stargazers_count += owner.stargazers_count
-            owner_forks_count += owner.forks_count
-            owner_commits_count += owner.commits_count
-            owner_code_edits += owner.code_edits
-            owner_prs_count += owner.prs_count
-            owner_open_issue_count += owner.open_issue_count
-            owner_close_issue_count += owner.close_issue_count
-            owner_watchers_count += owner.watchers_count
-            owner_dependencies += owner.dependencies
-            owner_contributors_count += owner.contributors_count
-            owner_release_count += owner.release_count
-            owner_readme += owner.readme
-
-            owner_additions += owner.additions
-            owner_deletions += owner.deletions
-            owner_contributor_commits_count += owner.contributor_commits_count
+            if owner.stargazers_count is not None:
+                owner_stargazers_count += owner.stargazers_count
+            if owner.forks_count is not None:
+                owner_forks_count += owner.forks_count
+            if owner.commits_count is not None:
+                owner_commits_count += owner.commits_count
+            if owner.code_edits is not None:
+                owner_code_edits += owner.code_edits
+            if owner.prs_count is not None:
+                owner_prs_count += owner.prs_count
+            if owner.open_issue_count is not None:
+                owner_open_issue_count += owner.open_issue_count
+            if owner.close_issue_count is not None:
+                owner_close_issue_count += owner.close_issue_count
+            if owner.watchers_count is not None:
+                owner_watchers_count += owner.watchers_count
+            if owner.dependencies is not None:
+                owner_dependencies += owner.dependencies
+            if owner.contributors_count is not None:
+                owner_contributors_count += owner.contributors_count
+            if owner.release_count is not None:
+                owner_release_count += owner.release_count
+            if owner.readme is not None:
+                owner_readme += owner.readme
+            if owner.additions is not None:
+                owner_additions += owner.additions
+            if owner.deletions is not None:
+                owner_deletions += owner.deletions
+            if owner.contributor_commits_count is not None:
+                owner_contributor_commits_count += owner.contributor_commits_count
 
         self.owner_stargazers_count = owner_stargazers_count
         self.owner_forks_count = owner_forks_count
@@ -341,22 +386,36 @@ class Contributor:
         print("contributor len ", len(self.contributor_repositories))
         for contributor in self.contributor_repositories:
             print("contributor ",contributor.commits_count)
-            contributor_stargazers_count += contributor.stargazers_count
-            contributor_forks_count += contributor.forks_count
-            contributor_commits_count += contributor.commits_count
-            contributor_code_edits += contributor.code_edits
-            contributor_prs_count += contributor.prs_count
-            contributor_open_issue_count += contributor.open_issue_count
-            contributor_close_issue_count += contributor.close_issue_count
-            contributor_watchers_count += contributor.watchers_count
-            contributor_dependencies += contributor.dependencies
-            contributor_contributors_count += contributor.contributors_count
-            contributor_release_count += contributor.release_count
-            contributor_readme += contributor.readme
-
-            contributor_additions += contributor.additions
-            contributor_deletions += contributor.deletions
-            contributor_contributor_commits_count += contributor.contributor_commits_count
+            if contributor.stargazers_count is not None:
+                contributor_stargazers_count += contributor.stargazers_count
+            if contributor.forks_count is not None:
+                contributor_forks_count += contributor.forks_count
+            if contributor.commits_count is not None:
+                contributor_commits_count += contributor.commits_count
+            if contributor.code_edits is not None:
+                contributor_code_edits += contributor.code_edits
+            if contributor.prs_count is not None:
+                contributor_prs_count += contributor.prs_count
+            if contributor.open_issue_count is not None:
+                contributor_open_issue_count += contributor.open_issue_count
+            if contributor.close_issue_count is not None:
+                contributor_close_issue_count += contributor.close_issue_count
+            if contributor.watchers_count is not None:
+                contributor_watchers_count += contributor.watchers_count
+            if contributor.dependencies is not None:
+                contributor_dependencies += contributor.dependencies
+            if contributor.contributors_count is not None:
+                contributor_contributors_count += contributor.contributors_count
+            if contributor.release_count is not None:
+                contributor_release_count += contributor.release_count
+            if contributor.readme is not None:
+                contributor_readme += contributor.readme
+            if contributor.additions is not None:
+                contributor_additions += contributor.additions
+            if contributor.deletions is not None:
+                contributor_deletions += contributor.deletions
+            if contributor.contributor_commits_count is not None:
+                contributor_contributor_commits_count += contributor.contributor_commits_count
 
         self.contributor_stargazers_count = contributor_stargazers_count
         self.contributor_forks_count = contributor_forks_count
