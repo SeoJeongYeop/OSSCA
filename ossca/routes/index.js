@@ -7,7 +7,7 @@ router.get("/", function (req, res, next) {
   const query1 = `select * from github_score 
 where (guideline_score+code_score+other_project_score+contribution_score+star_score+contributor_score) >= 3.0 
 and year=2021;`;
-  const query2 = `select * from student_tab A, github_score B where A.github_id = B.github_id;`;
+  const query2 = `select * from student_tab A left join github_score B on A.github_id = B.github_id;`;
   DB("GET", query2, []).then(function (result, error) {
     if (error) {
       console.log(error);
