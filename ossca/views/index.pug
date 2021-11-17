@@ -20,7 +20,7 @@ block content
         -for(let i=0; i<size;i++)
           tr
             td
-              a(href="users/"+table[i].name) #{table[i].name}
+              a(href="users/"+table[i].id) #{table[i].name}
             td #{table[i].github_id}
             td.ns= table[i].year
             td.sc= table[i].total_score
