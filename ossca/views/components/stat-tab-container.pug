@@ -1,15 +1,15 @@
 .tab-container
   ul#pills-tab.nav.nav-pills.mb-3(role="tablist")
     li.nav-item(role="presentation") 
-      button#pills-score-tab.nav-link.active(data-bs-toggle="pill",data-bs-target="#pills-score", type="button", role="tab", aria-controls="pills-score", aria-selected="true") Score
+      button#pills-score-tab.btn.btn-primary.chosen Score
     li.nav-item(role="presentation") 
-      button#pills-commits-tab.nav-link(data-bs-toggle="pill",data-bs-target="#pills-commits", type="button", role="tab", aria-controls="pills-commits", aria-selected="true") Commits 
+      button#pills-commits-tab.btn.btn-light.unchosen Commits 
     li.nav-item(role="presentation")  
-      button#pills-stars-tab.nav-link(data-bs-toggle="pill",data-bs-target="#pills-stars", type="button", role="tab", aria-controls="pills-stars", aria-selected="true") Stars 
+      button#pills-stars-tab.btn.btn-light.unchosen  Stars 
     li.nav-item(role="presentation")  
-      button#pills-pr-tab.nav-link(data-bs-toggle="pill",data-bs-target="#pills-pr", type="button", role="tab", aria-controls="pills-pr", aria-selected="true") Pull Request
+      button#pills-pr-tab.btn.btn-light.unchosen  Pull Request
     li.nav-item(role="presentation")  
-      button#pills-issue-tab.nav-link(data-bs-toggle="pill",data-bs-target="#pills-issue", type="button", role="tab", aria-controls="pills-issue", aria-selected="true") Issue
+      button#pills-issue-tab.btn.btn-light.unchosen  Issue
   .dropdown
     button#dropdownMenuButton1.btn.btn-primary.dropdown-toggle.me-2(type="button", data-bs-toggle="dropdown", aria-expanded="false") 2021 
     ul.dropdown-menu(aria-labelledby="dropdownMenuButton1")
@@ -19,4 +19,3 @@
         button#dropdownBtn2020.dropdown-item 2020
       li 
         button#dropdownBtn2019.dropdown-item 2019
-    

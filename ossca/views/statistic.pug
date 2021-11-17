@@ -4,151 +4,51 @@ block content
   script(type="text/javascript", src="/javascripts/statistic.js")
   //- chart.js를 node로 설치했으나 사용법을 모르겠어서 그냥 import
   script(type="text/javascript", src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.0/chart.min.js")
-  include components/stat-tab-container
-  .row 
-    .col-md-3 
-      .card
-        h5.card-title 3점 이상 비율
-        p#overGoal.card-text 
-    .col-md-3 
-      .card  
-        h5.card-title 총 커밋 수
-        p#totalCommit.card-text 
-    .col-md-3 
-      .card
-        h5.card-title 총 스타 수
-        p#totalStar.card-text 
-    .col-md-3
-      .card 
-        h5.card-title 총 레포 수
-        p#totalRepo.card-text 
+  
+  
   #pills-tabContent.container.tab-content
+    include components/stat-tab-container
+    .row 
+      .col-md-3 
+        .card
+          h5.card-title 3점 이상 비율
+          p#overGoal.card-text 
+      .col-md-3 
+        .card  
+          h5.card-title 총 커밋 수
+          p#totalCommit.card-text 
+      .col-md-3 
+        .card
+          h5.card-title 총 스타 수
+          p#totalStar.card-text 
+      .col-md-3
+        .card 
+          h5.card-title 총 레포 수
+          p#totalRepo.card-text 
     #pills-score.tab-pane.fade.show.active(role="tabpanel",aria-labelledby="pills-score-tab")
       .row 
         .col-md-6 
           .card
-            h5.card-title 전체 점수분포
+            h5.card-title.factor 전체 Score분포
             canvas#totalScoreDist
         .col-md-6
           .card
-            h5.card-title 점수대별 퍼센티지
+            h5.card-title.factor Score 퍼센티지
             #perScore.text-flex
-            canvas#totalLineScoreDist
-            
+            canvas#totalLineScoreDist       
       .row
         .col-md-4
           .card
-            h5.card-title 학번별 점수분포
+            h5.card-title.factor 학번별 Score분포
             canvas#sidScoreDist
         .col-md-4
           .card
-            h5.card-title 학과별 점수분포
+            h5.card-title.factor 학과별 Score분포
             canvas#deptScoreDist
         .col-md-4
           .card
-            h5.card-title 연도별 점수분포
+            h5.card-title.factor 연도별 Score분포
             canvas#annualScoreDist
-
-    #pills-commits.tab-pane.fade(role="tabpanel",aria-labelledby="pills-commits-tab")
-      .row 
-        .col-md-6 
-          .card
-            h5.card-title 전체 커밋분포
-            canvas#totalCommitDist 
-        .col-md-6
-          .card
-            h5.card-title 커밋 개수별 퍼센티지
-            #perCommit.text-flex
-            canvas#totalLineCommitDist
-            
-      .row
-        .col-md-4
-          .card
-            h5.card-title 학번별 커밋분포
-            canvas#sidCommitDist
-        .col-md-4
-          .card
-            h5.card-title 학과별 커밋분포
-            canvas#deptCommitDist
-        .col-md-4
-          .card
-            h5.card-title 연도별 커밋분포
-            canvas#annualCommitDist
-    #pills-stars.tab-pane.fade(role="tabpanel",aria-labelledby="pills-stars-tab")
-      .row 
-        .col-md-6 
-          .card
-            h5.card-title 전체 Star분포
-            canvas#totalStarDist 
-        .col-md-6
-          .card
-            h5.card-title Star 개수별 퍼센티지
-            #perStar.text-flex
-            canvas#totalLineStarDist
-            
-      .row
-        .col-md-4
-          .card
-            h5.card-title 학번별 Star분포
-            canvas#sidStarDist
-        .col-md-4
-          .card
-            h5.card-title 학과별 Star분포
-            canvas#deptStarDist
-        .col-md-4
-          .card
-            h5.card-title 연도별 Star분포
-            canvas#annualStarDist
-    #pills-pr.tab-pane.fade(role="tabpanel",aria-labelledby="pills-pr-tab")
-      .row 
-        .col-md-6 
-          .card
-            h5.card-title 전체 PR 분포
-            canvas#totalPRDist 
-        .col-md-6
-          .card
-            h5.card-title PR 개수별 퍼센티지
-            #perPR.text-flex
-            canvas#totalLinePrDist
-            
-      .row
-        .col-md-4
-          .card
-            h5.card-title 학번별 PR분포
-            canvas#sidPRDist
-        .col-md-4
-          .card
-            h5.card-title 학과별 PR분포
-            canvas#deptPRDist
-        .col-md-4
-          .card
-            h5.card-title 연도별 PR분포
-            canvas#annualPRDist
-    #pills-issue.tab-pane.fade(role="tabpanel",aria-labelledby="pills-issue-tab")
-      .row 
-        .col-md-6 
-          .card
-            h5.card-title 전체 Issue분포
-            canvas#totalIssueDist 
-        .col-md-6
-          .card
-            h5.card-title Issue 개수별 퍼센티지
-            #perIssue.text-flex
-            canvas#totalLineIssueDist
-            
-      .row
-        .col-md-4
-          .card
-            h5.card-title 학번별 Issue분포
-            canvas#sidIssueDist
-        .col-md-4
-          .card
-            h5.card-title 학과별 Issue분포
-            canvas#deptIssueDist
-        .col-md-4
-          .card
-            h5.card-title 연도별 Issue분포
-            canvas#annualIssueDist
   script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js",integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf",crossorigin="anonymous")
       
     

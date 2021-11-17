@@ -16,3 +16,11 @@ h5.card-title {
   font-family: "Noto Sans KR", sans-serif;
   font-weight: 500;
 }
+
+button.chosen {
+  font-family: "Roboto", sans-serif;
+}
+button.unchosen {
+  font-family: "Roboto", sans-serif;
+  color: RGB(13, 110, 253);
+}
