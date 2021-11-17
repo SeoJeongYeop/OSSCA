@@ -101,7 +101,7 @@ class Repository:
         else :
             # 이 조건 만족 못하면 아예 제외
             return repo_data
-        if self.license is not None and self.readme is not None and self.proj_short_desc is not None:
+        if self.license is not None and self.readme != 0 and self.proj_short_desc is not None:
             self.repo_score += 0.5
             repo_data["guideline_score"] = 0.5
         if self.dependencies != 0 :
