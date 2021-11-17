@@ -20,12 +20,16 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
     // [3] 학년별, 학과별, 연도별로 나눌 수 있어야 한다.
     // 일단 2번까지는 할 수 있을 것 같다.
     // 학번과 레포 연도는 역순으로 저장한다.
-    let distribution = create2DArray(3, 10);
-    let dept = create2DArray(3, 3);
-    let sid = create2DArray(3, 7);
+    let scoreDist = create2DArray(3, 10);
+    let scoreDept = create2DArray(3, 3);
+    let scoreSid = create2DArray(3, 7);
     let totalCommit = [0, 0, 0];
     let totalStar = [0, 0, 0];
-    let annual = [0, 0, 0];
+    let scoreAnnual = [0, 0, 0];
+    let commitAnnual = [0, 0, 0];
+    let starAnnual = [0, 0, 0];
+    let prAnnual = [0, 0, 0];
+    let issueAnnual = [0, 0, 0];
     let annualCnt = [0, 0, 0];
     let size = [0, 0, 0];
     let sidSize = create2DArray(3, 7);
@@ -67,33 +71,33 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
         /* student id */
         commitSid[idx1][idxId] += Number(Row.commit_count);
         starSid[idx1][idxId] += Row.star_count;
-        sid[idx1][idxId] += Number(Row.total_score);
+        scoreSid[idx1][idxId] += Number(Row.total_score);
         sidSize[idx1][idxId] += 1;
         /* dept */
         commitDept[idx1][deptDict[Row.dept]] += Row.commit_count;
         starDept[idx1][deptDict[Row.dept]] += Row.star_count;
-        dept[idx1][deptDict[Row.dept]] += Number(Row.total_score);
+        scoreDept[idx1][deptDict[Row.dept]] += Number(Row.total_score);
         deptSize[idx1][deptDict[Row.dept]] += 1;
         if (Row.total_score < 0.5) {
-          distribution[idx1][0] += 1;
+          scoreDist[idx1][0] += 1;
         } else if (Row.total_score < 1) {
-          distribution[idx1][1] += 1;
+          scoreDist[idx1][1] += 1;
         } else if (Row.total_score < 1.5) {
-          distribution[idx1][2] += 1;
+          scoreDist[idx1][2] += 1;
         } else if (Row.total_score < 2) {
-          distribution[idx1][3] += 1;
+          scoreDist[idx1][3] += 1;
         } else if (Row.total_score < 2.5) {
-          distribution[idx1][4] += 1;
+          scoreDist[idx1][4] += 1;
         } else if (Row.total_score < 3) {
-          distribution[idx1][5] += 1;
+          scoreDist[idx1][5] += 1;
         } else if (Row.total_score < 3.5) {
-          distribution[idx1][6] += 1;
+          scoreDist[idx1][6] += 1;
         } else if (Row.total_score < 4) {
-          distribution[idx1][7] += 1;
+          scoreDist[idx1][7] += 1;
         } else if (Row.total_score < 4.5) {
-          distribution[idx1][8] += 1;
+          scoreDist[idx1][8] += 1;
         } else if (Row.total_score >= 4.5) {
-          distribution[idx1][9] += 1;
+          scoreDist[idx1][9] += 1;
         }
         if (Row.commit_count < 100) {
           commitDist[idx1][0] += 1;
@@ -118,27 +122,38 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
           starDist[idx1][4] += 1;
         }
         // annual
-        annual[idx1] += Number(Row.total_score);
+        scoreAnnual[idx1] += Number(Row.total_score);
+        commitAnnual[idx1] += Row.commit_count;
+        starAnnual[idx1] += Row.star_count;
         annualCnt[idx1] += 1;
       }
 
       // object 타입으로 map함수 사용불가
       for (let i = 0; i < nowYear - startYear + 1; i++) {
-        for (let j = 0; j < sid[i].length; j++) {
+        for (let j = 0; j < scoreSid[i].length; j++) {
           commitSid[i][j] = (commitSid[i][j] / sidSize[i][j]).toFixed(1);
           starSid[i][j] = (starSid[i][j] / sidSize[i][j]).toFixed(1);
-          sid[i][j] = (sid[i][j] / sidSize[i][j]).toFixed(1);
+          scoreSid[i][j] = (scoreSid[i][j] / sidSize[i][j]).toFixed(1);
         }
       }
 
       for (let i = 0; i < nowYear - startYear + 1; i++) {
-        for (let j = 0; j < dept[i].length; j++) {
+        for (let j = 0; j < scoreDept[i].length; j++) {
           commitDept[i][j] = (commitDept[i][j] / deptSize[i][j]).toFixed(1);
           starDept[i][j] = (starDept[i][j] / deptSize[i][j]).toFixed(1);
-          dept[i][j] = (dept[i][j] / deptSize[i][j]).toFixed(1);
+          scoreDept[i][j] = (scoreDept[i][j] / deptSize[i][j]).toFixed(1);
         }
       }
-
+      // 연도별 점수, 커밋, 스타, pr, issue 평균 계산
+      scoreAnnual = scoreAnnual.map((val, idx) => {
+        return (val / annualCnt[idx]).toFixed(2);
+      });
+      commitAnnual = commitAnnual.map((val, idx) => {
+        return (val / annualCnt[idx]).toFixed(2);
+      });
+      starAnnual = starAnnual.map((val, idx) => {
+        return (val / annualCnt[idx]).toFixed(2);
+      });
       DB("GET", repoQuery, []).then(function (date, error) {
         totalRepo = date.row.length;
         for (i = 0; i < totalRepo; i++) {
@@ -156,12 +171,17 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
             totalStar: totalStar,
             totalRepo: totalRepo,
             repoDist: repoDist,
-            annual: annual,
-            annualCnt: annualCnt,
+            annual: {
+              score: scoreAnnual,
+              commit: commitAnnual,
+              star: starAnnual,
+              pr: [],
+              issue: [],
+            },
             year2019: {
-              distribution: distribution[0],
-              dept: dept[0],
-              sid: sid[0],
+              score_dist: scoreDist[0],
+              score_dept: scoreDept[0],
+              score_sid: scoreSid[0],
               commit_dist: commitDist[0],
               commit_dept: commitDept[0],
               commit_sid: commitSid[0],
@@ -170,9 +190,9 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
               star_sid: starSid[0],
             },
             year2020: {
-              distribution: distribution[1],
-              dept: dept[1],
-              sid: sid[1],
+              score_dist: scoreDist[1],
+              score_dept: scoreDept[1],
+              score_sid: scoreSid[1],
               commit_dist: commitDist[1],
               commit_dept: commitDept[1],
               commit_sid: commitSid[1],
@@ -181,9 +201,9 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
               star_sid: starSid[1],
             },
             year2021: {
-              distribution: distribution[2],
-              dept: dept[2],
-              sid: sid[2],
+              score_dist: scoreDist[2],
+              score_dept: scoreDept[2],
+              score_sid: scoreSid[2],
               commit_dist: commitDist[2],
               commit_dept: commitDept[2],
               commit_sid: commitSid[2],
