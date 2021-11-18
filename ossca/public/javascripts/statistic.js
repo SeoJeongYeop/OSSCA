@@ -16,7 +16,15 @@ window.onload = function () {
       const scoreAnnual = json["annual"]["score"];
       const commitAnnual = json["annual"]["commit"];
       const starAnnual = json["annual"]["star"];
-      let annualList = [scoreAnnual, commitAnnual, starAnnual, [], []];
+      const prAnnual = json["annual"]["pr"];
+      const issueAnnual = json["annual"]["issue"];
+      let annualList = [
+        scoreAnnual,
+        commitAnnual,
+        starAnnual,
+        prAnnual,
+        issueAnnual,
+      ];
       //default annual setting 2021
       let chartFactor = "score";
       let annual = 2021;
@@ -43,6 +51,8 @@ window.onload = function () {
         "400+",
       ];
       const starDistLabel = ["0", "1~2", "3~4", "5~6", "7+"];
+      const prDistLabel = ["0", "1~10", "11~20", "21~30", "30+"];
+      const issueDistLabel = ["0", "1~5", "6~10", "11~15", "15+"];
       const sidLabel = ["21", "20", "19", "18", "17", "16"];
       const deptLabel = ["소프트웨어", "글로벌융합", "컴퓨터공학"];
       const annualLabel = ["2019", "2020", "2021"];
@@ -331,8 +341,14 @@ window.onload = function () {
             chartColorRule = [cc5, cc5, cc6, cc3, cc3, cc5];
             break;
           case "pr":
+            labelList[0] = prDistLabel;
+            labelList[1] = prDistLabel;
+            chartColorRule = [cc5, cc5, cc6, cc3, cc3, cc5];
             break;
           case "issue":
+            labelList[0] = issueDistLabel;
+            labelList[1] = issueDistLabel;
+            chartColorRule = [cc5, cc5, cc6, cc3, cc3, cc5];
             break;
           default:
             console.log("default!!");
