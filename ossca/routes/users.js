@@ -3,14 +3,13 @@ const DB = require('./database');
 var router = express.Router();
 
 /* GET users listing. */
-router.get('/:name', function(req, res, next) {
-  const query = `CALL RepoOwnerScore('` + req.params.name + `')`; 
-  console.log(req.params.name);
+router.get('/:student_id', function(req, res) {
+  const query = `SELECT * FROM student_tab A WHERE A.id = '` + req.params.student_id + `'`; 
+  console.log('user: ' + req.params.student_id);
   DB("GET", query, []).then(function(result, error){
     if (error) {
       console.log(error);
     }
-    result.row = result.row[0]
     if(result.row.length == 0){
       res.send("No")
     }
@@ -18,8 +17,7 @@ router.get('/:name', function(req, res, next) {
     console.log(user)
     res.render("users", {
       title: "User",
-      user: result.row[0],
-      repos: result.row,
+      user: user
     });
 
   });

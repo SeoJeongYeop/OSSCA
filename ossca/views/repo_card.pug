@@ -1,0 +1,40 @@
+mixin owned_repo_card(repo)
+  .card.col-6
+    .card-body
+      a(href='https://github.com/'+repo.github_id+'/'+repo.repo_name, style='text-decoration: none;')
+        h2.card-title.fw-bold.text-body #{repo.repo_name}
+      table.table.text-center
+        thead
+          tr
+            th Code Score
+            th Guideline Score
+            th OpenSource Score
+        tbody 
+          tr 
+            td #{repo.code_score}
+            td #{repo.guideline_score}
+            td #{repo.other_project_score}
+
+mixin contr_repo_card(repo)
+  .card.col-6
+    .card-body
+      a(href='https://github.com/'+repo.github_id+'/'+repo.repo_name, style='text-decoration: none;')
+        h2.card-title.fw-bold.text-body #{repo.repo_name}
+      table.table.text-center
+        thead
+          tr
+            th Commits
+            th Issues
+            th Pull Requests
+        tbody 
+          tr 
+            td #{repo.commit_cnt}
+            td #{repo.issue_cnt}
+            td #{repo.pr_cnt}
+
+.d-flex.flex-wrap
+  -for(let i = 0; i < repos.length; i++)
+    -if(type == 'owned')
+      +owned_repo_card(repos[i])
+    -else
+      +contr_repo_card(repos[i])
