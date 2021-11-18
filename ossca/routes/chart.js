@@ -23,6 +23,7 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
     let scoreDist = create2DArray(3, 10);
     let scoreDept = create2DArray(3, 3);
     let scoreSid = create2DArray(3, 7);
+    let scoreMore3 = [0, 0, 0];
     let totalCommit = [0, 0, 0];
     let totalStar = [0, 0, 0];
     let scoreAnnual = [0, 0, 0];
@@ -92,12 +93,16 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
           scoreDist[idx1][5] += 1;
         } else if (Row.total_score < 3.5) {
           scoreDist[idx1][6] += 1;
+          scoreMore3[idx1] += 1;
         } else if (Row.total_score < 4) {
           scoreDist[idx1][7] += 1;
+          scoreMore3[idx1] += 1;
         } else if (Row.total_score < 4.5) {
           scoreDist[idx1][8] += 1;
+          scoreMore3[idx1] += 1;
         } else if (Row.total_score >= 4.5) {
           scoreDist[idx1][9] += 1;
+          scoreMore3[idx1] += 1;
         }
         if (Row.commit_count < 100) {
           commitDist[idx1][0] += 1;
@@ -154,6 +159,7 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
       starAnnual = starAnnual.map((val, idx) => {
         return (val / annualCnt[idx]).toFixed(2);
       });
+
       DB("GET", repoQuery, []).then(function (date, error) {
         totalRepo = date.row.length;
         for (i = 0; i < totalRepo; i++) {
@@ -167,6 +173,7 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
           console.log(result.row.length);
           res.json({
             title: "chart",
+            scoreMore3: scoreMore3,
             totalCommit: totalCommit,
             totalStar: totalStar,
             totalRepo: totalRepo,

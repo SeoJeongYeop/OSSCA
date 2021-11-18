@@ -13,18 +13,22 @@ block content
         .card
           h5.card-title 3점 이상 비율
           p#overGoal.card-text 
+          canvas#scoreOverview
       .col-md-3 
         .card  
           h5.card-title 총 커밋 수
           p#totalCommit.card-text 
+          canvas#commitOverview
       .col-md-3 
         .card
           h5.card-title 총 스타 수
           p#totalStar.card-text 
+          canvas#starOverview
       .col-md-3
         .card 
           h5.card-title 총 레포 수
           p#totalRepo.card-text 
+          canvas#repoOverview
     #pills-score.tab-pane.fade.show.active(role="tabpanel",aria-labelledby="pills-score-tab")
       .row 
         .col-md-6 
