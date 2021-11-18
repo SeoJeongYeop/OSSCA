@@ -17,10 +17,30 @@ h5.card-title {
   font-weight: 500;
 }
 
+.row {
+  margin: 10px 0px;
+}
 button.chosen {
   font-family: "Roboto", sans-serif;
 }
 button.unchosen {
   font-family: "Roboto", sans-serif;
   color: RGB(13, 110, 253);
+}
+#totalScoreDist {
+  margin: 40px 50px;
+}
+@media only screen and (max-width: 990px) {
+  #totalScoreDist {
+    margin: 20px 30px;
+  }
+}
+@media only screen and (max-width: 600px) {
+  #totalScoreDist {
+    margin: 0px 10px;
+  }
+}
+
+.tab-container {
+  margin: 10px 0px;
 }

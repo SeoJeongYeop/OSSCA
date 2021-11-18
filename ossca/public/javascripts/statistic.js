@@ -16,7 +16,15 @@ window.onload = function () {
       const scoreAnnual = json["annual"]["score"];
       const commitAnnual = json["annual"]["commit"];
       const starAnnual = json["annual"]["star"];
-      let annualList = [scoreAnnual, commitAnnual, starAnnual, [], []];
+      const prAnnual = json["annual"]["pr"];
+      const issueAnnual = json["annual"]["issue"];
+      let annualList = [
+        scoreAnnual,
+        commitAnnual,
+        starAnnual,
+        prAnnual,
+        issueAnnual,
+      ];
       //default annual setting 2021
       let chartFactor = "score";
       let annual = 2021;
@@ -43,6 +51,8 @@ window.onload = function () {
         "400+",
       ];
       const starDistLabel = ["0", "1~2", "3~4", "5~6", "7+"];
+      const prDistLabel = ["0", "1~10", "11~20", "21~30", "30+"];
+      const issueDistLabel = ["0", "1~5", "6~10", "11~15", "15+"];
       const sidLabel = ["21", "20", "19", "18", "17", "16"];
       const deptLabel = ["소프트웨어", "글로벌융합", "컴퓨터공학"];
       const annualLabel = ["2019", "2020", "2021"];
@@ -58,7 +68,14 @@ window.onload = function () {
 
       // const score
       // const labelRule = []
+      const overviewNameRule = ["score", "commit", "star", "repo"];
       const canvasNameRule = ["total", "totalLine", "sid", "dept", "annual"];
+      let ctxOverview = new Array(4);
+      for (let i = 0; i < 4; i++) {
+        ctxOverview[i] = document
+          .getElementById(`${overviewNameRule[i]}Overview`)
+          .getContext("2d");
+      }
       let ctx = new Array(5);
       for (let i = 0; i < 5; i++) {
         ctx[i] = document
@@ -94,12 +111,31 @@ window.onload = function () {
       ];
 
       const chart = createObjArray(6);
-      const allChartRule = ["pie", "line", "bar", "bar", "line", "line"];
+      const overviewChart = createObjArray(4);
+
+      let overviewDatasetList = [
+        json["scoreMore3"],
+        json["totalCommit"],
+        json["totalStar"],
+        json["repoDist"],
+      ];
+      overviewFactorList = ["count", "commit", "star", "repo"];
+      for (let i = 0; i < 4; i++) {
+        overviewChart[i] = makeChart(
+          ctxOverview[i],
+          "line",
+          overviewFactorList[i],
+          ["2019", "2020", "2021"],
+          overviewDatasetList[i],
+          cc3
+        );
+      }
+      const chartTypeRule = ["pie", "line", "bar", "bar", "line", "line"];
       let chartColorRule = [cc10, cc10, cc6, cc3, cc3, cc5];
       for (let i = 0; i < 5; i++) {
         chart[i] = makeChart(
           ctx[i],
-          allChartRule[i],
+          chartTypeRule[i],
           chartFactor,
           labelList[i],
           datasetList[i],
@@ -204,9 +240,9 @@ window.onload = function () {
 
       function setOverallStat(json) {
         // Overall statistic data: 3점 이상 비율, 총 커밋 수, 총 스타 수, 총 레포 수
-        const dist = json[`year${annual}`]["score_dist"];
+        //const dist = json[`year${annual}`]["score_dist"];
         const overGoal = document.getElementById("overGoal");
-        const overGoalcount = dist[6] + dist[7] + dist[8] + dist[9];
+        const overGoalcount = json["scoreMore3"][annual - startAnnual];
         overGoal.textContent =
           String(overGoalcount) +
           "/" +
@@ -305,8 +341,14 @@ window.onload = function () {
             chartColorRule = [cc5, cc5, cc6, cc3, cc3, cc5];
             break;
           case "pr":
+            labelList[0] = prDistLabel;
+            labelList[1] = prDistLabel;
+            chartColorRule = [cc5, cc5, cc6, cc3, cc3, cc5];
             break;
           case "issue":
+            labelList[0] = issueDistLabel;
+            labelList[1] = issueDistLabel;
+            chartColorRule = [cc5, cc5, cc6, cc3, cc3, cc5];
             break;
           default:
             console.log("default!!");
@@ -320,7 +362,7 @@ window.onload = function () {
         for (let i = 0; i < 5; i++) {
           chart[i] = makeChart(
             ctx[i],
-            allChartRule[i],
+            chartTypeRule[i],
             chartFactor,
             labelList[i],
             datasetList[i],

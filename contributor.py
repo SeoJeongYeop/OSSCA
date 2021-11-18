@@ -90,6 +90,9 @@ class Contributor:
         self.additional_score = 0
         self.star_score = 0
         self.contribution_score = 0
+        
+        self.contribute_pr_count = 0;
+        self.contribute_issue_count = 0;
         try :
             print("total_commit: ",self.total_commits)
         except Exception as e:
@@ -162,7 +165,10 @@ class Contributor:
             print("## Contributor repositories ##")
             for repo in self.contributor_repositories :
                 repo.showCompact()
-
+    def countPr(self):
+        self.contribute_pr_count += 1;
+    def countIssue(self):
+        self.contribute_issue_count += 1;
     def sumContribution(self):
         ##### Seperate 1: indie and team #####
         indie_stargazers_count = 0
@@ -215,7 +221,6 @@ class Contributor:
                 indie_deletions += indie.deletions
             if indie.contributor_commits_count is not None:
                 indie_contributor_commits_count += indie.contributor_commits_count
-
 
         self.indie_stargazers_count = indie_stargazers_count
         self.indie_forks_count = indie_forks_count
