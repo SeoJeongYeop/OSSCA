@@ -261,7 +261,20 @@ def analyzeCommits(contributorDict:dict, year:str):
         except Exception as e:
             print(e)
     print("done!!")
-
+    
+def analyzePrIssue(contributorDict:dict, year:str):
+    print(year,": analyzePrIssue")
+    with open("./data/github_pulls.json",'r', encoding="utf-8") as pulls:
+        pulls_data = json.load(pulls)
+    with open("./data/github_issues.json",'r', encoding="utf-8") as issues:
+        issues_data = json.load(issues)
+    for pr in pulls_data:
+        if pr["owner_id"] != pr["github_id"] and year == pr["date"][0:4]:
+            contributorDict[pr["github_id"]].countPr();
+    for issue in issues_data :
+        if issue["owner_id"] != issue["github_id"] and year == issue["date"][0:4]:
+            contributorDict[issue["github_id"]].countIssue();
+            
 def yieldScore(contributorDict:dict, year:str):
     with open("./data/github_overview.json",'r', encoding="utf-8") as overview:
         overview_data = json.load(overview)
@@ -283,18 +296,17 @@ def yieldScore(contributorDict:dict, year:str):
             resultDict["total_star_count"] = contributorDict[overview["github_id"]].indie_stargazers_count + contributorDict[overview["github_id"]].team_stargazers_count
             resultDict["total_commit_count"] = contributorDict[overview["github_id"]].indie_commits_count+contributorDict[overview["github_id"]].team_commits_count
             scoreList.append(resultDict)
-
+            resultDict["pr_count"] = contributorDict[overview["github_id"]].contribute_pr_count;
+            resultDict["issue_count"] = contributorDict[overview["github_id"]].contribute_issue_count;
             print("#### insert into ####")
             try :
-                print("#data: ",str(year+resultDict["github_id"]), str(resultDict["github_id"]), int(year), int(resultDict["excellent_contributor_score"]), str(best_repo["best_repo"]), float(best_repo["guideline_score"]), float(best_repo["code_score"]), float(best_repo["other_project_score"]), float(resultDict["contributor_activity_score"]), float(resultDict["star_score"]), float(resultDict["contribution_score"]), int(resultDict["total_star_count"]), int(resultDict["total_commit_count"]))
+                print("#data: ",str(year+resultDict["github_id"]), str(resultDict["github_id"]), int(year), int(resultDict["excellent_contributor_score"]), str(best_repo["best_repo"]), float(best_repo["guideline_score"]), float(best_repo["code_score"]), float(best_repo["other_project_score"]), float(resultDict["contributor_activity_score"]), float(resultDict["star_score"]), float(resultDict["contribution_score"]), int(resultDict["total_star_count"]), int(resultDict["total_commit_count"]),int(resultDict["pr_count"]),int(resultDict["issue_count"]))
             except Exception as e :
                 print("print data error ",e)
             try:
                 cursor = githubDB.cursor(pymysql.cursors.DictCursor)
-
-
-                insert_sql = '''INSERT INTO github_score(yid, github_id, year, excellent_contributor, best_repo, guideline_score, code_score, other_project_score, contributor_score, star_score, contribution_score, star_count, commit_count) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'''
-                insert_arg = [str(year+resultDict["github_id"]), str(resultDict["github_id"]), int(year), int(resultDict["excellent_contributor_score"]), str(best_repo["best_repo"]), float(best_repo["guideline_score"]), float(best_repo["code_score"]), float(best_repo["other_project_score"]), float(resultDict["contributor_activity_score"]), float(resultDict["star_score"]), float(resultDict["contribution_score"]), int(resultDict["total_star_count"]), int(resultDict["total_commit_count"])]
+                insert_sql = '''INSERT INTO github_score(yid, github_id, year, excellent_contributor, best_repo, guideline_score, code_score, other_project_score, contributor_score, star_score, contribution_score, star_count, commit_count, pr_count, issue_count) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'''
+                insert_arg = [str(year+resultDict["github_id"]), str(resultDict["github_id"]), int(year), int(resultDict["excellent_contributor_score"]), str(best_repo["best_repo"]), float(best_repo["guideline_score"]), float(best_repo["code_score"]), float(best_repo["other_project_score"]), float(resultDict["contributor_activity_score"]), float(resultDict["star_score"]), float(resultDict["contribution_score"]), int(resultDict["total_star_count"]), int(resultDict["total_commit_count"]),int(resultDict["pr_count"]),int(resultDict["issue_count"])]
                 
                 print("#insert_sql ",insert_sql, "#insert_arg ", insert_arg)
                 cursor.execute(insert_sql, insert_arg)

@@ -20,7 +20,7 @@ if __name__ == "__main__":
                 num = input(">>>")
                 if(num=='1'):
                     try :
-                        tableNameList = ["github_overview","github_repo_commits","github_repo_contributor","github_repo_stats", "github_repo_stats_yymm","github_stats_yymm","student_tab"]
+                        tableNameList = ["github_overview","github_repo_commits","github_repo_contributor","github_repo_stats", "github_repo_stats_yymm","github_stats_yymm","student_tab","github_pulls","github_issues"]
                         for tableName in tableNameList :
                             cv.saveJson(tableName)
                     except Exception as e:
@@ -104,9 +104,10 @@ if __name__ == "__main__":
                 print("a: all process")
                 print("1: Json make contributor object")
                 print("2: Contributor link repository data")
-                print("3: anlyze commits data")
-                print("4: Merge Json data and save json file")
-                print("5: evaluate opensource score")
+                print("3: analyze prs and issues")
+                print("4: analyze commits data")
+                print("5: Merge Json data and save json file")
+                print("6: evaluate opensource score")
 
                 print("9: Show contributor data")
                 print("q: quit")
@@ -119,6 +120,7 @@ if __name__ == "__main__":
                             periodDict[year] = contributorDict
                         for year in ["2021", "2020", "2019"]:
                             periodDict[year] = cvp.linkRepo(periodDict[year], year)
+                            cvp.analyzePrIssue(periodDict[year], year)
                             cvp.analyzeCommits(periodDict[year], year)
                             cvp.saveTotalJson(periodDict[year], year)
                             cvp.yieldScore(periodDict[year], year)
@@ -142,16 +144,22 @@ if __name__ == "__main__":
                 elif(num=='3'):
                     try:
                         for year in ["2021", "2020", "2019"]:
-                            cvp.analyzeCommits(periodDict[year], year)
+                            cvp.analyzePrIssue(periodDict[year], year)
                     except Exception as e:
                         print("error3: ",e)
                 elif(num=='4'):
                     try:
                         for year in ["2021", "2020", "2019"]:
+                            cvp.analyzeCommits(periodDict[year], year)
+                    except Exception as e:
+                        print("error3: ",e)
+                elif(num=='5'):
+                    try:
+                        for year in ["2021", "2020", "2019"]:
                             cvp.saveTotalJson(periodDict[year], year)
                     except Exception as e:
                         print("error4: ",e)
-                elif(num=='5'):
+                elif(num=='6'):
                     try:
                         for year in ["2021", "2020", "2019"]:
                             cvp.yieldScore(periodDict[year], year)
