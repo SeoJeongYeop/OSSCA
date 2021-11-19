@@ -4,32 +4,21 @@ const DB = require("./database");
 
 /* GET home page. */
 router.get("/data", function (req, res, next) {
-  const query1 = `select * from github_score 
-where (guideline_score+code_score+other_project_score+contribution_score+star_score+contributor_score) >= 3.0 
-and year=2021;`;
-  const query2 = `select * from student_tab A left join github_score B on A.github_id = B.github_id;`;
-  DB("GET", query2, []).then(function (result, error) {
+  const query = `call ScoreTable();`;
+  DB("GET", query, []).then(function (result, error) {
     if (error) {
       console.log(error);
     }
-    for (i = 0; i < result.row.length; i++) {
-      result.row[i].total_score = (
-        result.row[i].excellent_contributor +
-        result.row[i].guideline_score +
-        result.row[i].code_score +
-        result.row[i].other_project_score +
-        result.row[i].contributor_score +
-        result.row[i].star_score +
-        result.row[i].contribution_score
-      ).toFixed(1);
-      result.row[i].owner_score = (
-        result.row[i].guideline_score +
-        result.row[i].code_score +
-        result.row[i].other_project_score
-      ).toFixed(1);
-      result.row[i].additional_score = (
-        result.row[i].star_score + result.row[i].contribution_score
-      ).toFixed(1);
+    result.row = result.row[0];
+    for(i = 0; i < result.row.length; i++){
+      if(result.row[i].commits == null)
+        result.row[i].commits = 0;
+      if(result.row[i].issues == null)
+        result.row[i].issues = 0;
+      if(result.row[i].pulls == null)
+        result.row[i].pulls = 0;
+      if(result.row[i].repos == null)
+        result.row[i].repos = 0;
     }
     console.log(result.row.length);
     res.render("index", {

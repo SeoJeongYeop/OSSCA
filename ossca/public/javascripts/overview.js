@@ -1,16 +1,16 @@
 $(document).ready(function () {
-  $('#scoreTable').DataTable({
+  var table = $('#scoreTable').DataTable({
     searchPanes: {
       viewTotal: true,
       orderable: false,
-      columns: [2, 3, 4, 5, 6, 7],
+      columns: [2, 3],
       initCollapsed: true,
     },
     dom: 'Pfrtip',
     columnDefs: [
       {
         orderable: false,
-        targets:[2]
+        targets:[1]
       },
       {
         searchPanes: {
@@ -82,4 +82,5 @@ $(document).ready(function () {
     ],
     order: [[3, 'desc']]
   });
+  $('.dtsp-titleRow').remove();
 });
