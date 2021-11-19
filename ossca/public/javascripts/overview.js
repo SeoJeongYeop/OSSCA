@@ -83,4 +83,5 @@ $(document).ready(function () {
     order: [[3, 'desc']]
   });
   $('.dtsp-titleRow').remove();
+  $('.dtsp-panesContainer').insertAfter('#scoreTable_filter');
 });
