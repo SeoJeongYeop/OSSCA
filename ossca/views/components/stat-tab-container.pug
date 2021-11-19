@@ -1,21 +1,22 @@
-.tab-container
-  ul#pills-tab.nav.nav-pills.mb-3(role="tablist")
-    li.nav-item(role="presentation") 
-      button#pills-score-tab.btn.btn-primary.chosen Score
-    li.nav-item(role="presentation") 
-      button#pills-commits-tab.btn.btn-light.unchosen Commits 
-    li.nav-item(role="presentation")  
-      button#pills-stars-tab.btn.btn-light.unchosen  Stars 
-    li.nav-item(role="presentation")  
-      button#pills-pr-tab.btn.btn-light.unchosen  Pull Request
-    li.nav-item(role="presentation")  
-      button#pills-issue-tab.btn.btn-light.unchosen  Issue
+.d-flex
   .dropdown
-    button#dropdownMenuButton1.btn.btn-primary.dropdown-toggle.me-2(type="button", data-bs-toggle="dropdown", aria-expanded="false") 2021 
-    ul.dropdown-menu(aria-labelledby="dropdownMenuButton1")
-      li
-        button#dropdownBtn2021.dropdown-item 2021
-      li 
-        button#dropdownBtn2020.dropdown-item 2020
-      li 
-        button#dropdownBtn2019.dropdown-item 2019
+      button#dropdownMenuButton1.btn.btn-primary.dropdown-toggle.me-2(type="button", data-bs-toggle="dropdown", aria-expanded="false") 2021 
+      ul.dropdown-menu(aria-labelledby="dropdownMenuButton1")
+        li
+          button#dropdownBtn2021.dropdown-item 2021
+        li 
+          button#dropdownBtn2020.dropdown-item 2020
+        li 
+          button#dropdownBtn2019.dropdown-item 2019
+
+  .btn-group
+    button#pills-score-tab.btn.btn-primary.chosen Score
+
+    button#pills-commits-tab.btn.btn-light.unchosen Commits 
+
+    button#pills-stars-tab.btn.btn-light.unchosen  Stars     
+
+    button#pills-pr-tab.btn.btn-light.unchosen  Pull Request
+
+    button#pills-issue-tab.btn.btn-light.unchosen  Issue
+

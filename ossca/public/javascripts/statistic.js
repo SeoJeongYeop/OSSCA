@@ -1,6 +1,6 @@
 window.onload = function () {
-  //const IP = "localhost";
-  const IP = "115.145.212.144";
+  const IP = "localhost";
+  // const IP = "115.145.212.144";
   const port = "8081";
   /* 미구현
   - pr, issue 그래프
@@ -87,6 +87,7 @@ window.onload = function () {
       setDist(chartFactor);
       /* color pallet ref: 
       https://learnui.design/tools/data-color-picker.html#palette*/
+      const bsPrimary = "#0d6efd";
       const cc3 = ["#4245cb", "#ff4470", "#ffe913"];
       const cc5 = ["#4245cb", "#db20ac", "#ff4470", "#ff9a2f", "#ffe913"];
       const cc6 = [
@@ -127,7 +128,14 @@ window.onload = function () {
           overviewFactorList[i],
           ["2019", "2020", "2021"],
           overviewDatasetList[i],
-          cc3
+          bsPrimary,
+          {
+            plugins: {
+              legend: {
+                display: false
+              }
+            }
+          }
         );
       }
       const chartTypeRule = ["pie", "line", "bar", "bar", "line", "line"];
@@ -177,7 +185,8 @@ window.onload = function () {
       });
       scoreTab.addEventListener("click", function () {
         unchosenBtn();
-        scoreTab.setAttribute("class", "btn btn-primary chosen");
+        chooseBtn(scoreTab);
+        
         chartFactor = "score";
         changeCardTitle(chartFactor);
         reloadChart(annual, chartFactor);
@@ -185,7 +194,7 @@ window.onload = function () {
       });
       commitTab.addEventListener("click", function () {
         unchosenBtn();
-        commitTab.setAttribute("class", "btn btn-primary chosen");
+        chooseBtn(commitTab);
         chartFactor = "commit";
         changeCardTitle(chartFactor);
         reloadChart(annual, chartFactor);
@@ -193,7 +202,7 @@ window.onload = function () {
       });
       starTab.addEventListener("click", function () {
         unchosenBtn();
-        starTab.setAttribute("class", "btn btn-primary chosen");
+        chooseBtn(starTab);
         chartFactor = "star";
         changeCardTitle(chartFactor);
         reloadChart(annual, chartFactor);
@@ -201,7 +210,7 @@ window.onload = function () {
       });
       prTab.addEventListener("click", function () {
         unchosenBtn();
-        prTab.setAttribute("class", "btn btn-primary chosen");
+        chooseBtn(prTab);
         chartFactor = "pr";
         changeCardTitle(chartFactor);
         reloadChart(annual, chartFactor);
@@ -209,18 +218,21 @@ window.onload = function () {
       });
       issueTab.addEventListener("click", function () {
         unchosenBtn();
-        issueTab.setAttribute("class", "btn btn-primary chosen");
+        chooseBtn(issueTab);
         chartFactor = "issue";
         changeCardTitle(chartFactor);
         reloadChart(annual, chartFactor);
         setDist(chartFactor);
       });
       function unchosenBtn() {
-        scoreTab.setAttribute("class", "btn btn-light unchosen");
-        commitTab.setAttribute("class", "btn btn-light unchosen");
-        starTab.setAttribute("class", "btn btn-light unchosen");
-        prTab.setAttribute("class", "btn btn-light unchosen");
-        issueTab.setAttribute("class", "btn btn-light unchosen");
+        scoreTab.classList.remove("active");
+        commitTab.classList.remove("active");
+        starTab.classList.remove("active");
+        prTab.classList.remove("active");
+        issueTab.classList.remove("active");
+      }
+      function chooseBtn(ele) {
+        ele.classList.add("active");
       }
       function changeCardTitle(factor) {
         const cardTitle = document.getElementsByClassName("factor");
@@ -238,18 +250,29 @@ window.onload = function () {
         cardTitle.item(4).textContent = `연도별 ${word}분포`;
       }
 
+      function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+    
+
       function setOverallStat(json) {
         // Overall statistic data: 3점 이상 비율, 총 커밋 수, 총 스타 수, 총 레포 수
         //const dist = json[`year${annual}`]["score_dist"];
         const overGoal = document.getElementById("overGoal");
         const overGoalcount = json["scoreMore3"][annual - startAnnual];
-        overGoal.textContent =
-          String(overGoalcount) +
-          "/" +
-          json.size[annual - startAnnual] +
-          " " +
-          ((overGoalcount / json.size[annual - startAnnual]) * 100).toFixed(1) +
-          "%";
+
+        $("#overGoal1").text(overGoalcount);
+        $("#overGoal2").text(json.size[annual - startAnnual]);
+        $("#overGoal3").text(((overGoalcount / json.size[annual - startAnnual]) * 100).toFixed(1) +
+        "%");
+
+        // overGoal.textContent =
+        //   String(overGoalcount) +
+        //   "/" +
+        //   json.size[annual - startAnnual] +
+        //   " " +
+        //   ((overGoalcount / json.size[annual - startAnnual]) * 100).toFixed(1) +
+        //   "%";
         const totalCommit = document.getElementById("totalCommit");
         const totalStar = document.getElementById("totalStar");
         const totalRepo = document.getElementById("totalRepo");
@@ -312,7 +335,7 @@ window.onload = function () {
               },
             ],
           },
-          option: option,
+          options: option,
         });
         return chart;
       }

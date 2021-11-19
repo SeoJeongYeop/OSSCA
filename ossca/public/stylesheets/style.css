@@ -1,6 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
-body {
-  padding: 50px;
+
+/*body {
   font: 14px;
   font-family: "Roboto", sans-serif;
 }
@@ -10,16 +10,21 @@ a {
 }
 .nav-link {
   font-family: "Roboto", sans-serif;
-}
+}*/
+/* 
+body {
+  background: #fefefe;
+} */
+
 h5.card-title {
   font: 16px;
   font-family: "Noto Sans KR", sans-serif;
   font-weight: 500;
 }
-
 .row {
-  margin: 10px 0px;
+  /* margin: 10px 0px; */
 }
+
 button.chosen {
   font-family: "Roboto", sans-serif;
 }
@@ -30,6 +35,23 @@ button.unchosen {
 #totalScoreDist {
   margin: 40px 50px;
 }
+
+.kpi {
+  font-size: 2rem;
+}
+
+.current {
+
+}
+
+.total {
+}
+
+.percent-wrapper {
+  opacity: .5;
+  font-size: 1rem;
+  margin-left: .25rem;
+}
 @media only screen and (max-width: 990px) {
   #totalScoreDist {
     margin: 20px 30px;
@@ -38,7 +60,7 @@ button.unchosen {
 @media only screen and (max-width: 600px) {
   #totalScoreDist {
     margin: 0px 10px;
-  }
+ }
 }
 
 .tab-container {

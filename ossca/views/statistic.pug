@@ -1,56 +1,93 @@
 extends layout
 
+block vars
+  - var menu='home'
+  
 block content
+  .d-flex.text-lg
+    .dropdown
+        button#dropdownMenuButton1.btn.btn-primary.dropdown-toggle.me-2(type="button", data-bs-toggle="dropdown", aria-expanded="false") 2021 
+        ul.dropdown-menu(aria-labelledby="dropdownMenuButton1")
+          li
+            button#dropdownBtn2021.dropdown-item 2021
+          li 
+            button#dropdownBtn2020.dropdown-item 2020
+          li 
+            button#dropdownBtn2019.dropdown-item 2019
+
+    
+      
+  .row.pt-2
+    .col-md-3
+      .card.p-2
+        h5.card-title 3점 이상 비율
+        div.text-center.kpi
+          span.current.text-primary#overGoal1
+          |  / 
+          span.total#overGoal2
+          span.percent-wrapper
+            | (
+            span.percent#overGoal3 19.0%
+            | )
+
+        canvas#scoreOverview
+    .col-md-3 
+      .card.p-2  
+        h5.card-title 총 커밋 수
+        p#totalCommit.card-text 
+        canvas#commitOverview
+    .col-md-3 
+      .card.p-2
+        h5.card-title 총 스타 수
+        p#totalStar.card-text 
+        canvas#starOverview
+    .col-md-3
+      .card.p-2 
+        h5.card-title 총 레포 수
+        p#totalRepo.card-text 
+        canvas#repoOverview
+
+
+  ul.nav.nav-tabs.mt-4.text-lg
+    li.nav-item
+      a.nav-link#pills-score-tab.active(href="#") Score
+    li.nav-item
+      a.nav-link#pills-commits-tab(href="#") Commits
+    li.nav-item
+      a.nav-link#pills-stars-tab(href="#") Stars
+    li.nav-item
+      a.nav-link#pills-pr-tab(href="#") Pull Requests
+    li.nav-item
+      a.nav-link#pills-issue-tab(href="#") Issues
+
+
+  #pills-score.tab-pane.fade.show.mt-2
+    .row 
+      .col-md-6 
+        .card
+          h5.card-title.factor 전체 Score분포
+          canvas#totalScoreDist
+      .col-md-6
+        .card
+          h5.card-title.factor Score 퍼센티지
+          #perScore.text-flex
+          canvas#totalLineScoreDist       
+    .row.mt-2
+      .col-md-4
+        .card
+          h5.card-title.factor 학번별 Score분포
+          canvas#sidScoreDist
+      .col-md-4
+        .card
+          h5.card-title.factor 학과별 Score분포
+          canvas#deptScoreDist
+      .col-md-4
+        .card
+          h5.card-title.factor 연도별 Score분포
+          canvas#annualScoreDist
+        
   script(type="text/javascript", src="/javascripts/statistic.js")
   //- chart.js를 node로 설치했으나 사용법을 모르겠어서 그냥 import
   script(type="text/javascript", src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.0/chart.min.js")
+
   
-  
-  #pills-tabContent.container.tab-content
-    include components/stat-tab-container
-    .row 
-      .col-md-3 
-        .card
-          h5.card-title 3점 이상 비율
-          p#overGoal.card-text 
-          canvas#scoreOverview
-      .col-md-3 
-        .card  
-          h5.card-title 총 커밋 수
-          p#totalCommit.card-text 
-          canvas#commitOverview
-      .col-md-3 
-        .card
-          h5.card-title 총 스타 수
-          p#totalStar.card-text 
-          canvas#starOverview
-      .col-md-3
-        .card 
-          h5.card-title 총 레포 수
-          p#totalRepo.card-text 
-          canvas#repoOverview
-    #pills-score.tab-pane.fade.show.active(role="tabpanel",aria-labelledby="pills-score-tab")
-      .row 
-        .col-md-6 
-          .card
-            h5.card-title.factor 전체 Score분포
-            canvas#totalScoreDist
-        .col-md-6
-          .card
-            h5.card-title.factor Score 퍼센티지
-            #perScore.text-flex
-            canvas#totalLineScoreDist       
-      .row
-        .col-md-4
-          .card
-            h5.card-title.factor 학번별 Score분포
-            canvas#sidScoreDist
-        .col-md-4
-          .card
-            h5.card-title.factor 학과별 Score분포
-            canvas#deptScoreDist
-        .col-md-4
-          .card
-            h5.card-title.factor 연도별 Score분포
-            canvas#annualScoreDist
-  script(src='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js')
