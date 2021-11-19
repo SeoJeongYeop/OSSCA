@@ -3,7 +3,7 @@ var router = express.Router();
 const DB = require("./database");
 
 /* GET home page. */
-router.get("/", function (req, res, next) {
+router.get("/data", function (req, res, next) {
   const query1 = `select * from github_score 
 where (guideline_score+code_score+other_project_score+contribution_score+star_score+contributor_score) >= 3.0 
 and year=2021;`;
@@ -49,7 +49,7 @@ and year=2021;`;
 
   // });
 });
-router.get("/statistic", function (req, res, next) {
+router.get("/", function (req, res, next) {
   res.render("statistic", {
     title: "Statistic",
   });

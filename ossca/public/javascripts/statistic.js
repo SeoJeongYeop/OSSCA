@@ -1,6 +1,6 @@
 window.onload = function () {
-  const IP = "localhost";
-  // const IP = "115.145.212.144";
+  //const IP = "localhost";
+  const IP = "115.145.212.144";
   const port = "8081";
   /* 미구현
   - pr, issue 그래프
@@ -132,9 +132,9 @@ window.onload = function () {
           {
             plugins: {
               legend: {
-                display: false
-              }
-            }
+                display: false,
+              },
+            },
           }
         );
       }
@@ -186,7 +186,7 @@ window.onload = function () {
       scoreTab.addEventListener("click", function () {
         unchosenBtn();
         chooseBtn(scoreTab);
-        
+
         chartFactor = "score";
         changeCardTitle(chartFactor);
         reloadChart(annual, chartFactor);
@@ -252,46 +252,55 @@ window.onload = function () {
 
       function numberWithCommas(x) {
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
-    
+      }
 
       function setOverallStat(json) {
         // Overall statistic data: 3점 이상 비율, 총 커밋 수, 총 스타 수, 총 레포 수
-        //const dist = json[`year${annual}`]["score_dist"];
-        const overGoal = document.getElementById("overGoal");
         const overGoalcount = json["scoreMore3"][annual - startAnnual];
+        $("#overGoalNumerator").text(overGoalcount.toLocaleString("ko-KR"));
+        $("#overGoalDenominator").text(
+          json.size[annual - startAnnual].toLocaleString("ko-KR")
+        );
+        $("#overGoalPercent").text(
+          ((overGoalcount / json.size[annual - startAnnual]) * 100).toFixed(1) +
+            "%"
+        );
 
-        $("#overGoal1").text(overGoalcount);
-        $("#overGoal2").text(json.size[annual - startAnnual]);
-        $("#overGoal3").text(((overGoalcount / json.size[annual - startAnnual]) * 100).toFixed(1) +
-        "%");
-
-        // overGoal.textContent =
-        //   String(overGoalcount) +
-        //   "/" +
-        //   json.size[annual - startAnnual] +
-        //   " " +
-        //   ((overGoalcount / json.size[annual - startAnnual]) * 100).toFixed(1) +
-        //   "%";
-        const totalCommit = document.getElementById("totalCommit");
-        const totalStar = document.getElementById("totalStar");
-        const totalRepo = document.getElementById("totalRepo");
-        let TC = 0; // sum total commit
-        let TS = 0; // sum total star
+        let sumTotalCommit = 0; // sum total commit
+        let sumTotalStar = 0; // sum total star
         json.totalCommit.forEach((element) => {
-          TC += element;
+          sumTotalCommit += element;
         });
         json.totalStar.forEach((element) => {
-          TS += element;
+          sumTotalStar += element;
         });
-        totalCommit.textContent = String(
-          json.totalCommit[annual - startAnnual] + " / " + TC
+        $("#commitNumerator").text(
+          json.totalCommit[annual - startAnnual].toLocaleString("ko-KR")
         );
-        totalStar.textContent = String(
-          json.totalStar[annual - startAnnual] + " / " + TS
+        $("#commitDenominator").text(sumTotalCommit.toLocaleString("ko-KR"));
+        $("#commitPercent").text(
+          (
+            (json.totalCommit[annual - startAnnual] / sumTotalCommit) *
+            100
+          ).toFixed(1) + "%"
         );
-        totalRepo.textContent = String(
-          json.repoDist[-(annual - 2021)] + " / " + json.totalRepo
+        $("#starNumerator").text(
+          json.totalStar[annual - startAnnual].toLocaleString("ko-KR")
+        );
+        $("#starDenominator").text(sumTotalStar.toLocaleString("ko-KR"));
+        $("#starPercent").text(
+          ((json.totalStar[annual - startAnnual] / sumTotalStar) * 100).toFixed(
+            1
+          ) + "%"
+        );
+        $("#repoNumerator").text(
+          json.repoDist[-(annual - 2021)].toLocaleString("ko-KR")
+        );
+        $("#repoDenominator").text(json.totalRepo.toLocaleString("ko-KR"));
+        $("#repoPercent").text(
+          ((json.repoDist[-(annual - 2021)] / json.totalRepo) * 100).toFixed(
+            1
+          ) + "%"
         );
       }
       function setDist(factor) {

@@ -1,32 +1,14 @@
 block vars
-  - var menu = "home"
+  - var menu = "home";
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <div class="container">
-      <a class="navbar-brand" href="#">SKKU-OSSCA</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link #{menu === 'home' ? 'active' : ''}" aria-current="page" href="/statistic">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link  #{menu === 'data' ? 'active' : ''}" href="/">Data</a>
-          </li>
-        </ul>
-      </div>
-  <div>
-</nav>
-
-
-//- nav.nav 
-//-   ul.nav-list 
-//-     li.nav-item 
-//-       a(href="/") Home
-//-     li.nav-item 
-//-       a(href="/statistic") Statistic 
-//-     li.nav-item 
-//-       a(href="/analysis") Analisys
-      
+nav.navbar.navbar-expand-lg.navbar-light.bg-light 
+  .container 
+    a.navbar-brand(href="#") SKKU-OSSCA
+    button.navbar-toggler(type="button", data-bs-toggle="collapse", data-bs-target="#navbarSupportedContent", aria-controls="navbarSupportedContent", aria-expanded="false", aria-label="Toggle navigation")
+      span.navbar-toggler-icon 
+    #navbarSupportedContent.collapse.navbar-collapse
+      ul.navbar-nav.me-auto.mb-2.mb-lg-0 
+        li.nav-item 
+          a.nav-link(class=`${menu === 'home' ? 'active' : ''}`, aria-current="page", href="/") Home 
+        li.nav-item 
+          a.nav-link(class=`${menu === 'data' ? 'active' : ''}`, href="/data") Data
