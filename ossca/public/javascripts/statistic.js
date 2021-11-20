@@ -3,10 +3,9 @@ window.onload = function () {
   const IP = "115.145.212.144";
   const port = "8081";
   /* 미구현
-  - pr, issue 그래프
   - 검색기능
   */
-  const promise = fetch(`http://${IP}:${port}/chart`)
+  const promise = fetch(`http://${IP}:${port}/chartdata`)
     .then((response) => {
       console.log(response);
       return response.json();
@@ -65,9 +64,18 @@ window.onload = function () {
         annualLabel,
       ];
       let datasetList = [dist, dist, sidData, deptData, annualList[0]];
-
-      // const score
-      // const labelRule = []
+      let sidStd = json[`year2021`][`${chartFactor}SidStd`];
+      let deptStd = json[`year2021`][`${chartFactor}DeptStd`];
+      let annualStd = json[`annual`][`${chartFactor}Std`];
+      console.log("sidtest", sidData, sidStd);
+      console.log("depttest", deptData, deptStd);
+      datasetList = [
+        dist,
+        dist,
+        makeErrorJson(sidData, sidStd),
+        makeErrorJson(deptData, deptStd),
+        makeErrorJson(annualList[0], annualStd),
+      ];
       const overviewNameRule = ["score", "commit", "star", "repo"];
       const canvasNameRule = ["total", "totalLine", "sid", "dept", "annual"];
       let ctxOverview = new Array(4);
@@ -120,7 +128,7 @@ window.onload = function () {
         json["totalStar"],
         json["repoDist"],
       ];
-      overviewFactorList = ["count", "commit", "star", "repo"];
+      let overviewFactorList = ["count", "commit", "star", "repo"];
       for (let i = 0; i < 4; i++) {
         overviewChart[i] = makeChart(
           ctxOverview[i],
@@ -138,8 +146,51 @@ window.onload = function () {
           }
         );
       }
-      const chartTypeRule = ["pie", "line", "bar", "bar", "line", "line"];
+      const chartTypeRule = [
+        "pie",
+        "line",
+        "barWithErrorBars",
+        "barWithErrorBars",
+        "lineWithErrorBars",
+        "line",
+      ];
       let chartColorRule = [cc10, cc10, cc6, cc3, cc3, cc5];
+      // json["year2021"]["scoreDeptStd"];
+
+      console.log("sample", labelList[3]);
+      function makeErrorJson(dataArr, stdArr) {
+        let newData = new Array(dataArr.length);
+
+        console.log("dataArr", dataArr);
+        for (let i = 0; i < dataArr.length; i++) {
+          let errorJson = {};
+          errorJson["y"] = Number(dataArr[i]);
+          errorJson["yMax"] = Number(dataArr[i]) + Number(stdArr[i]);
+          errorJson["yMin"] = Number(dataArr[i]) - Number(stdArr[i]);
+          console.log("err", errorJson);
+          newData[i] = errorJson;
+        }
+        console.log("newData");
+        console.log("newData", newData);
+        return newData;
+      }
+      let scoreOption = {
+        plugins: {
+          legend: {
+            display: false,
+          },
+        },
+        scales: { y: { max: 5 } },
+      };
+      let noLegendOption = {
+        plugins: {
+          legend: {
+            display: false,
+          },
+        },
+      };
+      let chartOptions = [{}, {}, scoreOption, scoreOption, scoreOption];
+
       for (let i = 0; i < 5; i++) {
         chart[i] = makeChart(
           ctx[i],
@@ -148,7 +199,7 @@ window.onload = function () {
           labelList[i],
           datasetList[i],
           chartColorRule[i],
-          {}
+          chartOptions[i]
         );
       }
 
@@ -186,7 +237,6 @@ window.onload = function () {
       scoreTab.addEventListener("click", function () {
         unchosenBtn();
         chooseBtn(scoreTab);
-
         chartFactor = "score";
         changeCardTitle(chartFactor);
         reloadChart(annual, chartFactor);
@@ -257,9 +307,9 @@ window.onload = function () {
       function setOverallStat(json) {
         // Overall statistic data: 3점 이상 비율, 총 커밋 수, 총 스타 수, 총 레포 수
         const overGoalcount = json["scoreMore3"][annual - startAnnual];
-        $("#overGoalNumerator").text(overGoalcount.toLocaleString("ko-KR"));
+        $("#overGoalNumerator").text(numberWithCommas(overGoalcount));
         $("#overGoalDenominator").text(
-          json.size[annual - startAnnual].toLocaleString("ko-KR")
+          numberWithCommas(json.size[annual - startAnnual])
         );
         $("#overGoalPercent").text(
           ((overGoalcount / json.size[annual - startAnnual]) * 100).toFixed(1) +
@@ -275,9 +325,9 @@ window.onload = function () {
           sumTotalStar += element;
         });
         $("#commitNumerator").text(
-          json.totalCommit[annual - startAnnual].toLocaleString("ko-KR")
+          numberWithCommas(json.totalCommit[annual - startAnnual])
         );
-        $("#commitDenominator").text(sumTotalCommit.toLocaleString("ko-KR"));
+        $("#commitDenominator").text(numberWithCommas(sumTotalCommit));
         $("#commitPercent").text(
           (
             (json.totalCommit[annual - startAnnual] / sumTotalCommit) *
@@ -285,18 +335,18 @@ window.onload = function () {
           ).toFixed(1) + "%"
         );
         $("#starNumerator").text(
-          json.totalStar[annual - startAnnual].toLocaleString("ko-KR")
+          numberWithCommas(json.totalStar[annual - startAnnual])
         );
-        $("#starDenominator").text(sumTotalStar.toLocaleString("ko-KR"));
+        $("#starDenominator").text(numberWithCommas(sumTotalStar));
         $("#starPercent").text(
           ((json.totalStar[annual - startAnnual] / sumTotalStar) * 100).toFixed(
             1
           ) + "%"
         );
         $("#repoNumerator").text(
-          json.repoDist[-(annual - 2021)].toLocaleString("ko-KR")
+          numberWithCommas(json.repoDist[-(annual - 2021)])
         );
-        $("#repoDenominator").text(json.totalRepo.toLocaleString("ko-KR"));
+        $("#repoDenominator").text(numberWithCommas([json.totalRepo]));
         $("#repoPercent").text(
           ((json.repoDist[-(annual - 2021)] / json.totalRepo) * 100).toFixed(
             1
@@ -331,7 +381,7 @@ window.onload = function () {
         sidData = json[`year${annual}`][`${factor}_sid`];
         deptData = json[`year${annual}`][`${factor}_dept`];
       }
-      function makeChart(dist, type, factor, labels, data, color, option) {
+      function makeChart(dist, type, factor, labels, data, color, options) {
         const chart = new Chart(dist, {
           type: type,
           data: {
@@ -344,7 +394,7 @@ window.onload = function () {
               },
             ],
           },
-          options: option,
+          options: options,
         });
         return chart;
       }
@@ -361,26 +411,55 @@ window.onload = function () {
             labelList[0] = scoreDistLabel;
             labelList[1] = scoreDistLineLabel;
             chartColorRule = [cc10, cc10, cc6, cc3, cc3, cc5];
+            chartOptions = [{}, {}, scoreOption, scoreOption, scoreOption];
             break;
           case "commit":
             labelList[0] = commitDistLabel;
             labelList[1] = commitDistLabel;
             chartColorRule = [cc5, cc5, cc6, cc3, cc3, cc5];
+            chartOptions = [
+              {},
+              {},
+              noLegendOption,
+              noLegendOption,
+              noLegendOption,
+            ];
             break;
           case "star":
             labelList[0] = starDistLabel;
             labelList[1] = starDistLabel;
             chartColorRule = [cc5, cc5, cc6, cc3, cc3, cc5];
+            chartOptions = [
+              {},
+              {},
+              noLegendOption,
+              noLegendOption,
+              noLegendOption,
+            ];
             break;
           case "pr":
             labelList[0] = prDistLabel;
             labelList[1] = prDistLabel;
             chartColorRule = [cc5, cc5, cc6, cc3, cc3, cc5];
+            chartOptions = [
+              {},
+              {},
+              noLegendOption,
+              noLegendOption,
+              noLegendOption,
+            ];
             break;
           case "issue":
             labelList[0] = issueDistLabel;
             labelList[1] = issueDistLabel;
             chartColorRule = [cc5, cc5, cc6, cc3, cc3, cc5];
+            chartOptions = [
+              {},
+              {},
+              noLegendOption,
+              noLegendOption,
+              noLegendOption,
+            ];
             break;
           default:
             console.log("default!!");
@@ -389,8 +468,19 @@ window.onload = function () {
         sidData = json[`year${annual}`][`${factor}_sid`];
         deptData = json[`year${annual}`][`${factor}_dept`];
         datasetList = [dist, dist, sidData, deptData, annualList[annualIdx]];
-        console.log("labelList", labelList);
-        console.log("datasetList", datasetList);
+
+        sidStd = json[`year${annual}`][`${factor}SidStd`];
+        deptStd = json[`year${annual}`][`${factor}DeptStd`];
+        annualStd = json[`annual`][`${factor}Std`];
+        console.log("sidtest", sidData, sidStd);
+        console.log("depttest", deptData, deptStd);
+        datasetList = [
+          dist,
+          dist,
+          makeErrorJson(sidData, sidStd),
+          makeErrorJson(deptData, deptStd),
+          makeErrorJson(annualList[annualIdx], annualStd),
+        ];
         for (let i = 0; i < 5; i++) {
           chart[i] = makeChart(
             ctx[i],
@@ -399,7 +489,7 @@ window.onload = function () {
             labelList[i],
             datasetList[i],
             chartColorRule[i],
-            {}
+            chartOptions[i]
           );
         }
       }

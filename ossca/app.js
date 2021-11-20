@@ -29,6 +29,8 @@ app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/chartdata", chartRouter);
 app.use("/ajax", ajaxRouter);
+// scripts 경로로 접근시 node_modules을 사용할 수 있게 설정
+app.use("/scripts", express.static(path.join(__dirname, "node_modules")));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
