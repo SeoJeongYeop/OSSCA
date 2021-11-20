@@ -6,7 +6,7 @@ var logger = require("morgan");
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
-var chartRouter = require("./routes/chart");
+var chartRouter = require("./routes/chartdata");
 var ajaxRouter = require("./routes/ajax");
 
 var app = express();
@@ -27,7 +27,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
-app.use("/chart", chartRouter);
+app.use("/chartdata", chartRouter);
 app.use("/ajax", ajaxRouter);
 
 // catch 404 and forward to error handler
@@ -40,7 +40,7 @@ app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
-  console.error(err.stack)
+  console.error(err.stack);
   // render the error page
   res.status(err.status || 500);
   res.render("error");
