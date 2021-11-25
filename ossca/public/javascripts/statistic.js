@@ -2,9 +2,6 @@ window.onload = function () {
   //const IP = "localhost";
   const IP = "115.145.212.144";
   const port = "8081";
-  /* 미구현
-  - 검색기능
-  */
   const promise = fetch(`http://${IP}:${port}/chartdata`)
     .then((response) => {
       console.log(response);
@@ -47,57 +44,63 @@ window.onload = function () {
         "100~200",
         "200~300",
         "300~400",
-        "400+",
+        "400~500",
       ];
-      const starDistLabel = ["0", "1~2", "3~4", "5~6", "7+"];
-      const prDistLabel = ["0", "1~10", "11~20", "21~30", "30+"];
-      const issueDistLabel = ["0", "1~5", "6~10", "11~15", "15+"];
+      const starDistLabel = ["0~2", "2~4", "4~6", "6~8", "8~10"]; //contain over 10
+      const prDistLabel = ["0~5", "5~10", "10~15", "15~20", "20~25"];
+      const issueDistLabel = ["0~2", "2~4", "4~6", "6~8", "8~10"];
       const sidLabel = ["21", "20", "19", "18", "17", "16"];
       const deptLabel = ["소프트웨어", "글로벌융합", "컴퓨터공학"];
       const annualLabel = ["2019", "2020", "2021"];
-      let labelList = [
-        scoreDistLabel,
-        scoreDistLineLabel,
-        sidLabel,
-        deptLabel,
-        annualLabel,
-        annualLabel,
-      ];
-      let datasetList = [dist, dist, sidData, deptData, annualList[0]];
+      let labelList = [scoreDistLabel, sidLabel, deptLabel];
+      console.log("DIST", dist);
+      console.log("DIST", scoreDistLabel);
+      console.log("NEW DIST", makeHistogramJson(dist, scoreDistLabel));
       let sidStd = json[`year2021`][`${chartFactor}SidStd`];
       let deptStd = json[`year2021`][`${chartFactor}DeptStd`];
-      let annualStd = json[`annual`][`${chartFactor}Std`];
+      let annualStd = json[`annual`];
+      //[`${chartFactor}Std`];
+      const annualStdList = [
+        annualStd["scoreStd"],
+        annualStd["commitStd"],
+        annualStd["starStd"],
+        annualStd["prStd"],
+        annualStd["issueStd"],
+      ];
       console.log("sidtest", sidData, sidStd);
       console.log("depttest", deptData, deptStd);
-      datasetList = [
-        dist,
-        dist,
+      let datasetList = [
+        makeHistogramJson(dist, scoreDistLabel), // original: dist
         makeErrorJson(sidData, sidStd),
         makeErrorJson(deptData, deptStd),
-        makeErrorJson(annualList[0], annualStd),
       ];
+      const yearNameRule = ["score", "commit", "star", "pr", "issue"];
       const overviewNameRule = ["score", "commit", "star", "repo"];
-      const canvasNameRule = ["total", "totalLine", "sid", "dept", "annual"];
+      const canvasNameRule = ["total", "sid", "dept"];
+      let ctxYear = new Array(5);
+      for (let i = 0; i < 5; i++) {
+        ctxYear[i] = document
+          .getElementById(`${yearNameRule[i]}Year`)
+          .getContext("2d");
+      }
       let ctxOverview = new Array(4);
       for (let i = 0; i < 4; i++) {
         ctxOverview[i] = document
           .getElementById(`${overviewNameRule[i]}Overview`)
           .getContext("2d");
       }
-      let ctx = new Array(5);
-      for (let i = 0; i < 5; i++) {
+      let ctx = new Array(3);
+      for (let i = 0; i < 3; i++) {
         ctx[i] = document
           .getElementById(`${canvasNameRule[i]}ScoreDist`)
           .getContext("2d");
       }
 
       setOverallStat(json);
-      setDist(chartFactor);
       /* color pallet ref: 
       https://learnui.design/tools/data-color-picker.html#palette*/
       const bsPrimary = "#0d6efd";
       const cc3 = ["#4245cb", "#ff4470", "#ffe913"];
-      const cc5 = ["#4245cb", "#db20ac", "#ff4470", "#ff9a2f", "#ffe913"];
       const cc6 = [
         "#4245cb",
         "#c629b6",
@@ -118,9 +121,66 @@ window.onload = function () {
         "#ffbe1b",
         "#ffe913",
       ];
+      const noLegendOption = {
+        plugins: {
+          legend: {
+            display: false,
+          },
+        },
+      };
+      const scoreOption = {
+        plugins: {
+          legend: {
+            display: false,
+          },
+        },
+        scales: {
+          y: { max: 5 },
+        },
+      };
+      function histogramOption(offset) {
+        return {
+          plugins: {
+            legend: {
+              display: false,
+            },
+            tooltip: {
+              callbacks: {
+                title: (items) => {
+                  if (!items.length) {
+                    return "";
+                  }
+                  const item = items[0];
+                  const x = item.parsed.x;
+                  let min = x - offset <= 0 ? 0 : x - offset;
+                  let max = x + offset;
+                  if (x === 0) {
+                    min = 0;
+                    max = 0;
+                  }
 
-      const chart = createObjArray(6);
+                  return `${min}-${max}`;
+                },
+              },
+            },
+          },
+          scales: {
+            x: {
+              type: "linear",
+              offset: false,
+              grid: {
+                offset: false,
+              },
+              ticks: {
+                stepSize: offset * 2,
+              },
+            },
+          },
+        };
+      }
+
       const overviewChart = createObjArray(4);
+      const chart = createObjArray(3);
 
       let overviewDatasetList = [
         json["scoreMore3"],
@@ -137,61 +197,14 @@ window.onload = function () {
           ["2019", "2020", "2021"],
           overviewDatasetList[i],
           bsPrimary,
-          {
-            plugins: {
-              legend: {
-                display: false,
-              },
-            },
-          }
+          noLegendOption
         );
       }
-      const chartTypeRule = [
-        "pie",
-        "line",
-        "barWithErrorBars",
-        "barWithErrorBars",
-        "lineWithErrorBars",
-        "line",
-      ];
-      let chartColorRule = [cc10, cc10, cc6, cc3, cc3, cc5];
-      // json["year2021"]["scoreDeptStd"];
+      const chartTypeRule = ["bar", "barWithErrorBars", "barWithErrorBars"];
+      let chartColorRule = [bsPrimary, cc6, cc3];
+      let chartOptions = [histogramOption(0.25), scoreOption, scoreOption];
 
-      console.log("sample", labelList[3]);
-      function makeErrorJson(dataArr, stdArr) {
-        let newData = new Array(dataArr.length);
-
-        console.log("dataArr", dataArr);
-        for (let i = 0; i < dataArr.length; i++) {
-          let errorJson = {};
-          errorJson["y"] = Number(dataArr[i]);
-          errorJson["yMax"] = Number(dataArr[i]) + Number(stdArr[i]);
-          errorJson["yMin"] = Number(dataArr[i]) - Number(stdArr[i]);
-          console.log("err", errorJson);
-          newData[i] = errorJson;
-        }
-        console.log("newData");
-        console.log("newData", newData);
-        return newData;
-      }
-      let scoreOption = {
-        plugins: {
-          legend: {
-            display: false,
-          },
-        },
-        scales: { y: { max: 5 } },
-      };
-      let noLegendOption = {
-        plugins: {
-          legend: {
-            display: false,
-          },
-        },
-      };
-      let chartOptions = [{}, {}, scoreOption, scoreOption, scoreOption];
-
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < 3; i++) {
         chart[i] = makeChart(
           ctx[i],
           chartTypeRule[i],
@@ -218,21 +231,21 @@ window.onload = function () {
         setGraphData(annual, chartFactor);
         setOverallStat(json);
         reloadChart(annual, chartFactor);
-        setDist(chartFactor);
+        //setDist(chartFactor);
       });
       btn20.addEventListener("click", function () {
         annual = 2020;
         setGraphData(annual, chartFactor);
         setOverallStat(json);
         reloadChart(annual, chartFactor);
-        setDist(chartFactor);
+        //setDist(chartFactor);
       });
       btn19.addEventListener("click", function () {
         annual = 2019;
         setGraphData(annual, chartFactor);
         setOverallStat(json);
         reloadChart(annual, chartFactor);
-        setDist(chartFactor);
+        //setDist(chartFactor);
       });
       scoreTab.addEventListener("click", function () {
         unchosenBtn();
@@ -240,7 +253,7 @@ window.onload = function () {
         chartFactor = "score";
         changeCardTitle(chartFactor);
         reloadChart(annual, chartFactor);
-        setDist(chartFactor);
+        //setDist(chartFactor);
       });
       commitTab.addEventListener("click", function () {
         unchosenBtn();
@@ -248,7 +261,7 @@ window.onload = function () {
         chartFactor = "commit";
         changeCardTitle(chartFactor);
         reloadChart(annual, chartFactor);
-        setDist(chartFactor);
+        //setDist(chartFactor);
       });
       starTab.addEventListener("click", function () {
         unchosenBtn();
@@ -256,7 +269,7 @@ window.onload = function () {
         chartFactor = "star";
         changeCardTitle(chartFactor);
         reloadChart(annual, chartFactor);
-        setDist(chartFactor);
+        //setDist(chartFactor);
       });
       prTab.addEventListener("click", function () {
         unchosenBtn();
@@ -264,7 +277,7 @@ window.onload = function () {
         chartFactor = "pr";
         changeCardTitle(chartFactor);
         reloadChart(annual, chartFactor);
-        setDist(chartFactor);
+        //setDist(chartFactor);
       });
       issueTab.addEventListener("click", function () {
         unchosenBtn();
@@ -272,7 +285,7 @@ window.onload = function () {
         chartFactor = "issue";
         changeCardTitle(chartFactor);
         reloadChart(annual, chartFactor);
-        setDist(chartFactor);
+        //setDist(chartFactor);
       });
       function unchosenBtn() {
         scoreTab.classList.remove("active");
@@ -294,10 +307,8 @@ window.onload = function () {
           word = factor.charAt(0).toUpperCase() + factor.slice(1);
         }
         cardTitle.item(0).textContent = `전체 ${word}분포`;
-        cardTitle.item(1).textContent = `${word} 퍼센티지`;
-        cardTitle.item(2).textContent = `학번별 ${word}분포`;
-        cardTitle.item(3).textContent = `학과별 ${word}분포`;
-        cardTitle.item(4).textContent = `연도별 ${word}분포`;
+        cardTitle.item(1).textContent = `학번별 ${word}분포`;
+        cardTitle.item(2).textContent = `학과별 ${word}분포`;
       }
 
       function numberWithCommas(x) {
@@ -353,28 +364,6 @@ window.onload = function () {
           ) + "%"
         );
       }
-      function setDist(factor) {
-        const perScore = document.getElementById("perScore");
-        const distTextClass = document.getElementsByClassName("dist-text");
-        while (distTextClass.length !== 0) {
-          perScore.removeChild(distTextClass.item(0));
-        }
-        for (let i = 0; i < dist.length; i++) {
-          const pElement = document.createElement("p");
-          const percent = (
-            (dist[i] / json.size[annual - startAnnual]) *
-            100
-          ).toFixed(1);
-          pElement.setAttribute("class", "card-text dist-text");
-          // 퍼센테이지에 따라 글씨 색 바꾸기
-          pElement.textContent = labelList[1][i] + ": " + percent + "%";
-          pElement.style.color = `RGB(${(
-            (parseInt(percent) * 255) /
-            20
-          ).toFixed(0)},${parseInt(percent).toFixed(0)},0)`;
-          perScore.appendChild(pElement);
-        }
-      }
       function setGraphData(annual, factor) {
         document.getElementById("dropdownMenuButton1").textContent = annual;
         dist = json[`year${annual}`][`${factor}_dist`];
@@ -382,84 +371,88 @@ window.onload = function () {
         deptData = json[`year${annual}`][`${factor}_dept`];
       }
       function makeChart(dist, type, factor, labels, data, color, options) {
-        const chart = new Chart(dist, {
-          type: type,
-          data: {
-            labels: labels,
-            datasets: [
-              {
-                label: factor,
-                data: data,
-                backgroundColor: color,
-              },
-            ],
-          },
-          options: options,
-        });
+        let chart;
+
+        if (color === bsPrimary) console.log("makechart", data);
+        else console.log(labels.length, data.length);
+        if (type === "bar" || type === "barWithErrorBars") {
+          //Histogram
+          const borderWidth = 1;
+          const barPercentage = 1;
+          const categoryPercentage = 1;
+
+          chart = new Chart(dist, {
+            type: type,
+            data: {
+              labels: labels,
+              datasets: [
+                {
+                  label: "num",
+                  data: data,
+                  backgroundColor: color,
+                  borderWidth: borderWidth,
+                  barPercentage: barPercentage,
+                  categoryPercentage: categoryPercentage,
+                },
+              ],
+            },
+            options: options,
+          });
+        } else {
+          chart = new Chart(dist, {
+            type: type,
+            data: {
+              labels: labels,
+              datasets: [
+                {
+                  label: factor,
+                  data: data,
+                  backgroundColor: color,
+                },
+              ],
+            },
+            options: options,
+          });
+        }
+
         return chart;
       }
       function destroyChart() {
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 3; i++) {
           chart[i].destroy();
         }
       }
       function reloadChart(annual, factor) {
-        let annualIdx = indexFactor(factor);
         destroyChart();
+        chartColorRule = [bsPrimary, cc6, cc3];
         switch (factor) {
           case "score":
             labelList[0] = scoreDistLabel;
-            labelList[1] = scoreDistLineLabel;
-            chartColorRule = [cc10, cc10, cc6, cc3, cc3, cc5];
-            chartOptions = [{}, {}, scoreOption, scoreOption, scoreOption];
+            chartOptions = [histogramOption(0.25), scoreOption, scoreOption];
             break;
           case "commit":
             labelList[0] = commitDistLabel;
-            labelList[1] = commitDistLabel;
-            chartColorRule = [cc5, cc5, cc6, cc3, cc3, cc5];
             chartOptions = [
-              {},
-              {},
-              noLegendOption,
+              histogramOption(50),
               noLegendOption,
               noLegendOption,
             ];
             break;
           case "star":
             labelList[0] = starDistLabel;
-            labelList[1] = starDistLabel;
-            chartColorRule = [cc5, cc5, cc6, cc3, cc3, cc5];
-            chartOptions = [
-              {},
-              {},
-              noLegendOption,
-              noLegendOption,
-              noLegendOption,
-            ];
+            chartOptions = [histogramOption(1), noLegendOption, noLegendOption];
             break;
           case "pr":
             labelList[0] = prDistLabel;
-            labelList[1] = prDistLabel;
-            chartColorRule = [cc5, cc5, cc6, cc3, cc3, cc5];
             chartOptions = [
-              {},
-              {},
-              noLegendOption,
+              histogramOption(2.5),
               noLegendOption,
               noLegendOption,
             ];
             break;
           case "issue":
             labelList[0] = issueDistLabel;
-            labelList[1] = issueDistLabel;
-            chartColorRule = [cc5, cc5, cc6, cc3, cc3, cc5];
-            chartOptions = [
-              {},
-              {},
-              noLegendOption,
-              noLegendOption,
-              noLegendOption,
-            ];
+            chartOptions = [histogramOption(1), noLegendOption, noLegendOption];
             break;
           default:
             console.log("default!!");
@@ -467,32 +460,90 @@ window.onload = function () {
         dist = json[`year${annual}`][`${factor}_dist`];
         sidData = json[`year${annual}`][`${factor}_sid`];
         deptData = json[`year${annual}`][`${factor}_dept`];
-        datasetList = [dist, dist, sidData, deptData, annualList[annualIdx]];
-
         sidStd = json[`year${annual}`][`${factor}SidStd`];
         deptStd = json[`year${annual}`][`${factor}DeptStd`];
-        annualStd = json[`annual`][`${factor}Std`];
-        console.log("sidtest", sidData, sidStd);
-        console.log("depttest", deptData, deptStd);
         datasetList = [
-          dist,
-          dist,
+          makeHistogramJson(dist, labelList[0]),
           makeErrorJson(sidData, sidStd),
           makeErrorJson(deptData, deptStd),
-          makeErrorJson(annualList[annualIdx], annualStd),
         ];
-        for (let i = 0; i < 5; i++) {
-          chart[i] = makeChart(
-            ctx[i],
-            chartTypeRule[i],
-            chartFactor,
-            labelList[i],
-            datasetList[i],
-            chartColorRule[i],
-            chartOptions[i]
-          );
+        for (let i = 0; i < 3; i++) {
+          if (i === 0) {
+            chart[i] = makeChart(
+              ctx[i],
+              chartTypeRule[i],
+              chartFactor,
+              labelList[i],
+              datasetList[i],
+              chartColorRule[i],
+              chartOptions[i]
+            );
+          } else {
+            chart[i] = makeChart(
+              ctx[i],
+              chartTypeRule[i],
+              chartFactor,
+              labelList[i],
+              datasetList[i],
+              chartColorRule[i],
+              {
+                plugins: {
+                  legend: {
+                    display: false,
+                  },
+                },
+              }
+            );
+          }
         }
       }
+
+      function makeErrorJson(dataArr, stdArr) {
+        let newData = new Array(dataArr.length);
+
+        console.log("dataArr", dataArr);
+        for (let i = 0; i < dataArr.length; i++) {
+          let errorJson = {};
+          errorJson["y"] = Number(dataArr[i]);
+          errorJson["yMax"] = Number(
+            (Number(dataArr[i]) + Number(stdArr[i])).toFixed(2)
+          );
+          errorJson["yMin"] = Number(
+            (Number(dataArr[i]) - Number(stdArr[i])).toFixed(2)
+          );
+          newData[i] = errorJson;
+        }
+        console.log("newData", newData);
+        return newData;
+      }
+      function makeHistogramJson(dist, label) {
+        let offset = 0;
+        //label expect NUM1~NUM2 or NUM
+        let newDist = new Array(dist.length);
+        let newLabel = new Array(label.length);
+        if (dist.length === label.length) {
+          for (let i = 0; i < dist.length; i++) {
+            if (label[i].indexOf("~") === -1) {
+              newLabel[i] = label[i];
+              console.log("no~", newLabel[i], i);
+            } else {
+              newLabel[i] = label[i].split("~")[1];
+              if (offset === 0) {
+                let temp = label[i].split("~");
+                offset = (Number(temp[1]) - Number(temp[0])) / 2;
+              }
+            }
+          }
+        } else return dist;
+        for (let j = 0; j < dist.length; j++) {
+          newDist[j] = {
+            x: Number(newLabel[j]) - offset,
+            y: dist[j],
+          };
+        }
+        return newDist;
+      }
+
       function createObjArray(size) {
         const arr = new Array(size);
         for (let i = 0; i < size; i++) {
@@ -500,48 +551,31 @@ window.onload = function () {
         }
         return arr;
       }
-      function indexFactor(factor) {
-        let idx = 0;
-        switch (factor) {
-          case "score":
-            idx = 0;
-            break;
-          case "commit":
-            idx = 1;
-            break;
-          case "star":
-            idx = 2;
-            break;
-          case "pr":
-            idx = 3;
-            break;
-          case "issue":
-            idx = 4;
-            break;
-          default:
-            console.log("default!!");
-        }
-        return idx;
+
+      const yearChart = createObjArray(5);
+      const yearFactorList = ["score", "commit", "star", "pr", "issue"];
+
+      for (let i = 0; i < 5; i++) {
+        yearChart[i] = makeChart(
+          ctxYear[i],
+          "lineWithErrorBars",
+          yearFactorList[i],
+          [2019, 2020, 2021],
+          makeErrorJson(annualList[i], annualStdList[i]),
+          bsPrimary,
+          i === 0
+            ? {
+                plugins: {
+                  legend: {
+                    display: false,
+                  },
+                },
+                scales: {
+                  y: { max: 5 },
+                },
+              } // 그래프 렌더링 문제로 오브젝트자체를 전달하도록함
+            : noLegendOption
+        );
       }
     });
 };
-
-/*
-chart option example
-*****
-options: {
-  plugins: {
-    title: {
-      text: "hello",
-      display: true,
-    },
-    legend: {
-      display: true,
-      position: "bottom",
-    },
-    tooltips: {
-      enabled: false,
-    },
-  },
-},
-*/

@@ -4,6 +4,27 @@ block vars
   - var menu='home'
   
 block content
+  .row.pt-2.mb-2
+    .col-my-p20.ps-
+      .card.p-1
+        h5.card-title 연도별 Score
+        canvas#scoreYear
+    .col-my-p20
+      .card.p-1  
+        h5.card-title 연도별 Commit
+        canvas#commitYear
+    .col-my-p20
+      .card.p-1
+        h5.card-title 연도별 Star
+        canvas#starYear
+    .col-my-p20
+      .card.p-1 
+        h5.card-title 연도별 PR
+        canvas#prYear
+    .col-my-p20
+      .card.p-1 
+        h5.card-title 연도별 Issue
+        canvas#issueYear
   .d-flex.text-lg
     .dropdown
         button#dropdownMenuButton1.btn.btn-primary.dropdown-toggle.me-2(type="button", data-bs-toggle="dropdown", aria-expanded="false") 2021 
@@ -15,54 +36,58 @@ block content
           li 
             button#dropdownBtn2019.dropdown-item 2019
       
-  .row.pt-2
+  #overviewChart.row.pt-2
     .col-md-3
       .card.p-2
-        h5.card-title 3점 이상 비율
-        div.text-center.kpi
-          span#overGoalNumerator.current.text-primary
-          |  / 
-          span#overGoalDenominator.total
-          span.percent-wrapper
-            | (
-            span#overGoalPercent.percent 0.0%
-            | )
+        .card-text
+          h5.card-title 3점 이상 비율
+          .text-center.kpi
+            span#overGoalNumerator.current.text-primary
+            |  / 
+            span#overGoalDenominator.total
+            span.percent-wrapper
+              | (
+              span#overGoalPercent.percent 0.0%
+              | )
         canvas#scoreOverview
     .col-md-3 
-      .card.p-2  
-        h5.card-title 총 커밋 수
-        div.text-center.kpi
-          span#commitNumerator.current.text-primary
-          |  / 
-          span#commitDenominator.total
-          span.percent-wrapper
-            | (
-            span#commitPercent.percent 0.0%
-            | )
+      .card.p-2
+        .card-text  
+          h5.card-title 총 커밋 수
+          .text-center.kpi
+            span#commitNumerator.current.text-primary
+            |  / 
+            span#commitDenominator.total
+            span.percent-wrapper
+              | (
+              span#commitPercent.percent 0.0%
+              | )
         canvas#commitOverview
     .col-md-3 
       .card.p-2
-        h5.card-title 총 스타 수
-        div.text-center.kpi
-          span#starNumerator.current.text-primary
-          |  / 
-          span#starDenominator.total
-          span.percent-wrapper
-            | (
-            span#starPercent.percent 0.0%
-            | )
+        .card-text
+          h5.card-title 총 스타 수
+          .text-center.kpi
+            span#starNumerator.current.text-primary
+            |  / 
+            span#starDenominator.total
+            span.percent-wrapper
+              | (
+              span#starPercent.percent 0.0%
+              | )
         canvas#starOverview
     .col-md-3
       .card.p-2 
-        h5.card-title 총 레포 수
-        div.text-center.kpi
-          span#repoNumerator.current.text-primary
-          |  / 
-          span#repoDenominator.total
-          span.percent-wrapper
-            | (
-            span#repoPercent.percent 0.0%
-            | )
+        .card-text
+          h5.card-title 총 레포 수
+          div.text-center.kpi
+            span#repoNumerator.current.text-primary
+            |  / 
+            span#repoDenominator.total
+            span.percent-wrapper
+              | (
+              span#repoPercent.percent 0.0%
+              | )
         canvas#repoOverview
 
   ul.nav.nav-tabs.mt-4.text-lg
@@ -78,17 +103,12 @@ block content
       a.nav-link#pills-issue-tab(href="#") Issues
 
   #pills-score.tab-pane.fade.show.mt-2
-    .row 
-      .col-md-6 
+    .row.mt-2 
+      .col-md-4 
         .card
           h5.card-title.factor 전체 Score분포
-          canvas#totalScoreDist
-      .col-md-6
-        .card
-          h5.card-title.factor Score 퍼센티지
           #perScore.text-flex
-          canvas#totalLineScoreDist       
-    .row.mt-2
+          canvas#totalScoreDist 
       .col-md-4
         .card
           h5.card-title.factor 학번별 Score분포
@@ -97,10 +117,6 @@ block content
         .card
           h5.card-title.factor 학과별 Score분포
           canvas#deptScoreDist
-      .col-md-4
-        .card
-          h5.card-title.factor 연도별 Score분포
-          canvas#annualScoreDist
 
   
   script(type="text/javascript", src="/javascripts/statistic.js")

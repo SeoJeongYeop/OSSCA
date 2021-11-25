@@ -133,37 +133,37 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
         } else if (Row.commit_count >= 400) {
           commitDist[idx1][4] += 1;
         }
-        if (Row.star_count === 0) {
+        if (Row.star_count < 2) {
           starDist[idx1][0] += 1;
-        } else if (Row.star_count <= 2) {
+        } else if (Row.star_count < 4) {
           starDist[idx1][1] += 1;
-        } else if (Row.star_count <= 4) {
+        } else if (Row.star_count < 6) {
           starDist[idx1][2] += 1;
-        } else if (Row.star_count <= 6) {
+        } else if (Row.star_count < 8) {
           starDist[idx1][3] += 1;
-        } else if (Row.star_count > 6) {
+        } else if (Row.star_count >= 8) {
           starDist[idx1][4] += 1;
         }
-        if (Row.pr_count === 0) {
+        if (Row.pr_count < 5) {
           prDist[idx1][0] += 1;
-        } else if (Row.star_count <= 10) {
+        } else if (Row.pr_count < 10) {
           prDist[idx1][1] += 1;
-        } else if (Row.star_count <= 20) {
+        } else if (Row.pr_count < 15) {
           prDist[idx1][2] += 1;
-        } else if (Row.star_count <= 30) {
+        } else if (Row.pr_count < 20) {
           prDist[idx1][3] += 1;
-        } else if (Row.star_count > 30) {
+        } else if (Row.pr_count >= 20) {
           prDist[idx1][4] += 1;
         }
-        if (Row.issue_count === 0) {
+        if (Row.issue_count < 2) {
           issueDist[idx1][0] += 1;
-        } else if (Row.star_count <= 5) {
+        } else if (Row.issue_count < 4) {
           issueDist[idx1][1] += 1;
-        } else if (Row.star_count <= 10) {
+        } else if (Row.issue_count < 6) {
           issueDist[idx1][2] += 1;
-        } else if (Row.star_count <= 15) {
+        } else if (Row.issue_count < 8) {
           issueDist[idx1][3] += 1;
-        } else if (Row.star_count > 15) {
+        } else if (Row.issue_count >= 8) {
           issueDist[idx1][4] += 1;
         }
         // annual Total sum

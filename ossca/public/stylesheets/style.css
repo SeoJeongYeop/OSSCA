@@ -15,14 +15,20 @@ a {
 body {
   background: #fefefe;
 } */
+.row {
+  --bs-gutter-x: 0.8rem !important;
+}
+@media (min-width: 768px) {
+  .col-my-p20 {
+    flex: 0 0 auto;
+    width: 20%;
+  }
+}
 
 h5.card-title {
   font: 16px;
   font-family: "Noto Sans KR", sans-serif;
   font-weight: 500;
-}
-.row {
-  /* margin: 10px 0px; */
 }
 
 button.chosen {
@@ -32,25 +38,15 @@ button.unchosen {
   font-family: "Roboto", sans-serif;
   color: RGB(13, 110, 253);
 }
-#totalScoreDist {
-  margin: 40px 50px;
-}
 
 .kpi {
   font-size: 2rem;
 }
 
-.current {
-
-}
-
-.total {
-}
-
 .percent-wrapper {
-  opacity: .5;
+  opacity: 0.5;
   font-size: 1rem;
-  margin-left: .25rem;
+  margin-left: 0.25rem;
 }
 @media only screen and (max-width: 990px) {
   #totalScoreDist {
@@ -60,9 +56,18 @@ button.unchosen {
 @media only screen and (max-width: 600px) {
   #totalScoreDist {
     margin: 0px 10px;
- }
+  }
 }
 
 .tab-container {
   margin: 10px 0px;
+}
+
+#overviewChart > .col-md-3 > .card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.card {
+  height: 100%;
 }
