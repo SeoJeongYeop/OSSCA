@@ -11,13 +11,19 @@ html
   body
     include components/header
 
-    .container.mt-2
+    .container.mt-2.mb-2
       block content
-    //-include './components/footer'
 
     .footer.bg-light.pt-3.pb-3.mt-3
-      .container
-        | SKKU
+      .container.content
+        p#copyright Copyright 2021. SKKU GitHub Team All right reserved.
+        .logo-link
+          | OSSCA
+          a(href="https://github.com/SeoJeongYeop/OSSCA", target="_blank")
+            img(src="images/github.svg" alt="github logo") 
+          | GitHub_Crawl
+          a(href="https://github.com/tsfo1489/GitHub_Crawl", target="_blank")
+            img(src="images/github.svg" alt="github logo") 
 
     script(src='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js')
     script(src="http://code.jquery.com/jquery-latest.js")
