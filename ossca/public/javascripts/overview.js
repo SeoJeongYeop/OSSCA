@@ -10,7 +10,7 @@ $(document).ready(function () {
     columnDefs: [
       {
         orderable: false,
-        targets:[1]
+        targets:[0, 1]
       },
       {
         searchPanes: {
@@ -80,7 +80,14 @@ $(document).ready(function () {
         targets:[3]
       }
     ],
-    order: [[3, 'desc']]
+    order: [[3, 'desc']],
+    drawCallback: function( settings ) {
+      var now_page = parseInt($('.page-item.active > a').html());
+      var table_rows = $.find('.rank');
+      for(idx in table_rows){
+        $(table_rows[idx]).html((now_page - 1) * 10 + parseInt(idx) + 1);
+      }
+    }
   });
   $('.dtsp-titleRow').remove();
   $('.dtsp-panesContainer').insertAfter('#scoreTable_filter');

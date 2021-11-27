@@ -8,6 +8,7 @@ block content
     table#scoreTable.table.table-striped.table-hover
       thead.table-light
         tr 
+          th rank
           th name 
           th github id 
           th year 
@@ -20,6 +21,7 @@ block content
       tbody
         -for(let i=0; i<size;i++)
           tr
+            td.rank 
             td
               a(href="users/"+table[i].id) #{table[i].name}
             td #{table[i].github_id}
