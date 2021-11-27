@@ -13,6 +13,7 @@ block content
           th year 
           th total score
           th commits
+          th commit lines
           th issues
           th pull requests
           th repositories
@@ -25,6 +26,7 @@ block content
             td.ns= table[i].year
             td.sc= table[i].total_score
             td.sc= table[i].commits
+            td.sc= table[i].commit_lines
             td.sc= table[i].issues
             td.sc= table[i].pulls
             td.sc= table[i].repos
@@ -39,4 +41,3 @@ block scripts
   script(src='http://cdn.datatables.net/searchpanes/1.4.0/js/dataTables.searchPanes.min.js')
   script(src='http://cdn.datatables.net/searchpanes/1.4.0/js/searchPanes.bootstrap5.min.js')
   script(src='http://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js')
-  
