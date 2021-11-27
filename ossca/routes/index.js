@@ -19,6 +19,8 @@ router.get("/data", function (req, res, next) {
         result.row[i].pulls = 0;
       if(result.row[i].repos == null)
         result.row[i].repos = 0;
+      if(result.row[i].commit_lines == null)
+        result.row[i].commit_lines = 0;
     }
     console.log(result.row.length);
     res.render("index", {
