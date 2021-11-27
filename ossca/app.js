@@ -48,7 +48,4 @@ app.use(function (err, req, res, next) {
   res.render("error");
 });
 
-app.listen(port, function () {
-  console.log(`http://localhost:${port}`);
-});
 module.exports = app;
