@@ -3,14 +3,14 @@ $(document).ready(function () {
     searchPanes: {
       viewTotal: true,
       orderable: false,
-      columns: [2, 3],
+      columns: [3, 4],
       initCollapsed: true,
     },
     dom: 'Pfrtip',
     columnDefs: [
       {
         orderable: false,
-        targets:[0, 1]
+        targets:[0, 1, 2]
       },
       {
         searchPanes: {
@@ -77,10 +77,10 @@ $(document).ready(function () {
             }
           ]
         },
-        targets:[3]
+        targets:[4]
       }
     ],
-    order: [[3, 'desc']],
+    order: [[4, 'desc']],
     drawCallback: function( settings ) {
       var now_page = parseInt($('.page-item.active > a').html());
       var table_rows = $.find('.rank');
