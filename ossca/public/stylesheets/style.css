@@ -27,6 +27,12 @@ button.unchosen {
 
 .kpi {
   font-size: 2rem;
+  /* font-size: 2vw; */
+}
+@media (max-width: 768px) {
+  .kpi {
+    font-size: 2rem !important;
+  }
 }
 
 .percent-wrapper {
@@ -47,6 +53,7 @@ button.unchosen {
 .card {
   height: 100%;
   margin-bottom: 5px;
+  font-family: "Roboto", sans-serif;
 }
 
 #copyright {
@@ -68,7 +75,11 @@ a.nav-link {
   cursor: pointer;
 }
 
-.repo-card{
+.repo-card {
   width: 45%;
   margin: 5px;
+}
+
+.form-switch {
+  padding-top: 9px;
 }

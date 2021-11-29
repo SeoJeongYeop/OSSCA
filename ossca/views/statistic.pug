@@ -27,67 +27,65 @@ block content
         canvas#issueYear
   .d-flex.text-lg
     .dropdown
-        button#dropdownMenuButton1.btn.btn-primary.dropdown-toggle.me-2(type="button", data-bs-toggle="dropdown", aria-expanded="false") 2021 
-        ul.dropdown-menu(aria-labelledby="dropdownMenuButton1")
-          li
-            button#dropdownBtn2021.dropdown-item 2021
-          li 
-            button#dropdownBtn2020.dropdown-item 2020
-          li 
-            button#dropdownBtn2019.dropdown-item 2019
-      
+      button#dropdownMenuButton1.btn.btn-primary.dropdown-toggle.me-2(type="button", data-bs-toggle="dropdown", aria-expanded="false") 2021 
+      ul.dropdown-menu(aria-labelledby="dropdownMenuButton1")
+        li
+          button#dropdownBtn2021.dropdown-item 2021
+        li 
+          button#dropdownBtn2020.dropdown-item 2020
+        li 
+          button#dropdownBtn2019.dropdown-item 2019
+    .form-check.form-switch 
+      input#totalSwitch.form-check-input(type="checkbox", role="switch" checked)
+      label.form-check-label(for="totalSwitch") 전체보기
   #overviewChart.row.pt-2
     .col-md-3
       .card.p-2
-        .card-text
-          h5.card-title 3점 이상 비율
-          .text-center.kpi
-            span#overGoalNumerator.current.text-primary
-            |  / 
-            span#overGoalDenominator.total
-            span.percent-wrapper
-              | (
-              span#overGoalPercent.percent 0.0%
-              | )
+        h5.card-title 3점 이상 인원
+        .text-center.kpi
+          span#overGoalNumerator.current.text-primary
+          |  / 
+          span#overGoalDenominator.total
+          span.percent-wrapper
+            | (
+            span#overGoalPercent.percent 0.0%
+            | )
         canvas#scoreOverview
     .col-md-3 
       .card.p-2
-        .card-text  
-          h5.card-title 총 Commit 수
-          .text-center.kpi
-            span#commitNumerator.current.text-primary
-            |  / 
-            span#commitDenominator.total
-            span.percent-wrapper
-              | (
-              span#commitPercent.percent 0.0%
-              | )
+        h5.card-title 총 Commit 수
+        .text-center.kpi
+          span#commitNumerator.current.text-primary
+          |  / 
+          span#commitDenominator.total
+          span.percent-wrapper
+            | (
+            span#commitPercent.percent 0.0%
+            | )
         canvas#commitOverview
     .col-md-3 
       .card.p-2
-        .card-text
-          h5.card-title 총 Star 수
-          .text-center.kpi
-            span#starNumerator.current.text-primary
-            |  / 
-            span#starDenominator.total
-            span.percent-wrapper
-              | (
-              span#starPercent.percent 0.0%
-              | )
+        h5.card-title 총 Star 수
+        .text-center.kpi
+          span#starNumerator.current.text-primary
+          |  / 
+          span#starDenominator.total
+          span.percent-wrapper
+            | (
+            span#starPercent.percent 0.0%
+            | )
         canvas#starOverview
     .col-md-3
       .card.p-2 
-        .card-text
-          h5.card-title 총 Repo 수
-          div.text-center.kpi
-            span#repoNumerator.current.text-primary
-            |  / 
-            span#repoDenominator.total
-            span.percent-wrapper
-              | (
-              span#repoPercent.percent 0.0%
-              | )
+        h5.card-title 총 Repo 수
+        div.text-center.kpi
+          span#repoNumerator.current.text-primary
+          |  / 
+          span#repoDenominator.total
+          span.percent-wrapper
+            | (
+            span#repoPercent.percent 0.0%
+            | )
         canvas#repoOverview
 
   ul.nav.nav-tabs.mt-4.text-lg
@@ -105,16 +103,16 @@ block content
   #pills-score.tab-pane.fade.show.mt-2
     .row.mt-2 
       .col-md-4 
-        .card
+        .card.p-2
           h5.card-title.factor 전체 Score분포
           #perScore.text-flex
           canvas#totalScoreDist 
       .col-md-4
-        .card
+        .card.p-2
           h5.card-title.factor 학번별 Score분포
           canvas#sidScoreDist
       .col-md-4
-        .card
+        .card.p-2
           h5.card-title.factor 학과별 Score분포
           canvas#deptScoreDist
 

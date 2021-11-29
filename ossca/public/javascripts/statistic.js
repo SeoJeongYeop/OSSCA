@@ -127,6 +127,9 @@ window.onload = function () {
             display: false,
           },
         },
+        scales: {
+          y: { beginAtZero: true },
+        },
       };
       const scoreOption = {
         plugins: {
@@ -135,7 +138,7 @@ window.onload = function () {
           },
         },
         scales: {
-          y: { max: 5 },
+          y: { max: 5, beginAtZero: true },
         },
       };
       function histogramOption(offset) {
@@ -175,6 +178,7 @@ window.onload = function () {
                 stepSize: offset * 2,
               },
             },
+            y: { beginAtZero: true },
           },
         };
       }
@@ -509,7 +513,10 @@ window.onload = function () {
             (Number(dataArr[i]) + Number(stdArr[i])).toFixed(2)
           );
           errorJson["yMin"] = Number(
-            (Number(dataArr[i]) - Number(stdArr[i])).toFixed(2)
+            (Number(dataArr[i]) - Number(stdArr[i]) < 0
+              ? 0
+              : Number(dataArr[i]) - Number(stdArr[i])
+            ).toFixed(2)
           );
           newData[i] = errorJson;
         }
@@ -571,11 +578,33 @@ window.onload = function () {
                   },
                 },
                 scales: {
-                  y: { max: 5 },
+                  y: { max: 5, beginAtZero: true },
                 },
               } // 그래프 렌더링 문제로 오브젝트자체를 전달하도록함
             : noLegendOption
         );
+      }
+
+      // too long text
+      const numerator = document.getElementsByClassName("text-primary");
+      const denominator = document.getElementsByClassName("total");
+      const percent = document.getElementsByClassName("percent");
+      const kpi = document.getElementsByClassName("kpi");
+      for (let i = 0; i < numerator.length; i++) {
+        let lenNumer = numerator.item(i).textContent.length;
+        let lenDenom = denominator.item(i).textContent.length;
+        let lenPercent = percent.item(i).textContent.length;
+        console.log(i, lenNumer + lenDenom);
+        console.log(
+          i,
+          numerator.item(i).textContent,
+          denominator.item(i).textContent
+        );
+        if (lenNumer + lenDenom + lenPercent / 2 > 10) {
+          kpi.item(i).style.fontSize =
+            ((2 / (lenNumer + lenDenom + lenPercent / 2)) * 10).toFixed(2) +
+            "rem";
+        }
       }
     });
 };

@@ -2,7 +2,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 
-
 li,
 a,
 button {
@@ -11,54 +10,17 @@ button {
   text-decoration: none;
 }
 
-/*
-header,
-nav {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 10px 10px;
-  border-bottom: solid 2px black;
-}
-
-.nav-list {
-  list-style: none;
-}
-.nav-list li {
-  display: inline-block;
-  padding: 0px 20px;
-}
-
-.nav-list li a {
-  transition: all 0.2s ease 0s;
-}
-
-.nav-list li a:hover {
-  color: red;
-}
-*/
-
-/* .tab-container {
-  display: flex;
-  justify-content: space-between;
-} */
 .dropdown-item {
   text-align: center;
-
 }
- .dropdown-menu {
+.dropdown-menu {
   transform: translate(-2px, 40px) !important;
   min-width: 80px !important;
-} 
+}
 .text-flex {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-}
-.card-text {
-  flex: 1 1 30%;
-  font-family: "Roboto", sans-serif;
-  text-align: center;
 }
 footer {
   border-top: solid 2px black;
