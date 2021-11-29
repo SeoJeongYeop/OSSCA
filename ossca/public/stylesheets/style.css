@@ -67,3 +67,8 @@ button.unchosen {
 a.nav-link {
   cursor: pointer;
 }
+
+.repo-card{
+  width: 45%;
+  margin: 5px;
+}

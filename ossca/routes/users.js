@@ -19,7 +19,6 @@ router.get('/:student_id', function(req, res) {
       title: "User",
       user: user
     });
-
   });
 });
 

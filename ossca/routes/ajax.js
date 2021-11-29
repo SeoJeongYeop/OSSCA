@@ -3,7 +3,7 @@ const DB = require('./database');
 var router = express.Router();
 
 router.get('/owned_repo', function(req, res){
-  DB("GET", "CALL RepoOwnerScore('" + req.query.student_id +"');").then(function(result, error){
+  DB("GET", "CALL RepoOwn('" + req.query.student_id +"');").then(function(result, error){
     if (error) {
       console.log(error);
     }

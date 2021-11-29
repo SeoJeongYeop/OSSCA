@@ -1,25 +1,27 @@
 mixin owned_repo_card(repo)
-  .card.col-6
+  .card.col-6.repo-card
     .card-body
       a(href='https://github.com/'+repo.github_id+'/'+repo.repo_name, style='text-decoration: none;')
-        h2.card-title.fw-bold.text-body #{repo.repo_name}
+        h4.card-title.fw-bold.text-body #{repo.repo_name}
+        h6.text-muted #{repo.date.toLocaleDateString()}
       table.table.text-center
         thead
           tr
-            th Code Score
-            th Guideline Score
-            th OpenSource Score
+            th Commits
+            th Issues
+            th Pull Requests
         tbody 
           tr 
-            td #{repo.code_score}
-            td #{repo.guideline_score}
-            td #{repo.other_project_score}
+            td #{repo.commit_cnt}
+            td #{repo.issue_cnt}
+            td #{repo.pr_cnt}
 
 mixin contr_repo_card(repo)
-  .card.col-6
+  .card.col-6.repo-card
     .card-body
       a(href='https://github.com/'+repo.github_id+'/'+repo.repo_name, style='text-decoration: none;')
-        h2.card-title.fw-bold.text-body #{repo.github_id+'/'+repo.repo_name}
+        h4.card-title.fw-bold.text-body #{repo.github_id+'/'+repo.repo_name}
+        h6.text-muted #{repo.date.toLocaleDateString()}
       table.table.text-center
         thead
           tr
