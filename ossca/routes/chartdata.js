@@ -175,6 +175,374 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
         annualCnt[idx1] += 1;
       }
 
+      /* 상위 5%의 데이터 셋 만들기 */
+      let scoreSidTop5pct = create2DArray_a(3, 7);
+      let scoreDeptTop5pct = create2DArray_a(3, 3);
+      let commitSidTop5pct = create2DArray_a(3, 7);
+      let commitDeptTop5pct = create2DArray_a(3, 3);
+      let starSidTop5pct = create2DArray_a(3, 7);
+      let starDeptTop5pct = create2DArray_a(3, 3);
+      let prSidTop5pct = create2DArray_a(3, 7);
+      let prDeptTop5pct = create2DArray_a(3, 3);
+      let issueSidTop5pct = create2DArray_a(3, 7);
+      let issueDeptTop5pct = create2DArray_a(3, 3);
+
+      for (let i = 0; i < result.row.length; i++) {
+        Row = result.row[i];
+        idx1 = Row.year - startYear;
+        idxId = nowYear - Math.floor(Row.id / 1000000);
+        idxDept = deptDict[Row.dept];
+        let sidmax = parseInt((sidSize[idx1][idxId] * 5) / 100) + 1;
+        let deptmax = parseInt((deptSize[idx1][idxDept] * 5) / 100) + 1;
+        /** score */
+        // student id
+        if (
+          sidmax > scoreSidTop5pct[idx1][idxId].length &&
+          Row.total_score > 0
+        ) {
+          if (Row.total_score < scoreSidTop5pct[idx1][idxId][0]) {
+            scoreSidTop5pct[idx1][idxId].unshift(Row.total_score);
+          } else {
+            let p = 0;
+            for (p = 0; p < sidmax; p++) {
+              if (scoreSidTop5pct[idx1][idxId][p] > Row.total_score) {
+                break;
+              }
+            }
+            scoreSidTop5pct[idx1][idxId].splice(p, 0, Row.total_score);
+          }
+          console.log("score-sid", idx1, idxId, scoreSidTop5pct[idx1][idxId]);
+        } else {
+          if (Row.total_score > scoreSidTop5pct[idx1][idxId][sidmax]) {
+            scoreSidTop5pct[idx1][idxId].shift();
+            scoreSidTop5pct[idx1][idxId].push(Row.total_score);
+          } else if (Row.total_score > scoreSidTop5pct[idx1][idxId][0]) {
+            scoreSidTop5pct[idx1][idxId].shift();
+            let p = 0;
+            for (p = 0; p < sidmax; p++) {
+              if (scoreSidTop5pct[idx1][idxId][p] > Row.total_score) {
+                break;
+              }
+            }
+            scoreSidTop5pct[idx1][idxId].splice(p, 0, Row.total_score);
+          }
+        }
+        // department
+        if (
+          deptmax > scoreDeptTop5pct[idx1][idxDept].length &&
+          Row.total_score > 0
+        ) {
+          if (Row.total_score < scoreDeptTop5pct[idx1][idxDept][0]) {
+            scoreDeptTop5pct[idx1][idxDept].unshift(Row.total_score);
+          } else {
+            let p = 0;
+            for (p = 0; p < deptmax; p++) {
+              if (scoreDeptTop5pct[idx1][idxDept][p] > Row.total_score) {
+                break;
+              }
+            }
+            scoreDeptTop5pct[idx1][idxDept].splice(p, 0, Row.total_score);
+          }
+          console.log(
+            "score-dept",
+            idx1,
+            idxDept,
+            scoreDeptTop5pct[idx1][idxDept]
+          );
+        } else {
+          if (Row.total_score > scoreDeptTop5pct[idx1][idxDept][deptmax]) {
+            scoreDeptTop5pct[idx1][idxDept].shift();
+            scoreDeptTop5pct[idx1][idxDept].push(Row.total_score);
+          } else if (Row.total_score > scoreDeptTop5pct[idx1][idxDept][0]) {
+            scoreDeptTop5pct[idx1][idxDept].shift();
+            let p = 0;
+            for (p = 0; p < deptmax; p++) {
+              if (scoreDeptTop5pct[idx1][idxDept][p] > Row.total_score) {
+                break;
+              }
+            }
+            scoreDeptTop5pct[idx1][idxDept].splice(p, 0, Row.total_score);
+          }
+        }
+
+        /** commit */
+        // student id
+        if (
+          sidmax > commitSidTop5pct[idx1][idxId].length &&
+          Row.commit_count > 0
+        ) {
+          if (Row.commit_count < commitSidTop5pct[idx1][idxId][0]) {
+            commitSidTop5pct[idx1][idxId].unshift(Row.commit_count);
+          } else {
+            let p = 0;
+            for (p = 0; p < sidmax; p++) {
+              if (commitSidTop5pct[idx1][idxId][p] > Row.commit_count) {
+                break;
+              }
+            }
+            commitSidTop5pct[idx1][idxId].splice(p, 0, Row.commit_count);
+          }
+          console.log("commit-sid", idx1, idxId, commitSidTop5pct[idx1][idxId]);
+        } else {
+          if (Row.commit_count > commitSidTop5pct[idx1][idxId][sidmax]) {
+            commitSidTop5pct[idx1][idxId].shift();
+            commitSidTop5pct[idx1][idxId].push(Row.commit_count);
+          } else if (Row.commit_count > commitSidTop5pct[idx1][idxId][0]) {
+            commitSidTop5pct[idx1][idxId].shift();
+            let p = 0;
+            for (p = 0; p < sidmax; p++) {
+              if (commitSidTop5pct[idx1][idxId][p] > Row.commit_count) {
+                break;
+              }
+            }
+            commitSidTop5pct[idx1][idxId].splice(p, 0, Row.commit_count);
+          }
+        }
+        // department
+        if (
+          deptmax > commitDeptTop5pct[idx1][idxDept].length &&
+          Row.commit_count > 0
+        ) {
+          if (Row.commit_count < commitDeptTop5pct[idx1][idxDept][0]) {
+            commitDeptTop5pct[idx1][idxDept].unshift(Row.commit_count);
+          } else {
+            let p = 0;
+            for (p = 0; p < deptmax; p++) {
+              if (commitDeptTop5pct[idx1][idxDept][p] > Row.commit_count) {
+                break;
+              }
+            }
+            commitDeptTop5pct[idx1][idxDept].splice(p, 0, Row.commit_count);
+          }
+          console.log(
+            "commit-dept",
+            idx1,
+            idxDept,
+            commitDeptTop5pct[idx1][idxDept]
+          );
+        } else {
+          if (Row.commit_count > commitDeptTop5pct[idx1][idxDept][deptmax]) {
+            console.log("bug", commitDeptTop5pct[idx1][idxDept][deptmax]);
+            commitDeptTop5pct[idx1][idxDept].shift();
+            commitDeptTop5pct[idx1][idxDept].push(Row.commit_count);
+          } else if (Row.commit_count > commitDeptTop5pct[idx1][idxDept][0]) {
+            commitDeptTop5pct[idx1][idxDept].shift();
+            let p = 0;
+            for (p = 0; p < deptmax; p++) {
+              if (commitDeptTop5pct[idx1][idxDept][p] > Row.commit_count) {
+                break;
+              }
+            }
+            commitDeptTop5pct[idx1][idxDept].splice(p, 0, Row.commit_count);
+          }
+          console.log(
+            "commit-dept",
+            idx1,
+            idxDept,
+            commitDeptTop5pct[idx1][idxDept]
+          );
+        }
+
+        /** star */
+        // student id
+        if (sidmax > starSidTop5pct[idx1][idxId].length && Row.star_count > 0) {
+          if (Row.star_count < starSidTop5pct[idx1][idxId][0]) {
+            starSidTop5pct[idx1][idxId].unshift(Row.star_count);
+          } else {
+            let p = 0;
+            for (p = 0; p < sidmax; p++) {
+              if (starSidTop5pct[idx1][idxId][p] > Row.star_count) {
+                break;
+              }
+            }
+            starSidTop5pct[idx1][idxId].splice(p, 0, Row.star_count);
+          }
+          console.log("star-sid", idx1, idxId, starSidTop5pct[idx1][idxId]);
+        } else {
+          if (Row.star_count > starSidTop5pct[idx1][idxId][sidmax]) {
+            starSidTop5pct[idx1][idxId].shift();
+            starSidTop5pct[idx1][idxId].push(Row.star_count);
+          } else if (Row.star_count > starSidTop5pct[idx1][idxId][0]) {
+            starSidTop5pct[idx1][idxId].shift();
+            let p = 0;
+            for (p = 0; p < sidmax; p++) {
+              if (starSidTop5pct[idx1][idxId][p] > Row.star_count) {
+                break;
+              }
+            }
+            starSidTop5pct[idx1][idxId].splice(p, 0, Row.star_count);
+          }
+        }
+        // department
+        if (
+          deptmax > starDeptTop5pct[idx1][idxDept].length &&
+          Row.star_count > 0
+        ) {
+          if (Row.star_count < starDeptTop5pct[idx1][idxDept][0]) {
+            starDeptTop5pct[idx1][idxDept].unshift(Row.star_count);
+          } else {
+            let p = 0;
+            for (p = 0; p < deptmax; p++) {
+              if (starDeptTop5pct[idx1][idxDept][p] > Row.star_count) {
+                break;
+              }
+            }
+            starDeptTop5pct[idx1][idxDept].splice(p, 0, Row.star_count);
+          }
+          console.log(
+            "star-dept",
+            idx1,
+            idxDept,
+            starDeptTop5pct[idx1][idxDept]
+          );
+        } else {
+          if (Row.star_count > starDeptTop5pct[idx1][idxDept][deptmax]) {
+            starDeptTop5pct[idx1][idxDept].shift();
+            starDeptTop5pct[idx1][idxDept].push(Row.star_count);
+          } else if (Row.star_count > starDeptTop5pct[idx1][idxDept][0]) {
+            starDeptTop5pct[idx1][idxDept].shift();
+            let p = 0;
+            for (p = 0; p < deptmax; p++) {
+              if (starDeptTop5pct[idx1][idxDept][p] > Row.star_count) {
+                break;
+              }
+            }
+            starDeptTop5pct[idx1][idxDept].splice(p, 0, Row.star_count);
+          }
+        }
+
+        /** prs */
+        // student id
+        if (sidmax > prSidTop5pct[idx1][idxId].length && Row.pr_count > 0) {
+          if (Row.pr_count < prSidTop5pct[idx1][idxId][0]) {
+            prSidTop5pct[idx1][idxId].unshift(Row.pr_count);
+          } else {
+            let p = 0;
+            for (p = 0; p < sidmax; p++) {
+              if (prSidTop5pct[idx1][idxId][p] > Row.pr_count) {
+                break;
+              }
+            }
+            prSidTop5pct[idx1][idxId].splice(p, 0, Row.pr_count);
+          }
+          console.log("prs-sid", idx1, idxId, prSidTop5pct[idx1][idxId]);
+        } else {
+          if (Row.pr_count > prSidTop5pct[idx1][idxId][sidmax]) {
+            prSidTop5pct[idx1][idxId].shift();
+            prSidTop5pct[idx1][idxId].push(Row.pr_count);
+          } else if (Row.pr_count > prSidTop5pct[idx1][idxId][0]) {
+            prSidTop5pct[idx1][idxId].shift();
+            let p = 0;
+            for (p = 0; p < sidmax; p++) {
+              if (prSidTop5pct[idx1][idxId][p] > Row.pr_count) {
+                break;
+              }
+            }
+            prSidTop5pct[idx1][idxId].splice(p, 0, Row.pr_count);
+          }
+        }
+        // department
+        if (deptmax > prDeptTop5pct[idx1][idxDept].length && Row.pr_count > 0) {
+          if (Row.pr_count < prDeptTop5pct[idx1][idxDept][0]) {
+            prDeptTop5pct[idx1][idxDept].unshift(Row.pr_count);
+          } else {
+            let p = 0;
+            for (p = 0; p < deptmax; p++) {
+              if (prDeptTop5pct[idx1][idxDept][p] > Row.pr_count) {
+                break;
+              }
+            }
+            prDeptTop5pct[idx1][idxDept].splice(p, 0, Row.pr_count);
+          }
+          console.log("prs-dept", idx1, idxDept, prDeptTop5pct[idx1][idxDept]);
+        } else {
+          if (Row.pr_count > prDeptTop5pct[idx1][idxDept][deptmax]) {
+            prDeptTop5pct[idx1][idxDept].shift();
+            prDeptTop5pct[idx1][idxDept].push(Row.pr_count);
+          } else if (Row.pr_count > prDeptTop5pct[idx1][idxDept][0]) {
+            prDeptTop5pct[idx1][idxDept].shift();
+            let p = 0;
+            for (p = 0; p < deptmax; p++) {
+              if (prDeptTop5pct[idx1][idxDept][p] > Row.pr_count) {
+                break;
+              }
+            }
+            prDeptTop5pct[idx1][idxDept].splice(p, 0, Row.pr_count);
+          }
+        }
+
+        /** issue */
+        // student id
+        if (
+          sidmax > issueSidTop5pct[idx1][idxId].length &&
+          Row.issue_count > 0
+        ) {
+          if (Row.issue_count < issueSidTop5pct[idx1][idxId][0]) {
+            issueSidTop5pct[idx1][idxId].unshift(Row.issue_count);
+          } else {
+            let p = 0;
+            for (p = 0; p < sidmax; p++) {
+              if (issueSidTop5pct[idx1][idxId][p] > Row.issue_count) {
+                break;
+              }
+            }
+            issueSidTop5pct[idx1][idxId].splice(p, 0, Row.issue_count);
+          }
+          console.log("score-sid", idx1, idxId, issueSidTop5pct[idx1][idxId]);
+        } else {
+          if (Row.issue_count > issueSidTop5pct[idx1][idxId][sidmax]) {
+            issueSidTop5pct[idx1][idxId].shift();
+            issueSidTop5pct[idx1][idxId].push(Row.issue_count);
+          } else if (Row.issue_count > issueSidTop5pct[idx1][idxId][0]) {
+            issueSidTop5pct[idx1][idxId].shift();
+            let p = 0;
+            for (p = 0; p < sidmax; p++) {
+              if (issueSidTop5pct[idx1][idxId][p] > Row.issue_count) {
+                break;
+              }
+            }
+            issueSidTop5pct[idx1][idxId].splice(p, 0, Row.issue_count);
+          }
+        }
+        // department
+        if (
+          deptmax > issueDeptTop5pct[idx1][idxDept].length &&
+          Row.issue_count > 0
+        ) {
+          if (Row.issue_count < issueDeptTop5pct[idx1][idxDept][0]) {
+            issueDeptTop5pct[idx1][idxDept].unshift(Row.issue_count);
+          } else {
+            let p = 0;
+            for (p = 0; p < deptmax; p++) {
+              if (issueDeptTop5pct[idx1][idxDept][p] > Row.issue_count) {
+                break;
+              }
+            }
+            issueDeptTop5pct[idx1][idxDept].splice(p, 0, Row.issue_count);
+          }
+          console.log(
+            "score-dept",
+            idx1,
+            idxDept,
+            issueDeptTop5pct[idx1][idxDept]
+          );
+        } else {
+          if (Row.issue_count > issueDeptTop5pct[idx1][idxDept][deptmax]) {
+            issueDeptTop5pct[idx1][idxDept].shift();
+            issueDeptTop5pct[idx1][idxDept].push(Row.issue_count);
+          } else if (Row.issue_count > issueDeptTop5pct[idx1][idxDept][0]) {
+            issueDeptTop5pct[idx1][idxDept].shift();
+            let p = 0;
+            for (p = 0; p < deptmax; p++) {
+              if (issueDeptTop5pct[idx1][idxDept][p] > Row.issue_count) {
+                break;
+              }
+            }
+            issueDeptTop5pct[idx1][idxDept].splice(p, 0, Row.issue_count);
+          }
+        }
+      }
+
       /* 학번 평균, 학과 평균 구하기 */
       // object 타입으로 map함수 사용불가
       for (let i = 0; i < nowYear - startYear + 1; i++) {
@@ -382,7 +750,6 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
           repoDist[idx] += 1;
         }
         try {
-          //res.json
           console.log(result.row.length);
           res.json({
             title: "chart",
@@ -407,7 +774,6 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
               score_dist: scoreDist[0],
               score_dept: scoreDept[0],
               score_sid: scoreSid[0],
-
               commit_dist: commitDist[0],
               commit_dept: commitDept[0],
               commit_sid: commitSid[0],
@@ -430,6 +796,17 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
               prSidStd: prSidStd[0],
               issueDeptStd: issueDeptStd[0],
               issueSidStd: issueSidStd[0],
+
+              scoreSidTop5pct: scoreSidTop5pct[0],
+              commitSidTop5pct: commitSidTop5pct[0],
+              starSidTop5pct: starSidTop5pct[0],
+              prSidTop5pct: prSidTop5pct[0],
+              issueSidTop5pct: issueSidTop5pct[0],
+              scoreDeptTop5pct: scoreDeptTop5pct[0],
+              commitDeptTop5pct: commitDeptTop5pct[0],
+              starDeptTop5pct: starDeptTop5pct[0],
+              prDeptTop5pct: prDeptTop5pct[0],
+              issueDeptTop5pct: issueDeptTop5pct[0],
             },
             year2020: {
               score_dist: scoreDist[1],
@@ -457,6 +834,17 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
               prSidStd: prSidStd[1],
               issueDeptStd: issueDeptStd[1],
               issueSidStd: issueSidStd[1],
+
+              scoreSidTop5pct: scoreSidTop5pct[1],
+              commitSidTop5pct: commitSidTop5pct[1],
+              starSidTop5pct: starSidTop5pct[1],
+              prSidTop5pct: prSidTop5pct[1],
+              issueSidTop5pct: issueSidTop5pct[1],
+              scoreDeptTop5pct: scoreDeptTop5pct[1],
+              commitDeptTop5pct: commitDeptTop5pct[1],
+              starDeptTop5pct: starDeptTop5pct[1],
+              prDeptTop5pct: prDeptTop5pct[1],
+              issueDeptTop5pct: issueDeptTop5pct[1],
             },
             year2021: {
               score_dist: scoreDist[2],
@@ -484,10 +872,19 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
               prSidStd: prSidStd[2],
               issueDeptStd: issueDeptStd[2],
               issueSidStd: issueSidStd[2],
-            },
 
+              scoreSidTop5pct: scoreSidTop5pct[2],
+              commitSidTop5pct: commitSidTop5pct[2],
+              starSidTop5pct: starSidTop5pct[2],
+              prSidTop5pct: prSidTop5pct[2],
+              issueSidTop5pct: issueSidTop5pct[2],
+              scoreDeptTop5pct: scoreDeptTop5pct[2],
+              commitDeptTop5pct: commitDeptTop5pct[2],
+              starDeptTop5pct: starDeptTop5pct[2],
+              prDeptTop5pct: prDeptTop5pct[2],
+              issueDeptTop5pct: issueDeptTop5pct[2],
+            },
             size: annualCnt,
-            /*factors: result.row,*/
           });
         } catch (err) {
           console.log("res.json(): ", err);
@@ -503,6 +900,16 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
     for (let i = 0; i < rows; i++) {
       arr[i] = new Array(columns);
       arr[i].fill(0);
+    }
+    return arr;
+  }
+  function create2DArray_a(rows, columns) {
+    const arr = new Array(rows);
+    for (let i = 0; i < rows; i++) {
+      arr[i] = new Array(columns);
+      for (let j = 0; j < columns; j++) {
+        arr[i][j] = [];
+      }
     }
     return arr;
   }
