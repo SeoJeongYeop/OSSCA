@@ -242,21 +242,18 @@ window.onload = function () {
         setGraphData(annual, chartFactor);
         setOverallStat(json);
         reloadChart(annual, chartFactor);
-        //setDist(chartFactor);
       });
       btn20.addEventListener("click", function () {
         annual = 2020;
         setGraphData(annual, chartFactor);
         setOverallStat(json);
         reloadChart(annual, chartFactor);
-        //setDist(chartFactor);
       });
       btn19.addEventListener("click", function () {
         annual = 2019;
         setGraphData(annual, chartFactor);
         setOverallStat(json);
         reloadChart(annual, chartFactor);
-        //setDist(chartFactor);
       });
       scoreTab.addEventListener("click", function () {
         unchosenBtn();
@@ -295,6 +292,254 @@ window.onload = function () {
       });
       switchTotal.addEventListener("change", function (e) {
         console.log(e.target.checked);
+        $(".switch-toggle").toggleClass("bold");
+        if (e.target.checked === false) {
+          $("#commitTitle").text("학생당 Commit 수");
+          $("#starTitle").text("학생당 Star 수");
+          $("#repoTitle").text("학생당 Repo 수");
+          destroyOverviewChart();
+          const data = [];
+          for (let year = 2019; year <= 2021; year++) {
+            json[`student${year}`].map((obj) => {
+              const picked = (({ github_id, score }) => ({
+                github_id,
+                score,
+              }))(obj);
+              if (Number(picked["score"]) < 3) return;
+              data.push({
+                x: String(year),
+                y: picked["score"],
+                tooltip: picked["github_id"],
+              });
+            });
+          }
+          overviewChart[0] = makeChart(
+            ctxOverview[0],
+            "scatter",
+            "score",
+            ["2019", "2020", "2021"],
+            data,
+            bsPrimary,
+            {
+              plugins: {
+                legend: {
+                  display: false,
+                },
+                tooltip: {
+                  callbacks: {
+                    title: (items) => {
+                      return items[0].raw.y;
+                    },
+                    label: (item) => {
+                      return item.raw.tooltip;
+                    },
+                  },
+                },
+              },
+              scales: {
+                x: {
+                  offset: false,
+                  grid: {
+                    offset: false,
+                  },
+                  ticks: {
+                    stepSize: 1,
+                  },
+                },
+                y: {
+                  max: 5,
+                  beginAtZero: true,
+                },
+              },
+            }
+          );
+
+          const commitDataset = [];
+          for (let year = 2019; year <= 2021; year++) {
+            json[`student${year}`].map((obj) => {
+              const picked = (({ github_id, commit }) => ({
+                github_id,
+                commit,
+              }))(obj);
+              if (Number(picked["commit"]) < 3) return;
+              commitDataset.push({
+                x: String(year),
+                y: picked["commit"],
+                tooltip: picked["github_id"],
+              });
+            });
+          }
+          overviewChart[1] = makeChart(
+            ctxOverview[1],
+            "scatter",
+            "commit",
+            ["2019", "2020", "2021"],
+            commitDataset,
+            bsPrimary,
+            {
+              plugins: {
+                legend: {
+                  display: false,
+                },
+                tooltip: {
+                  callbacks: {
+                    title: (items) => {
+                      return items[0].raw.y;
+                    },
+                    label: (item) => {
+                      return item.raw.tooltip;
+                    },
+                  },
+                },
+              },
+              scales: {
+                x: {
+                  type: "linear",
+                  offset: false,
+                  grid: {
+                    offset: false,
+                  },
+                  ticks: {
+                    stepSize: 1,
+                  },
+                },
+                y: {
+                  beginAtZero: true,
+                },
+              },
+            }
+          );
+
+          const starDataset = [];
+          for (let year = 2019; year <= 2021; year++) {
+            json[`student${year}`].map((obj) => {
+              const picked = (({ github_id, star }) => ({
+                github_id,
+                star,
+              }))(obj);
+              if (Number(picked["star"]) < 3) return;
+              starDataset.push({
+                x: String(year),
+                y: picked["star"],
+                tooltip: picked["github_id"],
+              });
+            });
+          }
+          overviewChart[2] = makeChart(
+            ctxOverview[2],
+            "scatter",
+            "star",
+            ["2019", "2020", "2021"],
+            starDataset,
+            bsPrimary,
+            {
+              plugins: {
+                legend: {
+                  display: false,
+                },
+                tooltip: {
+                  callbacks: {
+                    title: (items) => {
+                      return items[0].raw.y;
+                    },
+                    label: (item) => {
+                      return item.raw.tooltip;
+                    },
+                  },
+                },
+              },
+              scales: {
+                x: {
+                  type: "linear",
+                  offset: false,
+                  grid: {
+                    offset: false,
+                  },
+                  ticks: {
+                    stepSize: 1,
+                  },
+                },
+                y: {
+                  beginAtZero: true,
+                },
+              },
+            }
+          );
+
+          const repoDataset = [];
+          for (let year = 2019; year <= 2021; year++) {
+            for (let key in json[`repo${year}`]) {
+              repoDataset.push({
+                x: String(year),
+                y: json[`repo${year}`][key],
+                tooltip: key,
+              });
+            }
+          }
+          overviewChart[3] = makeChart(
+            ctxOverview[3],
+            "scatter",
+            "repo",
+            ["2019", "2020", "2021"],
+            repoDataset,
+            bsPrimary,
+            {
+              plugins: {
+                legend: {
+                  display: false,
+                },
+                tooltip: {
+                  callbacks: {
+                    title: (items) => {
+                      return items[0].raw.y;
+                    },
+                    label: (item) => {
+                      return item.raw.tooltip;
+                    },
+                  },
+                },
+              },
+              scales: {
+                x: {
+                  type: "linear",
+                  offset: false,
+                  grid: {
+                    offset: false,
+                  },
+                  ticks: {
+                    stepSize: 1,
+                  },
+                },
+                y: {
+                  beginAtZero: true,
+                },
+              },
+            }
+          );
+        }
+        if (e.target.checked === true) {
+          $("#commitTitle").text("총 Commit 수");
+          $("#starTitle").text("총 Star 수");
+          $("#repoTitle").text("총 Repo 수");
+          destroyOverviewChart();
+          overviewDatasetList = [
+            json["scoreMore3"],
+            json["totalCommit"],
+            json["totalStar"],
+            json["repoDist"],
+          ];
+          for (let i = 0; i < 4; i++) {
+            overviewChart[i] = makeChart(
+              ctxOverview[i],
+              "line",
+              overviewFactorList[i],
+              ["2019", "2020", "2021"],
+              overviewDatasetList[i],
+              bsPrimary,
+              noLegendOption
+            );
+          }
+        }
       });
       function unchosenBtn() {
         scoreTab.classList.remove("active");
@@ -466,6 +711,11 @@ window.onload = function () {
       function destroyChart() {
         for (let i = 0; i < 3; i++) {
           chart[i].destroy();
+        }
+      }
+      function destroyOverviewChart() {
+        for (let i = 0; i < 4; i++) {
+          overviewChart[i].destroy();
         }
       }
       function reloadChart(annual, factor) {

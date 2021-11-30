@@ -83,3 +83,12 @@ a.nav-link {
 .form-switch {
   padding-top: 9px;
 }
+.form-check-label {
+  font-family: "Noto Sans KR", sans-serif;
+  color: gray;
+}
+
+.bold {
+  font-weight: bold;
+  color: black;
+}

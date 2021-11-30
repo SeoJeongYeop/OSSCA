@@ -37,11 +37,13 @@ block content
           button#dropdownBtn2019.dropdown-item 2019
     .form-check.form-switch 
       input#totalSwitch.form-check-input(type="checkbox", role="switch" checked)
-      label.form-check-label(for="totalSwitch") 전체보기
+      label.form-check-label(for="totalSwitch")
+        span.switch-toggle 개별 
+        span.switch-toggle.bold 합계
   #overviewChart.row.pt-2
     .col-md-3
       .card.p-2
-        h5.card-title 3점 이상 인원
+        h5#scoreTitle.card-title 3점 이상 인원
         .text-center.kpi
           span#overGoalNumerator.current.text-primary
           |  / 
@@ -53,7 +55,7 @@ block content
         canvas#scoreOverview
     .col-md-3 
       .card.p-2
-        h5.card-title 총 Commit 수
+        h5#commitTitle.card-title 총 Commit 수
         .text-center.kpi
           span#commitNumerator.current.text-primary
           |  / 
@@ -65,7 +67,7 @@ block content
         canvas#commitOverview
     .col-md-3 
       .card.p-2
-        h5.card-title 총 Star 수
+        h5#starTitle.card-title 총 Star 수
         .text-center.kpi
           span#starNumerator.current.text-primary
           |  / 
@@ -77,7 +79,7 @@ block content
         canvas#starOverview
     .col-md-3
       .card.p-2 
-        h5.card-title 총 Repo 수
+        h5#repoTitle.card-title 총 Repo 수
         div.text-center.kpi
           span#repoNumerator.current.text-primary
           |  / 

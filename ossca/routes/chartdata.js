@@ -9,17 +9,13 @@ gs.contributor_score, round(gs.star_score+gs.contribution_score,1) as additional
 gs.best_repo, gs.star_count, gs.commit_count, gs.pr_count, gs.issue_count, st.id, st.dept
 FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
   console.log(query);
-  let repoQuery = `select grs.create_date from github_repo_stats as grs;`;
+  let repoQuery = `select grs.github_id, grs.create_date from github_repo_stats as grs;`;
   DB("GET", query, []).then(function (result, error) {
     if (error) {
       console.log(error);
     }
-
-    // [1] 3점 이상 비율, 총 커밋 수  총 스타 수, 총 레포 수 같은것을 서버로 보내놔야한다.
-    // [2] 점수분포를 보내놔야한다.
-    // [3] 학년별, 학과별, 연도별로 나눌 수 있어야 한다.
-    // 일단 2번까지는 할 수 있을 것 같다.
-    // 학번과 레포 연도는 역순으로 저장한다.
+    const studentData = [[], [], []];
+    const studentRepo = [{}, {}, {}];
     const startYear = 2019;
     const nowYear = 2021;
     let deptDict = { 소프트웨어학과: 0, 글로벌융합학부: 1, 컴퓨터공학과: 2 };
@@ -83,6 +79,15 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
           Row.contributor_score +
           Row.additional_score
         ).toFixed(1);
+        studentData[idx1].push({
+          github_id: Row["github_id"],
+          score: Row.total_score,
+          commit: Row["commit_count"],
+          star: Row["star_count"],
+          pr: Row["pr_count"],
+          issue: Row["issue_count"],
+          //repo: Row[],
+        });
         /* student id */
         commitSid[idx1][idxId] += Row.commit_count;
         starSid[idx1][idxId] += Row.star_count;
@@ -308,7 +313,6 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
           }
         } else {
           if (Row.commit_count > commitDeptTop5pct[idx1][idxDept][deptmax]) {
-            console.log("bug", commitDeptTop5pct[idx1][idxDept][deptmax]);
             commitDeptTop5pct[idx1][idxDept].shift();
             commitDeptTop5pct[idx1][idxDept].push(Row.commit_count);
           } else if (Row.commit_count > commitDeptTop5pct[idx1][idxDept][0]) {
@@ -705,16 +709,28 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
         ).toFixed(4);
       }
 
-      DB("GET", repoQuery, []).then(function (date, error) {
-        totalRepo = date.row.length;
-        for (i = 0; i < totalRepo; i++) {
-          let idx =
-            nowYear -
-            parseInt(date.row[i].create_date.toISOString().substring(0, 4));
-          repoDist[idx] += 1;
+      DB("GET", repoQuery, []).then(function (data, error) {
+        if (error) {
+          console.log(error);
         }
         try {
-          console.log(result.row.length);
+          totalRepo = data.row.length;
+          for (i = 0; i < totalRepo; i++) {
+            let idx =
+              nowYear -
+              parseInt(data.row[i].create_date.toISOString().substring(0, 4));
+            repoDist[idx] += 1;
+            if (idx > 2) continue;
+            if (!studentRepo[idx].hasOwnProperty(data.row[i]["github_id"])) {
+              studentRepo[idx][data.row[i]["github_id"]] = 1;
+            } else {
+              studentRepo[idx][data.row[i]["github_id"]]++;
+            }
+          }
+        } catch (e) {
+          console.log("repo count error: ", e);
+        }
+        try {
           res.json({
             title: "chart",
             scoreMore3: scoreMore3,
@@ -849,6 +865,14 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
               issueDeptTop5pct: issueDeptTop5pct[2],
             },
             size: annualCnt,
+            student2019: studentData[0],
+            student2020: studentData[1],
+            student2021: studentData[2],
+            student: studentData,
+            repo2019: studentRepo[2],
+            repo2020: studentRepo[1],
+            repo2021: studentRepo[0],
+            repo: studentRepo,
           });
         } catch (err) {
           console.log("res.json(): ", err);
