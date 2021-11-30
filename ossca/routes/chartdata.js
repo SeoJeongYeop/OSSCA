@@ -211,7 +211,6 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
             }
             scoreSidTop5pct[idx1][idxId].splice(p, 0, Row.total_score);
           }
-          console.log("score-sid", idx1, idxId, scoreSidTop5pct[idx1][idxId]);
         } else {
           if (Row.total_score > scoreSidTop5pct[idx1][idxId][sidmax]) {
             scoreSidTop5pct[idx1][idxId].shift();
@@ -243,12 +242,6 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
             }
             scoreDeptTop5pct[idx1][idxDept].splice(p, 0, Row.total_score);
           }
-          console.log(
-            "score-dept",
-            idx1,
-            idxDept,
-            scoreDeptTop5pct[idx1][idxDept]
-          );
         } else {
           if (Row.total_score > scoreDeptTop5pct[idx1][idxDept][deptmax]) {
             scoreDeptTop5pct[idx1][idxDept].shift();
@@ -282,7 +275,6 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
             }
             commitSidTop5pct[idx1][idxId].splice(p, 0, Row.commit_count);
           }
-          console.log("commit-sid", idx1, idxId, commitSidTop5pct[idx1][idxId]);
         } else {
           if (Row.commit_count > commitSidTop5pct[idx1][idxId][sidmax]) {
             commitSidTop5pct[idx1][idxId].shift();
@@ -314,12 +306,6 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
             }
             commitDeptTop5pct[idx1][idxDept].splice(p, 0, Row.commit_count);
           }
-          console.log(
-            "commit-dept",
-            idx1,
-            idxDept,
-            commitDeptTop5pct[idx1][idxDept]
-          );
         } else {
           if (Row.commit_count > commitDeptTop5pct[idx1][idxDept][deptmax]) {
             console.log("bug", commitDeptTop5pct[idx1][idxDept][deptmax]);
@@ -335,12 +321,6 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
             }
             commitDeptTop5pct[idx1][idxDept].splice(p, 0, Row.commit_count);
           }
-          console.log(
-            "commit-dept",
-            idx1,
-            idxDept,
-            commitDeptTop5pct[idx1][idxDept]
-          );
         }
 
         /** star */
@@ -357,7 +337,6 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
             }
             starSidTop5pct[idx1][idxId].splice(p, 0, Row.star_count);
           }
-          console.log("star-sid", idx1, idxId, starSidTop5pct[idx1][idxId]);
         } else {
           if (Row.star_count > starSidTop5pct[idx1][idxId][sidmax]) {
             starSidTop5pct[idx1][idxId].shift();
@@ -389,12 +368,6 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
             }
             starDeptTop5pct[idx1][idxDept].splice(p, 0, Row.star_count);
           }
-          console.log(
-            "star-dept",
-            idx1,
-            idxDept,
-            starDeptTop5pct[idx1][idxDept]
-          );
         } else {
           if (Row.star_count > starDeptTop5pct[idx1][idxDept][deptmax]) {
             starDeptTop5pct[idx1][idxDept].shift();
@@ -425,7 +398,6 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
             }
             prSidTop5pct[idx1][idxId].splice(p, 0, Row.pr_count);
           }
-          console.log("prs-sid", idx1, idxId, prSidTop5pct[idx1][idxId]);
         } else {
           if (Row.pr_count > prSidTop5pct[idx1][idxId][sidmax]) {
             prSidTop5pct[idx1][idxId].shift();
@@ -454,7 +426,6 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
             }
             prDeptTop5pct[idx1][idxDept].splice(p, 0, Row.pr_count);
           }
-          console.log("prs-dept", idx1, idxDept, prDeptTop5pct[idx1][idxDept]);
         } else {
           if (Row.pr_count > prDeptTop5pct[idx1][idxDept][deptmax]) {
             prDeptTop5pct[idx1][idxDept].shift();
@@ -488,7 +459,6 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
             }
             issueSidTop5pct[idx1][idxId].splice(p, 0, Row.issue_count);
           }
-          console.log("score-sid", idx1, idxId, issueSidTop5pct[idx1][idxId]);
         } else {
           if (Row.issue_count > issueSidTop5pct[idx1][idxId][sidmax]) {
             issueSidTop5pct[idx1][idxId].shift();
@@ -520,12 +490,6 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
             }
             issueDeptTop5pct[idx1][idxDept].splice(p, 0, Row.issue_count);
           }
-          console.log(
-            "score-dept",
-            idx1,
-            idxDept,
-            issueDeptTop5pct[idx1][idxDept]
-          );
         } else {
           if (Row.issue_count > issueDeptTop5pct[idx1][idxDept][deptmax]) {
             issueDeptTop5pct[idx1][idxDept].shift();
@@ -634,15 +598,15 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
           2
         );
         starDeptDevTotal[idx1][idxDept] += Math.pow(
-          Number(Row.star_count - starSid[idx1][idxDept]),
+          Number(Row.star_count - starDept[idx1][idxDept]),
           2
         );
         prDeptDevTotal[idx1][idxDept] += Math.pow(
-          Number(Row.pr_count - prSid[idx1][idxDept]),
+          Number(Row.pr_count - prDept[idx1][idxDept]),
           2
         );
         issueDeptDevTotal[idx1][idxDept] += Math.pow(
-          Number(Row.issue_count - issueSid[idx1][idxDept]),
+          Number(Row.issue_count - issueDept[idx1][idxDept]),
           2
         );
 
