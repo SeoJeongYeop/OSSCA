@@ -6,6 +6,7 @@ var logger = require("morgan");
 
 var indexRouter = require("./routes/index");
 var userRouter = require("./routes/users");
+var repoRouter = require("./routes/repos");
 var chartRouter = require("./routes/chartdata");
 var ajaxRouter = require("./routes/ajax");
 
@@ -29,6 +30,7 @@ app.use("/", indexRouter);
 app.use("/user", userRouter);
 app.use("/chartdata", chartRouter);
 app.use("/ajax", ajaxRouter);
+app.use("/repo", repoRouter);
 // scripts 경로로 접근시 node_modules을 사용할 수 있게 설정
 app.use("/scripts", express.static(path.join(__dirname, "node_modules")));
 

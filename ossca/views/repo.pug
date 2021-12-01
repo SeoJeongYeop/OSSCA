@@ -1,0 +1,47 @@
+extends layout
+
+block vars
+  - var menu='user'
+
+block content
+  .container 
+    table#scoreTable.table.table-striped.table-hover
+      thead.table-light
+        tr 
+          th Repository
+          th Star
+          th Forks
+          th Commits
+          th PR
+          th Issues 
+          th Watchers
+          th Language
+          th Contributors
+          th Student Contributors
+      tbody
+        -for(let i=0; i<size;i++)
+          tr
+            td
+              a(href="http://github.com/" + table[i].owner_id + "/" + table[i].repo_name) #{table[i].owner_id + "/" + table[i].repo_name}
+            td #{table[i].stargazers_count}
+            td #{table[i].forks_count}
+            td #{table[i].commits_count}
+            td #{table[i].prs_count}
+            td #{table[i].open_issue_count + table[i].close_issue_count}
+            td #{table[i].watchers_count}
+            td #{table[i].language}
+            td #{table[i].contributors_count}
+            td.repo_row(id=table[i].owner_id + "/" + table[i].repo_name) #{table[i].student_contributor}
+  .hover-menu.bg-secondary
+    p test
+
+block scripts
+  link(rel='stylesheet', href='https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css')
+  link(rel='stylesheet', href='https://cdn.datatables.net/searchpanes/1.4.0/css/searchPanes.bootstrap5.min.css')
+  link(rel='stylesheet', href='https://cdn.datatables.net/select/1.3.3/css/select.bootstrap5.min.css')
+  script(type="text/javascript", src="/javascripts/repository.js")
+  script(src='http://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js')
+  script(src='http://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js')
+  script(src='http://cdn.datatables.net/searchpanes/1.4.0/js/dataTables.searchPanes.min.js')
+  script(src='http://cdn.datatables.net/searchpanes/1.4.0/js/searchPanes.bootstrap5.min.js')
+  script(src='http://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js')
