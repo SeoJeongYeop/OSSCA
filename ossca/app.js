@@ -5,7 +5,7 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 
 var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
+var userRouter = require("./routes/users");
 var chartRouter = require("./routes/chartdata");
 var ajaxRouter = require("./routes/ajax");
 
@@ -26,7 +26,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
-app.use("/users", usersRouter);
+app.use("/user", userRouter);
 app.use("/chartdata", chartRouter);
 app.use("/ajax", ajaxRouter);
 // scripts 경로로 접근시 node_modules을 사용할 수 있게 설정

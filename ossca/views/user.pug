@@ -1,7 +1,7 @@
 extends layout
 
 block vars
-  - var menu='data'
+  - var menu='user'
 
 block content
   .container 
@@ -23,7 +23,7 @@ block content
           tr
             td.rank 
             td
-              a(href="users/"+table[i].id) #{table[i].name}
+              a(href="user/"+table[i].id) #{table[i].name}
             td #{table[i].github_id}
             td.ns= table[i].year
             td.sc= table[i].total_score
