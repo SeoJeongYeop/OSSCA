@@ -4,7 +4,7 @@ var router = express.Router();
 
 /* GET users listing. */
 router.get('/:student_id', function(req, res) {
-  const query = `SELECT * FROM student_tab A WHERE A.id = '` + req.params.student_id + `'`; 
+  const query = `SELECT * FROM student_tab A, github_score B WHERE A.id = '` + req.params.student_id + `' AND A.github_id = B.github_id`; 
   console.log('user: ' + req.params.student_id);
   DB("GET", query, []).then(function(result, error){
     if (error) {

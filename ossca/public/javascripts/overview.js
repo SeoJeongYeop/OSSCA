@@ -91,4 +91,5 @@ $(document).ready(function () {
   });
   $('.dtsp-titleRow').remove();
   $('.dtsp-panesContainer').insertAfter('#scoreTable_filter');
+  $('span[title=2021]').click();
 });

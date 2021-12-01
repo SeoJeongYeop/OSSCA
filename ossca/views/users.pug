@@ -20,12 +20,33 @@ block content
               td(scope='row') 학과
               td #{user.dept}
             tr
+              td(scope='row') 전공
+              td #{user.plural_major ? "복수전공" : "원전공"}
+            tr
               td(scope='row') GitHub
               td 
                 a(href='https://github.com/' + user.github_id) #{user.github_id}
             tr
-              td(scope='row') Email
+              td(scope='row') 개인 Email
+              td #{user.personal_email}
+            tr
+              td(scope='row') Github Email
               td #{user.primary_email}
+            -var owned_score = user.guideline_score + user.code_score + user.other_project_score
+            -var contributor_score = user.contributor_score
+            -var addition_score = user.star_score + user.contribution_score
+            tr
+              td(scope='row') Score
+              td #{user.excellent_contributor}
+            tr
+              td(scope='row') Owner Score
+              td #{owned_score}
+            tr
+              td(scope='row') Contributor Score
+              td #{contributor_score}
+            tr
+              td(scope='row') Additional Score
+              td #{addition_score}
       .col-9
         .container
           ul.nav.nav-tabs
