@@ -19,6 +19,7 @@ window.onload = function () {
         issueAnnual,
       ];
       //default annual setting 2021
+      let switchChecked = true;
       let chartFactor = "score";
       let annual = 2021;
       let startAnnual = 2019;
@@ -235,21 +236,31 @@ window.onload = function () {
 
       const switchTotal = document.getElementById("totalSwitch");
       btn21.addEventListener("click", function () {
+        $("#totalSwitch").classList;
         annual = 2021;
         setGraphData(annual, chartFactor);
-        setOverallStat(json);
+        setOverallStat(
+          json,
+          switchChecked ? 1 : json["size"][annual - startAnnual]
+        );
         reloadChart(annual, chartFactor);
       });
       btn20.addEventListener("click", function () {
         annual = 2020;
         setGraphData(annual, chartFactor);
-        setOverallStat(json);
+        setOverallStat(
+          json,
+          switchChecked ? 1 : json["size"][annual - startAnnual]
+        );
         reloadChart(annual, chartFactor);
       });
       btn19.addEventListener("click", function () {
         annual = 2019;
         setGraphData(annual, chartFactor);
-        setOverallStat(json);
+        setOverallStat(
+          json,
+          switchChecked ? 1 : json["size"][annual - startAnnual]
+        );
         reloadChart(annual, chartFactor);
       });
       scoreTab.addEventListener("click", function () {
@@ -291,9 +302,11 @@ window.onload = function () {
         console.log(e.target.checked);
         $(".switch-toggle").toggleClass("bold");
         if (e.target.checked === false) {
+          switchChecked = false;
           $("#commitTitle").text("학생당 Commit 수");
           $("#starTitle").text("학생당 Star 수");
           $("#repoTitle").text("학생당 Repo 수");
+          setOverallStat(json, json["size"][annual - startAnnual]);
           destroyOverviewChart();
           const data = [];
           for (let year = 2019; year <= 2021; year++) {
@@ -515,10 +528,12 @@ window.onload = function () {
           );
         }
         if (e.target.checked === true) {
+          switchChecked = true;
           $("#commitTitle").text("총 Commit 수");
           $("#starTitle").text("총 Star 수");
           $("#repoTitle").text("총 Repo 수");
           destroyOverviewChart();
+          setOverallStat(json);
           overviewDatasetList = [
             json["scoreMore3"],
             json["totalCommit"],
@@ -566,8 +581,9 @@ window.onload = function () {
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       }
 
-      function setOverallStat(json) {
+      function setOverallStat(json, nStudent = 1) {
         // Overall statistic data: 3점 이상 비율, 총 커밋 수, 총 스타 수, 총 레포 수
+        let fix = nStudent === 1 ? 0 : 1;
         const overGoalcount = json["scoreMore3"][annual - startAnnual];
         $("#overGoalNumerator").text(numberWithCommas(overGoalcount));
         $("#overGoalDenominator").text(
@@ -587,33 +603,45 @@ window.onload = function () {
           sumTotalStar += element;
         });
         $("#commitNumerator").text(
-          numberWithCommas(json.totalCommit[annual - startAnnual])
+          numberWithCommas(
+            (json.totalCommit[annual - startAnnual] / nStudent).toFixed(fix)
+          )
         );
         $("#commitDenominator").text(numberWithCommas(sumTotalCommit));
         $("#commitPercent").text(
           (
-            (json.totalCommit[annual - startAnnual] / sumTotalCommit) *
+            (json.totalCommit[annual - startAnnual] /
+              nStudent /
+              sumTotalCommit) *
             100
           ).toFixed(1) + "%"
         );
         $("#starNumerator").text(
-          numberWithCommas(json.totalStar[annual - startAnnual])
+          numberWithCommas(
+            (json.totalStar[annual - startAnnual] / nStudent).toFixed(fix)
+          )
         );
         $("#starDenominator").text(numberWithCommas(sumTotalStar));
         $("#starPercent").text(
-          ((json.totalStar[annual - startAnnual] / sumTotalStar) * 100).toFixed(
-            1
-          ) + "%"
+          (
+            (json.totalStar[annual - startAnnual] / nStudent / sumTotalStar) *
+            100
+          ).toFixed(1) + "%"
         );
         $("#repoNumerator").text(
-          numberWithCommas(json.repoDist[-(annual - 2021)])
+          numberWithCommas(
+            (json.repoDist[-(annual - 2021)] / nStudent).toFixed(fix)
+          )
         );
-        $("#repoDenominator").text(numberWithCommas([json.totalRepo]));
+        $("#repoDenominator").text(numberWithCommas(json.totalRepo));
         $("#repoPercent").text(
-          ((json.repoDist[-(annual - 2021)] / json.totalRepo) * 100).toFixed(
-            1
-          ) + "%"
+          (
+            (json.repoDist[-(annual - 2021)] / nStudent / json.totalRepo) *
+            100
+          ).toFixed(1) + "%"
         );
+
+        controlFontSize();
       }
       function setGraphData(annual, factor) {
         document.getElementById("dropdownMenuButton1").textContent = annual;
@@ -883,26 +911,30 @@ window.onload = function () {
       }
 
       // too long text
-      const numerator = document.getElementsByClassName("text-primary");
-      const denominator = document.getElementsByClassName("total");
-      const percent = document.getElementsByClassName("percent");
-      const kpi = document.getElementsByClassName("kpi");
-      for (let i = 0; i < numerator.length; i++) {
-        let lenNumer = numerator.item(i).textContent.length;
-        let lenDenom = denominator.item(i).textContent.length;
-        let lenPercent = percent.item(i).textContent.length;
-        console.log(i, lenNumer + lenDenom);
-        console.log(
-          i,
-          numerator.item(i).textContent,
-          denominator.item(i).textContent
-        );
-        if (lenNumer + lenDenom + lenPercent / 2 > 10) {
-          kpi.item(i).style.fontSize =
-            ((2 / (lenNumer + lenDenom + lenPercent / 2)) * 10).toFixed(2) +
-            "rem";
+      controlFontSize();
+      function controlFontSize() {
+        const numerator = document.getElementsByClassName("text-primary");
+        const denominator = document.getElementsByClassName("total");
+        const percent = document.getElementsByClassName("percent");
+        const kpi = document.getElementsByClassName("kpi");
+        for (let i = 0; i < numerator.length; i++) {
+          let lenNumer = numerator.item(i).textContent.length;
+          let lenDenom = denominator.item(i).textContent.length;
+          let lenPercent = percent.item(i).textContent.length;
+          console.log(i, lenNumer + lenDenom);
+          console.log(
+            i,
+            numerator.item(i).textContent,
+            denominator.item(i).textContent
+          );
+          if (lenNumer + lenDenom + lenPercent / 2 > 10) {
+            kpi.item(i).style.fontSize =
+              ((2 / (lenNumer + lenDenom + lenPercent / 2)) * 10).toFixed(2) +
+              "rem";
+          }
         }
       }
+
       function makeScatterData(arr2d, label) {
         let ret = [];
         for (let i = 0; i < arr2d.length; i++) {
