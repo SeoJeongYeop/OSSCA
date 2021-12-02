@@ -32,4 +32,19 @@ router.get('/contr_repo', function(req, res){
   });
 });
 
+router.get('/contribute_student/:repo_owner/:repo_name', function(req, res){
+  DB("GET", "CALL GetContributor('" + req.params.repo_owner +"', '" + req.params.repo_name + "');").then(function(result, error){
+    if (error) {
+      console.log(error);
+    }
+    else {
+      result.row = result.row[0]
+      res.render("contribute_card", {
+        data: result.row
+      });
+    }
+  });
+});
+
+
 module.exports = router;

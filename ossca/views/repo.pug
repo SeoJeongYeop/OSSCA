@@ -32,8 +32,7 @@ block content
             td #{table[i].language}
             td #{table[i].contributors_count}
             td.repo_row(id=table[i].owner_id + "/" + table[i].repo_name) #{table[i].student_contributor}
-  .hover-menu.bg-secondary
-    p test
+  #hover-menu
 
 block scripts
   link(rel='stylesheet', href='https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css')

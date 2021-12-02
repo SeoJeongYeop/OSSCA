@@ -1,0 +1,18 @@
+.card.col-6
+  .card-body
+    table.table.text-center
+      thead
+        tr
+          th Name
+          th Github
+          th Commits
+          th Issues
+          th Pull Requests
+      tbody 
+        -for(i = 0; i < data.length; i++)
+          tr 
+            td #{data[i].name}
+            td #{data[i].github_id}
+            td #{data[i].commit_cnt}
+            td #{data[i].issue_cnt}
+            td #{data[i].pull_cnt}
