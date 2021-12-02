@@ -93,12 +93,12 @@ class Contributor:
         self.repo_score_v2 = 0
         self.repo_additional_score_v2 = 0
         
-        self.contribute_pr_count = 0;
-        self.contribute_issue_count = 0;
-        try :
-            print("total_commit: ",self.total_commits)
-        except Exception as e:
-            print(e)
+        self.contribute_pr_count = 0
+        self.contribute_issue_count = 0
+        # try :
+        #     print("total_commit: ",self.total_commits)
+        # except Exception as e:
+        #     print(e)
     def link_indie_repo(self,stats):
         self.indie_repositories.append(Repository(stats))
         return self.indie_repositories
@@ -168,9 +168,9 @@ class Contributor:
             for repo in self.contributor_repositories :
                 repo.showCompact()
     def countPr(self):
-        self.contribute_pr_count += 1;
+        self.contribute_pr_count += 1
     def countIssue(self):
-        self.contribute_issue_count += 1;
+        self.contribute_issue_count += 1
     def sumContribution(self):
         ##### Seperate 1: indie and team #####
         indie_stargazers_count = 0
@@ -618,47 +618,39 @@ class Contributor:
         repo_score_sub_v2 = list()
         best_repo_v2 = dict()
         best_repo_v2["best_repo"] = ""
-        best_repo_v2["score_10000L"] = 0
-        best_repo_v2["score_50C"] = 0
-        best_repo_v2["score_pr_issue"] = 0
+        best_repo_v2["score_10000L"] = 0 # x -
+        best_repo_v2["score_50C"] = 0 # x -
+        best_repo_v2["score_pr_issue"] = 0 # x -
         best_repo_v2["guideline_score"] = 0
-        best_repo_v2["star_count"] = 0
-        best_repo_v2["fork_count"] = 0
-        best_repo_v2["repo_score"] = 0
+        best_repo_v2["star_count"] = 0 
+        best_repo_v2["fork_count"] = 0 
         best_repo_v2["score_star"] = 0
-        best_repo_v2["repo_score"] = 0
-        best_repo_v2["score_fork'"] = 0
-        best_repo_v2["score_other_repo"] = 0
-        best_repo_v2["additional_score"] = 0
+        best_repo_v2["repo_score"] = 0 # x
+        best_repo_v2["score_fork'"] = 0 
+        best_repo_v2["score_other_repo"] = 0 # x
+        best_repo_v2["additional_score"] = 0 # x
         sub_repo_v2 = list()
         total_star = 0
         total_fork = 0
-        for repo in (self.owner_repositories+self.contributor_repositories) :
+        for repo in (self.owner_repositories) :
             retJson = repo.calculateRepoScore_v2(10000,50,7)
             
             repo_score = retJson["repo_score"]
-            print("repo_score",repo_score)
             total_star += repo.stargazers_count
             total_fork += repo.forks_count
-            print("total",total_star,total_fork)
             if repo_score_best_v2 < repo_score:
                 # best 바뀌면 기존 best가 서브레포로 이동
                 if bool(best_repo_v2) :
                     if len(sub_repo_v2) < 2:
-                        print("<2")
-                        sub_repo_v2.append(best_repo_v2);
+                        sub_repo_v2.append(best_repo_v2)
                         repo_score_sub_v2.append(repo_score_best_v2)
-                        print("repo_score_sub_v2",repo_score_sub_v2)
                     else :
-                        print("else")
                         del sub_repo_v2[0]
                         sub_repo_v2.append(best_repo_v2)
                         del repo_score_sub_v2[0]
                         repo_score_sub_v2.append(repo_score_best_v2)
-                        print("repo_score_sub_v2",repo_score_sub_v2)
                     
                 repo_score_best_v2 = repo_score
-                print(repo.repo_name, ' has ', repo_score_best_v2)
                 best_repo_v2 = retJson
             
         if bool(best_repo_v2) :
@@ -668,11 +660,24 @@ class Contributor:
                 best_repo_v2["score_star"] = 5
             best_repo_v2["score_fork"] = min([(total_fork-best_repo_v2["fork_count"])*0.2,1])
             best_repo_v2["score_other_repo"] = min([sum(repo_score_sub_v2), 1])
+            best_repo_v2["score_other_repo"] = 0 # x
             self.repo_additional_score_v2 = best_repo_v2["score_star"] + best_repo_v2["score_fork"] + best_repo_v2["score_other_repo"]
-                
+        
+        best_repo_v2["score_10000L"] = 0 # x -
+        best_repo_v2["score_10000L_sub"] = 0 # x -
+        best_repo_v2["score_10000L_add"] = 0 # x -
+        best_repo_v2["score_10000L_sum"] = 0 # x -
+        best_repo_v2["score_50C"] = 0 # x -
+        best_repo_v2["score_pr_issue"] = 0 # x -
+        best_repo_v2["repo_score_sub"] = 0 # x
+        best_repo_v2["repo_score_add"] = 0 # x
+        best_repo_v2["repo_score_sum"] = 0 # x
+        
+        best_repo_v2["additional_score"] = 0 # x
+        best_repo_v2["additional_score_sub"] = 0 # x
+        best_repo_v2["additional_score_add"] = 0 # x
+        best_repo_v2["additional_score_sum"] = 0 # x
+
         self.repo_score_v2 = repo_score_best_v2
-        print("self.repo_additional_score_v2",self.repo_additional_score_v2)
         #추가점수도 끼워서 같이 리턴한다.
-        best_repo_v2["additional_score"] = self.repo_additional_score_v2
-        print("best_repo_v2: ", best_repo_v2)
         return best_repo_v2
