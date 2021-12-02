@@ -275,7 +275,7 @@ def analyzePrIssue(contributorDict:dict, year:str):
         if issue["owner_id"] != issue["github_id"] and year == issue["date"][0:4]:
             contributorDict[issue["github_id"]].countIssue();
             
-def yieldScore(contributorDict:dict, year:str):
+def yieldScore(contributorDict:dict, year:str, insert:bool):
     with open("./data/github_overview.json",'r', encoding="utf-8") as overview:
         overview_data = json.load(overview)
     scoreList = []
@@ -284,8 +284,9 @@ def yieldScore(contributorDict:dict, year:str):
         try :
             resultDict = dict()
             best_repo = contributorDict[overview["github_id"]].yieldScore()
-            
+            best_repo_v2 = contributorDict[overview["github_id"]].yieldScore_v2()
             resultDict["github_id"] = overview["github_id"]
+            
             resultDict["excellent_contributor_score"] = contributorDict[overview["github_id"]].excellent_contributor_score
             resultDict["owner_activity_score"] = contributorDict[overview["github_id"]].owner_activity_score
             resultDict["contributor_activity_score"] = contributorDict[overview["github_id"]].contributor_activity_score
@@ -303,19 +304,29 @@ def yieldScore(contributorDict:dict, year:str):
                 print("#data: ",str(year+resultDict["github_id"]), str(resultDict["github_id"]), int(year), int(resultDict["excellent_contributor_score"]), str(best_repo["best_repo"]), float(best_repo["guideline_score"]), float(best_repo["code_score"]), float(best_repo["other_project_score"]), float(resultDict["contributor_activity_score"]), float(resultDict["star_score"]), float(resultDict["contribution_score"]), int(resultDict["total_star_count"]), int(resultDict["total_commit_count"]),int(resultDict["pr_count"]),int(resultDict["issue_count"]))
             except Exception as e :
                 print("print data error ",e)
-            try:
-                cursor = githubDB.cursor(pymysql.cursors.DictCursor)
-                insert_sql = '''INSERT INTO github_score(yid, github_id, year, excellent_contributor, best_repo, guideline_score, code_score, other_project_score, contributor_score, star_score, contribution_score, star_count, commit_count, pr_count, issue_count) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'''
-                insert_arg = [str(year+resultDict["github_id"]), str(resultDict["github_id"]), int(year), int(resultDict["excellent_contributor_score"]), str(best_repo["best_repo"]), float(best_repo["guideline_score"]), float(best_repo["code_score"]), float(best_repo["other_project_score"]), float(resultDict["contributor_activity_score"]), float(resultDict["star_score"]), float(resultDict["contribution_score"]), int(resultDict["total_star_count"]), int(resultDict["total_commit_count"]),int(resultDict["pr_count"]),int(resultDict["issue_count"])]
-                
-                print("#insert_sql ",insert_sql, "#insert_arg ", insert_arg)
-                cursor.execute(insert_sql, insert_arg)
-                githubDB.commit()
-                time.sleep(0.1)
-                print("done!!")
+            if(insert) :
+                try:
+                    cursor = githubDB.cursor(pymysql.cursors.DictCursor)
+                    insert_sql = '''INSERT INTO github_score(yid, github_id, year, excellent_contributor, best_repo, guideline_score, code_score, other_project_score, contributor_score, star_score, contribution_score, star_count, commit_count, pr_count, issue_count,fork_count, score_10000L, score_50C, score_pr_issue, guideline_score_v2, repo_score, score_star, score_fork, score_other_repo, additional_score) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'''
+                    insert_arg = [str(year+resultDict["github_id"]), str(resultDict["github_id"]), int(year), int(resultDict["excellent_contributor_score"]), str(best_repo["best_repo"]), float(best_repo["guideline_score"]), float(best_repo["code_score"]), float(best_repo["other_project_score"]), float(resultDict["contributor_activity_score"]), float(resultDict["star_score"]), float(resultDict["contribution_score"]), int(resultDict["total_star_count"]), int(resultDict["total_commit_count"]),int(resultDict["pr_count"]),int(resultDict["issue_count"]),int(best_repo_v2["fork_count"]),
+            round(float(best_repo_v2["score_10000L"]),3),
+            round(float(best_repo_v2["score_50C"]),3),
+            round(float(best_repo_v2["score_pr_issue"]),3),
+            round(float(best_repo_v2["guideline_score"]),3),
+            round(float(best_repo_v2["repo_score"]),3),
+            round(float(best_repo_v2["score_star"]),3),
+            round(float(best_repo_v2["score_fork"]),3),
+            round(float(best_repo_v2["score_other_repo"]),3),
+            round(float(best_repo_v2["additional_score"]),3)]
+                    
+                    print("#insert_sql ",insert_sql, "#insert_arg ", insert_arg)
+                    cursor.execute(insert_sql, insert_arg)
+                    githubDB.commit()
+                    time.sleep(0.1)
+                    print("done!!")
 
-            except Exception as e:
-                print("insert error ", e)
+                except Exception as e:
+                    print("insert error ", e)
 
         except Exception as e:
             print(e)

@@ -25,6 +25,7 @@ class Repository:
             self.contributor_commits_count = 0
             # code_edits
             self.repo_score = 0
+            self.repo_score_v2 = 0
         except Exception as e:
             print("repo ",e)
             
@@ -108,4 +109,22 @@ class Repository:
             self.repo_score += 0.5
             repo_data["other_project_score"] = 0.5
         repo_data["repo_score"] = repo_data["code_score"] + repo_data["guideline_score"] + repo_data["other_project_score"]
+        return repo_data
+    
+    def calculateRepoScore_v2(self, max_code_edits = 10000, max_commit_count = 50, max_pr_issue = 7):
+        print("calculateRepoScore_v2")
+        repo_data = dict();
+        repo_data["best_repo"] = self.repo_name
+        repo_data["score_10000L"] = min([self.code_edits, max_code_edits])/max_code_edits
+        repo_data["score_50C"] = min([self.commits_count,max_commit_count])/max_commit_count
+        repo_data["score_pr_issue"] = min([self.prs_count+self.open_issue_count,max_pr_issue])*0.7/max_pr_issue
+        repo_data["guideline_score"] = 0
+        repo_data["star_count"] = self.stargazers_count
+        repo_data["fork_count"] = self.forks_count
+        if self.license is not None and self.readme != 0 and self.proj_short_desc is not None:
+            repo_data["guideline_score"] = 0.3
+        
+        repo_data["repo_score"] = repo_data["score_10000L"]+repo_data["score_50C"]+repo_data["score_pr_issue"]+repo_data["guideline_score"]
+        self.repo_score_v2 = min([3,repo_data["repo_score"]])
+        print("self.repo_score_v2",self.repo_score_v2)
         return repo_data
