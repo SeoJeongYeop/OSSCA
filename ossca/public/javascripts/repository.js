@@ -23,7 +23,7 @@ $(document).ready(function () {
       for(idx in table_rows){
         $(table_rows[idx]).html((now_page - 1) * 10 + parseInt(idx) + 1);
       }
-      $('.repo_row').mouseover(function(e){
+      $('.repo_row').click(function(e){
         console.log(this.id);
         $('#hover-menu').children().remove();
         $('#hover-menu').append($('<div>').attr("class", "spinner-border text-primary").attr("role", "status"));
