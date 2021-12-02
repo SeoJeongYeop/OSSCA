@@ -1,8 +1,5 @@
 window.onload = function () {
-  //const IP = "localhost";
-  const IP = "115.145.212.144";
-  const port = "8081";
-  const promise = fetch(`http://${IP}:${port}/chartdata`)
+  const promise = fetch(`/chartdata`)
     .then((response) => {
       console.log(response);
       return response.json();
