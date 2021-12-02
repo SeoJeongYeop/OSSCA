@@ -673,10 +673,10 @@ class Contributor:
         best_repo_v2["repo_score_add"] = 0 # x
         best_repo_v2["repo_score_sum"] = 0 # x
         
-        best_repo_v2["additional_score"] = 0 # x
-        best_repo_v2["additional_score_sub"] = 0 # x
-        best_repo_v2["additional_score_add"] = 0 # x
-        best_repo_v2["additional_score_sum"] = 0 # x
+        best_repo_v2["additional_score"] = best_repo_v2["score_star"] + best_repo_v2["score_fork"]
+        best_repo_v2["additional_score_sub"] = best_repo_v2["score_star"] + best_repo_v2["score_fork"]
+        best_repo_v2["additional_score_add"] = best_repo_v2["score_star"] + best_repo_v2["score_fork"]
+        best_repo_v2["additional_score_sum"] = best_repo_v2["score_star"] + best_repo_v2["score_fork"]
 
         self.repo_score_v2 = repo_score_best_v2
         #추가점수도 끼워서 같이 리턴한다.
