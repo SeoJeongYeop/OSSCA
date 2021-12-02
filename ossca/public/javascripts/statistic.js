@@ -5,8 +5,11 @@ window.onload = function () {
       return response.json();
     })
     .then((json) => {
+      const scoreList = ["", "_sub", "_sum"];
+      const scoreCapitalList = ["", "Sub", "Sum"];
+      let scoreIdx = 0;
       console.log("check", json.totalCommit, json.totalStar, json.totalRepo);
-      const scoreAnnual = json["annual"]["score"];
+      let scoreAnnual = json["annual"]["score"];
       const commitAnnual = json["annual"]["commit"];
       const starAnnual = json["annual"]["star"];
       const prAnnual = json["annual"]["pr"];
@@ -23,7 +26,7 @@ window.onload = function () {
       let chartFactor = "score";
       let annual = 2021;
       let startAnnual = 2019;
-      let dist = json[`year${annual}`]["score_dist"];
+      let dist = json.year2021["score_dist"];
       let sidData = json.year2021["score_sid"];
       let deptData = json.year2021["score_dept"];
       let sidTopData = json.year2021["scoreSidTop5pct"];
@@ -224,6 +227,7 @@ window.onload = function () {
       }
 
       /* Add Event Listener to year button */
+      const btnScore = document.getElementsByClassName("btn-score");
       const btn21 = document.getElementById("dropdownBtn2021");
       const btn20 = document.getElementById("dropdownBtn2020");
       const btn19 = document.getElementById("dropdownBtn2019");
@@ -235,6 +239,132 @@ window.onload = function () {
       const issueTab = document.getElementById("pills-issue-tab");
 
       const switchTotal = document.getElementById("totalSwitch");
+      for (let i = 0; i < btnScore.length; i++) {
+        btnScore.item(i).addEventListener("click", (btn) => {
+          for (let j = 0; j < btnScore.length; j++) {
+            btnScore.item(j).classList.add("btn-outline-primary");
+            btnScore.item(j).classList.remove("btn-primary");
+          }
+          btnScore.item(i).classList.remove("btn-outline-primary");
+          btnScore.item(i).classList.add("btn-primary");
+          scoreIdx = i;
+          console.log("scoreIdx", i);
+          //reload score year chart
+          yearChart[0].destroy();
+          yearChart[0] = makeChart(
+            ctxYear[0],
+            "lineWithErrorBars",
+            yearFactorList[0],
+            [2019, 2020, 2021],
+            makeErrorJson(
+              json["annual"][`score${scoreList[scoreIdx]}`],
+              annualStd[`score${scoreCapitalList[scoreIdx]}Std`]
+            ),
+            bsPrimary,
+            {
+              plugins: {
+                legend: {
+                  display: false,
+                },
+              },
+              scales: {
+                y: { max: 5, beginAtZero: true },
+              },
+            }
+          );
+
+          setGraphData(annual, chartFactor);
+          setOverallStat(
+            json,
+            switchChecked ? 1 : json["size"][annual - startAnnual]
+          );
+          if (switchChecked === true) {
+            //reload score overview chart
+            overviewChart[0].destroy();
+            overviewChart[0] = makeChart(
+              ctxOverview[0],
+              "line",
+              overviewFactorList[0],
+              ["2019", "2020", "2021"],
+              json[`score${scoreCapitalList[scoreIdx]}More3`],
+              bsPrimary,
+              noLegendOption
+            );
+          } else {
+            //reload score overview chart
+            overviewChart[0].destroy();
+            const data = [];
+            for (let year = 2019; year <= 2021; year++) {
+              json[`student${year}`].map((obj) => {
+                const picked = (({
+                  github_id,
+                  score,
+                  score_sub,
+                  score_sum,
+                }) => ({
+                  github_id,
+                  score,
+                  score_sub,
+                  score_sum,
+                }))(obj);
+
+                if (Number(picked[`score${scoreList[scoreIdx]}`]) < 3) return;
+                data.push({
+                  x: String(year),
+                  y: picked[`score${scoreList[scoreIdx]}`],
+                  tooltip: picked["github_id"],
+                });
+              });
+            }
+            overviewChart[0] = makeChart(
+              ctxOverview[0],
+              "scatter",
+              "score",
+              ["2019", "2020", "2021"],
+              data,
+              bsPrimary,
+              {
+                plugins: {
+                  legend: {
+                    display: false,
+                  },
+                  tooltip: {
+                    callbacks: {
+                      title: (items) => {
+                        return items[0].raw.y;
+                      },
+                      label: (item) => {
+                        return item.raw.tooltip;
+                      },
+                    },
+                  },
+                },
+                scales: {
+                  x: {
+                    offset: false,
+                    grid: {
+                      offset: false,
+                    },
+                    ticks: {
+                      stepSize: 1,
+                    },
+                    max: 2021,
+                    min: 2019,
+                  },
+                  y: {
+                    max: 5,
+                    beginAtZero: true,
+                  },
+                },
+              }
+            );
+          }
+
+          if (chartFactor === "score") {
+            reloadChart(annual, chartFactor);
+          }
+        });
+      }
       btn21.addEventListener("click", function () {
         $("#totalSwitch").classList;
         annual = 2021;
@@ -311,15 +441,18 @@ window.onload = function () {
           const data = [];
           for (let year = 2019; year <= 2021; year++) {
             json[`student${year}`].map((obj) => {
-              const picked = (({ github_id, score }) => ({
+              const picked = (({ github_id, score, score_sub, score_sum }) => ({
                 github_id,
                 score,
+                score_sub,
+                score_sum,
               }))(obj);
-              if (Number(picked["score"]) < 3) return;
+              if (Number(picked[`score${scoreList[scoreIdx]}`]) < 3) return;
               data.push({
                 x: String(year),
-                y: picked["score"],
+                y: picked[`score${scoreList[scoreIdx]}`],
                 tooltip: picked["github_id"],
+                order: 1,
               });
             });
           }
@@ -355,6 +488,8 @@ window.onload = function () {
                   ticks: {
                     stepSize: 1,
                   },
+                  max: 2021,
+                  min: 2019,
                 },
                 y: {
                   max: 5,
@@ -584,7 +719,8 @@ window.onload = function () {
       function setOverallStat(json, nStudent = 1) {
         // Overall statistic data: 3점 이상 비율, 총 커밋 수, 총 스타 수, 총 레포 수
         let fix = nStudent === 1 ? 0 : 1;
-        const overGoalcount = json["scoreMore3"][annual - startAnnual];
+        const overGoalcount =
+          json[`score${scoreCapitalList[scoreIdx]}More3`][annual - startAnnual];
         $("#overGoalNumerator").text(numberWithCommas(overGoalcount));
         $("#overGoalDenominator").text(
           numberWithCommas(json.size[annual - startAnnual])
@@ -645,11 +781,27 @@ window.onload = function () {
       }
       function setGraphData(annual, factor) {
         document.getElementById("dropdownMenuButton1").textContent = annual;
-        dist = json[`year${annual}`][`${factor}_dist`];
-        sidData = json[`year${annual}`][`${factor}_sid`];
-        deptData = json[`year${annual}`][`${factor}_dept`];
-        sidTopData = json[`year${annual}`][`${factor}SidTop5pct`];
-        deptTopData = json[`year${annual}`][`${factor}DeptTop5pct`];
+        if (factor === "score") {
+          dist = json[`year${annual}`][`${factor}${scoreList[scoreIdx]}_dist`];
+          sidData =
+            json[`year${annual}`][`${factor}${scoreList[scoreIdx]}_sid`];
+          deptData =
+            json[`year${annual}`][`${factor}${scoreList[scoreIdx]}_dept`];
+          sidTopData =
+            json[`year${annual}`][
+              `${factor}${scoreCapitalList[scoreIdx]}SidTop5pct`
+            ];
+          deptTopData =
+            json[`year${annual}`][
+              `${factor}${scoreCapitalList[scoreIdx]}DeptTop5pct`
+            ];
+        } else {
+          dist = json[`year${annual}`][`${factor}_dist`];
+          sidData = json[`year${annual}`][`${factor}_sid`];
+          deptData = json[`year${annual}`][`${factor}_dept`];
+          sidTopData = json[`year${annual}`][`${factor}SidTop5pct`];
+          deptTopData = json[`year${annual}`][`${factor}DeptTop5pct`];
+        }
       }
       function makeChart(
         dist,
@@ -778,13 +930,38 @@ window.onload = function () {
           default:
             console.log("default!!");
         }
-        dist = json[`year${annual}`][`${factor}_dist`];
-        sidData = json[`year${annual}`][`${factor}_sid`];
-        deptData = json[`year${annual}`][`${factor}_dept`];
-        sidStd = json[`year${annual}`][`${factor}SidStd`];
-        deptStd = json[`year${annual}`][`${factor}DeptStd`];
-        sidTopData = json[`year${annual}`][`${factor}SidTop5pct`];
-        deptTopData = json[`year${annual}`][`${factor}DeptTop5pct`];
+        if (chartFactor === "score") {
+          dist = json[`year${annual}`][`${factor}${scoreList[scoreIdx]}_dist`];
+          sidData =
+            json[`year${annual}`][`${factor}${scoreList[scoreIdx]}_sid`];
+          deptData =
+            json[`year${annual}`][`${factor}${scoreList[scoreIdx]}_dept`];
+          sidStd =
+            json[`year${annual}`][
+              `${factor}${scoreCapitalList[scoreIdx]}SidStd`
+            ];
+          deptStd =
+            json[`year${annual}`][
+              `${factor}${scoreCapitalList[scoreIdx]}DeptStd`
+            ];
+          sidTopData =
+            json[`year${annual}`][
+              `${factor}${scoreCapitalList[scoreIdx]}SidTop5pct`
+            ];
+          deptTopData =
+            json[`year${annual}`][
+              `${factor}${scoreCapitalList[scoreIdx]}DeptTop5pct`
+            ];
+        } else {
+          dist = json[`year${annual}`][`${factor}_dist`];
+          sidData = json[`year${annual}`][`${factor}_sid`];
+          deptData = json[`year${annual}`][`${factor}_dept`];
+          sidStd = json[`year${annual}`][`${factor}SidStd`];
+          deptStd = json[`year${annual}`][`${factor}DeptStd`];
+          sidTopData = json[`year${annual}`][`${factor}SidTop5pct`];
+          deptTopData = json[`year${annual}`][`${factor}DeptTop5pct`];
+        }
+
         topdataRule = [
           [],
           makeScatterData(sidTopData, sidLabel),

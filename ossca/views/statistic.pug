@@ -4,6 +4,11 @@ block vars
   - var menu='home'
   
 block content
+  .btn-toolbar(role="toolbar", aria-label="Toolbar with button groups")
+    .btn-group.me-2(role="group", aria-label="First group")
+      button.btn.btn-primary.btn-score(type="button") 1 
+      button.btn.btn-outline-primary.btn-score(type="button") 2
+      button.btn.btn-outline-primary.btn-score(type="button") 3
   .row.pt-2.mb-2
     .col-my-p20.ps-
       .card.p-1

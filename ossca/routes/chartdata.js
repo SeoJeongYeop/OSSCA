@@ -103,6 +103,8 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
         studentData[idx1].push({
           github_id: Row["github_id"],
           score: Row.total_score,
+          score_sub: String(Row.total_score_sub),
+          score_sum: String(Row.total_score_sum),
           commit: Row["commit_count"],
           star: Row["star_count"],
           pr: Row["pr_count"],
@@ -110,17 +112,21 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
           fork: Row["fork_owner_count"],
         });
         /* student id */
+        scoreSid[idx1][idxId] += Number(Row.total_score);
+        scoreSubSid[idx1][idxId] += Number(Row.total_score_sub);
+        scoreSumSid[idx1][idxId] += Number(Row.total_score_sum);
         commitSid[idx1][idxId] += Row.commit_count;
         starSid[idx1][idxId] += Row.star_count;
-        scoreSid[idx1][idxId] += Number(Row.total_score);
         prSid[idx1][idxId] += Row.pr_count;
         issueSid[idx1][idxId] += Row.issue_count;
         forkSid[idx1][idxId] += Row.fork_owner_count;
         sidSize[idx1][idxId] += 1;
         /* dept */
+        scoreDept[idx1][idxDept] += Number(Row.total_score);
+        scoreSubDept[idx1][idxDept] += Number(Row.total_score_sub);
+        scoreSumDept[idx1][idxDept] += Number(Row.total_score_sum);
         commitDept[idx1][idxDept] += Row.commit_count;
         starDept[idx1][idxDept] += Row.star_count;
-        scoreDept[idx1][idxDept] += Number(Row.total_score);
         prDept[idx1][idxDept] += Row.pr_count;
         issueDept[idx1][idxDept] += Row.issue_count;
         forkDept[idx1][idxDept] += Row.fork_owner_count;
@@ -1127,6 +1133,8 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
           res.json({
             title: "chart",
             scoreMore3: scoreMore3,
+            scoreSubMore3: scoreSubMore3,
+            scoreSumMore3: scoreSumMore3,
             totalCommit: totalCommit,
             totalStar: totalStar,
             totalRepo: totalRepo,
