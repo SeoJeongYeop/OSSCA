@@ -20,6 +20,12 @@ router.get("/", function (req, res, next) {
         result.row[i].repos = 0;
       if(result.row[i].commit_lines == null)
         result.row[i].commit_lines = 0;
+      if(result.row[i].year != prev_year){
+        prev_year = result.row[i].year;
+        rank = 1;
+      }
+      result.row[i].rank = rank;
+      rank += 1;
     }
     console.log(result.row.length);
     res.render("user", {

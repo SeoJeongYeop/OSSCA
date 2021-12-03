@@ -21,7 +21,7 @@ block content
       tbody
         -for(let i=0; i<size;i++)
           tr
-            td.rank #{i + 1}
+            td.rank #{table[i].rank}
             td
               a(href="user/"+table[i].id) #{table[i].name}
             td #{table[i].github_id}
