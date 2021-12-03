@@ -6,6 +6,7 @@ var logger = require("morgan");
 
 var indexRouter = require("./routes/index");
 var userRouter = require("./routes/users");
+var user2Router = require("./routes/users2");
 var repoRouter = require("./routes/repos");
 var chartRouter = require("./routes/chartdata");
 var ajaxRouter = require("./routes/ajax");
@@ -28,6 +29,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
 app.use("/user", userRouter);
+app.use("/user2", user2Router);
 app.use("/chartdata", chartRouter);
 app.use("/ajax", ajaxRouter);
 app.use("/repo", repoRouter);

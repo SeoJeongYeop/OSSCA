@@ -82,11 +82,6 @@ $(document).ready(function () {
     ],
     order: [[4, 'desc']],
     drawCallback: function( settings ) {
-      var now_page = parseInt($('.page-item.active > a').html());
-      var table_rows = $.find('.rank');
-      for(idx in table_rows){
-        $(table_rows[idx]).html((now_page - 1) * 10 + parseInt(idx) + 1);
-      }
     }
   });
   $('.dtsp-titleRow').remove();
