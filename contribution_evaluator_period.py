@@ -442,31 +442,30 @@ def yieldScore(contributorDict:dict, year:str, insert:bool):
             try: 
                 repo_best["sub"]["repo_score_sub"] = float(repo_score_best_sub) + float(repo_best["sub"]["score_50C"]) + float(repo_best["sub"]["score_pr_issue"]) + float(repo_best["sub"]["guideline_score"])
             except Exception as e:
-                repo_best["sub"]["score_10000L_sub"] = max([0,repo["commit_line_score_sub"]])
-                repo_best["sub"]["score_50C"] = repo["commit_score"]
-                repo_best["sub"]["score_pr_issue"] = repo["pr_issue_score"]
-                repo_best["sub"]["guideline_score"] = repo["guidline_score"]
-                repo_best["sub"]["repo_score_sub"] = float(repo_score_best_sub) + float(repo_best["sub"]["score_50C"]) + float(repo_best["sub"]["score_pr_issue"]) + float(repo_best["sub"]["guideline_score"])
-
+                repo_best["sub"]["score_10000L_sub"] = 0
+                repo_best["sub"]["score_50C"] = 0
+                repo_best["sub"]["score_pr_issue"] = 0
+                repo_best["sub"]["guideline_score"] = 0
+                repo_best["sub"]["repo_score_sub"] = 0
                 print("sub ",e)
             try: 
                 repo_best["add"]["repo_score_add"] = float(repo_score_best_add) + float(repo_best["add"]["score_50C"]) + float(repo_best["add"]["score_pr_issue"]) + float(repo_best["add"]["guideline_score"])
             except Exception as e:
-                repo_best["add"]["score_10000L_add"] = repo["commit_line_score_add"]
-                repo_best["add"]["score_50C"] = repo["commit_score"]
-                repo_best["add"]["score_pr_issue"] = repo["pr_issue_score"]
-                repo_best["add"]["guideline_score"] = repo["guidline_score"]
-                repo_best["add"]["repo_score_add"] = float(repo_score_best_add) + float(repo_best["add"]["score_50C"]) + float(repo_best["add"]["score_pr_issue"]) + float(repo_best["add"]["guideline_score"])
+                repo_best["add"]["score_10000L_add"] = 0
+                repo_best["add"]["score_50C"] = 0
+                repo_best["add"]["score_pr_issue"] = 0
+                repo_best["add"]["guideline_score"] = 0
+                repo_best["add"]["repo_score_add"] = 0
                 print("add ",e)
 
             try:
                 repo_best["sum"]["repo_score_sum"] = float(repo_score_best_sum) + float(repo_best["sum"]["score_50C"]) + float(repo_best["sum"]["score_pr_issue"]) + float(repo_best["sum"]["guideline_score"])
             except Exception as e:
-                repo_best["sum"]["score_10000L_sum"] = repo["commit_line_score_sum"]
-                repo_best["sum"]["score_50C"] = repo["commit_score"]
-                repo_best["sum"]["score_pr_issue"] = repo["pr_issue_score"]
-                repo_best["sum"]["guideline_score"] = repo["guidline_score"]
-                repo_best["sum"]["repo_score_sum"] = float(repo_score_best_sum) + float(repo_best["sum"]["score_50C"]) + float(repo_best["sum"]["score_pr_issue"]) + float(repo_best["sum"]["guideline_score"])
+                repo_best["sum"]["score_10000L_sum"] = 0
+                repo_best["sum"]["score_50C"] = 0
+                repo_best["sum"]["score_pr_issue"] = 0
+                repo_best["sum"]["guideline_score"] = 0
+                repo_best["sum"]["repo_score_sum"] = 0
                 print("sum ",e)
 
             resultDict["github_id"] = overview["github_id"]

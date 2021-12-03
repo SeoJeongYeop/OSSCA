@@ -6,10 +6,10 @@ router.get("/", (req, res, next) => {
   let query = `SELECT gs.github_id, gs.year, gs.excellent_contributor, 
 round(gs.guideline_score+gs.code_score+gs.other_project_score,1) as owner_score, 
 gs.contributor_score, round(gs.star_score+gs.contribution_score,1) as additional_score,  
-gs.best_repo, gs.star_count, gs.commit_count, st.id, st.dept,
+gs.best_repo, gs.star_count, gs.commit_count, gs.pr_count, gs.issue_count, st.id, st.dept,
 gs.star_owner_count, gs.fork_owner_count, 
 least(round(gs.repo_score_sub+gs.additional_score_sub,3), 5) as total_score_sub, 
-least(round(gs.repo_score_sub+gs.additional_score_sum,3), 5) as total_score_sum
+least(round(gs.repo_score_sum+gs.additional_score_sum,3), 5) as total_score_sum
 FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
 
   console.log(query);
@@ -152,10 +152,11 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
         } else if (Row.total_score < 4.5) {
           scoreDist[idx1][8] += 1;
           scoreMore3[idx1] += 1;
-        } else if (Row.total_score >= 4.5) {
+        } else {
           scoreDist[idx1][9] += 1;
           scoreMore3[idx1] += 1;
         }
+
         if (Row.total_score_sub < 0.5) {
           scoreSubDist[idx1][0] += 1;
         } else if (Row.total_score_sub < 1) {
@@ -177,10 +178,11 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
         } else if (Row.total_score_sub < 4.5) {
           scoreSubDist[idx1][8] += 1;
           scoreSubMore3[idx1] += 1;
-        } else if (Row.total_score_sub >= 4.5) {
+        } else {
           scoreSubDist[idx1][9] += 1;
           scoreSubMore3[idx1] += 1;
         }
+        
         if (Row.total_score_sum < 0.5) {
           scoreSumDist[idx1][0] += 1;
         } else if (Row.total_score_sum < 1) {
@@ -202,7 +204,7 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
         } else if (Row.total_score_sum < 4.5) {
           scoreSumDist[idx1][8] += 1;
           scoreSumMore3[idx1] += 1;
-        } else if (Row.total_score_sum >= 4.5) {
+        } else{
           scoreSumDist[idx1][9] += 1;
           scoreSumMore3[idx1] += 1;
         }
@@ -214,7 +216,7 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
           commitDist[idx1][2] += 1;
         } else if (Row.commit_count < 400) {
           commitDist[idx1][3] += 1;
-        } else if (Row.commit_count >= 400) {
+        } else {
           commitDist[idx1][4] += 1;
         }
         if (Row.star_count < 2) {
@@ -225,7 +227,7 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
           starDist[idx1][2] += 1;
         } else if (Row.star_count < 8) {
           starDist[idx1][3] += 1;
-        } else if (Row.star_count >= 8) {
+        } else {
           starDist[idx1][4] += 1;
         }
         if (Row.pr_count < 5) {
@@ -236,7 +238,7 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
           prDist[idx1][2] += 1;
         } else if (Row.pr_count < 20) {
           prDist[idx1][3] += 1;
-        } else if (Row.pr_count >= 20) {
+        } else {
           prDist[idx1][4] += 1;
         }
         if (Row.issue_count < 2) {
@@ -247,7 +249,7 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
           issueDist[idx1][2] += 1;
         } else if (Row.issue_count < 8) {
           issueDist[idx1][3] += 1;
-        } else if (Row.issue_count >= 8) {
+        } else {
           issueDist[idx1][4] += 1;
         }
         if (Row.fork_owner_count < 1) {
@@ -258,7 +260,7 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
           forkDist[idx1][2] += 1;
         } else if (Row.fork_owner_count < 4) {
           forkDist[idx1][3] += 1;
-        } else if (Row.fork_owner_count >= 4) {
+        } else {
           forkDist[idx1][4] += 1;
         }
         // annual Total sum
