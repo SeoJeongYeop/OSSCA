@@ -291,38 +291,52 @@ def yieldScore(contributorDict:dict, year:str, insert:bool):
             getId = f"select * from student_tab where github_id ='{overview['github_id']}';"
             cursor.execute(getId)
             rows = cursor.fetchall()
-            repo_score_best_sub = 0
-            repo_score_sub_list = list()
-            sub_repo_sub = list()
-            #only addtion
-            repo_score_best_add = 0
-            repo_score_add_list = list()
-            sub_repo_add = list()
-            # addtion + deletion
-            repo_score_best_sum = 0
-            repo_score_sum_list = list()
-            sub_repo_sum = list()
+
+            
             print("user:", overview["github_id"])
             for row in rows:
                 id = row["id"]
                 select_sql = f"call RepoContributeYearScore({id});"
                 cursor.execute(select_sql)
                 data = cursor.fetchall()
-
+                score_star = best_repo_v2["score_star"]
+                score_fork = best_repo_v2["score_fork"]
+                star_own_count = best_repo_v2["star_own_count"]
+                fork_own_count = best_repo_v2["fork_own_count"]
+                repo_best = dict()
+                repo_best["sub"] = dict()
+                repo_best["add"] = dict()
+                repo_best["sum"] = dict()
+                repo_score_best_sub = 0
+                repo_score_sub_list = list()
+                sub_repo_sub = list()
+                
+                #only addtion
+                repo_score_best_add = 0
+                repo_score_add_list = list()
+                sub_repo_add = list()
+                # addtion + deletion
+                repo_score_best_sum = 0
+                repo_score_sum_list = list()
+                sub_repo_sum = list()
                 for repo in data :
                     if(repo['year'] != int(year)):
                         continue
+                    
                     best_repo_v2["score_10000L_sub"] = max([0,repo["commit_line_score_sub"]])
                     best_repo_v2["score_10000L_add"] = repo["commit_line_score_add"]
                     best_repo_v2["score_10000L_sum"] = repo["commit_line_score_sum"]
                     best_repo_v2["score_50C"] = repo["commit_score"]
                     best_repo_v2["score_pr_issue"] = repo["pr_issue_score"]
+                    best_repo_v2["guideline_score"] = repo["guidline_score"]
+                    
                     repo_score_sub = min([3, float(best_repo_v2["score_10000L_sub"]) + float(best_repo_v2["score_50C"]) + float(best_repo_v2["score_pr_issue"]) + float(best_repo_v2["guideline_score"])])
                     repo_score_add = min([3,float(best_repo_v2["score_10000L_add"]) + float(best_repo_v2["score_50C"]) + float(best_repo_v2["score_pr_issue"]) + float(best_repo_v2["guideline_score"])])
                     repo_score_sum = min([3,float(best_repo_v2["score_10000L_sum"]) + float(best_repo_v2["score_50C"]) + float(best_repo_v2["score_pr_issue"]) + float(best_repo_v2["guideline_score"])])
                     print("repo min", repo_score_sub, repo_score_add,repo_score_sum)
                     #addtion-deletion
-                    if repo_score_best_sub < repo_score_sub:
+                    
+                    if repo_score_best_sub <= repo_score_sub:
                         # best 바뀌면 기존 best가 서브레포로 이동
                         if bool(best_repo_v2) :
                             if len(sub_repo_sub) < 2:
@@ -333,7 +347,7 @@ def yieldScore(contributorDict:dict, year:str, insert:bool):
                                 sub_repo_sub.append(best_repo_v2)
                                 del repo_score_sub_list[0]
                                 repo_score_sub_list.append(repo_score_best_sub)
-                            
+                            repo_best["sub"] = best_repo_v2
                         repo_score_best_sub = repo_score_sub
                     elif repo_score_sub_list[-1] < repo_score_sub :
                         if len(repo_score_sub_list) == 2 :
@@ -353,7 +367,7 @@ def yieldScore(contributorDict:dict, year:str, insert:bool):
                             repo_score_sub_list.insert(0,repo_score_sub)
                     
                     #only addtion
-                    if repo_score_best_add < repo_score_add:
+                    if repo_score_best_add <= repo_score_add:
                         # best 바뀌면 기존 best가 서브레포로 이동
                         if bool(best_repo_v2) :
                             if len(sub_repo_add) < 2:
@@ -364,7 +378,7 @@ def yieldScore(contributorDict:dict, year:str, insert:bool):
                                 sub_repo_add.append(best_repo_v2)
                                 del repo_score_add_list[0]
                                 repo_score_add_list.append(repo_score_best_add)
-                            
+                            repo_best["add"] = best_repo_v2
                         repo_score_best_add = repo_score_add
                     elif repo_score_add_list[-1] < repo_score_add :
                         if len(repo_score_add_list) == 2:
@@ -384,7 +398,7 @@ def yieldScore(contributorDict:dict, year:str, insert:bool):
                             repo_score_add_list.insert(0, repo_score_add)
 
                     #addtion + deletion
-                    if repo_score_best_sum < repo_score_sum:
+                    if repo_score_best_sum <= repo_score_sum:
                         # best 바뀌면 기존 best가 서브레포로 이동
                         if bool(best_repo_v2) :
                             if len(sub_repo_sum) < 2:
@@ -395,6 +409,7 @@ def yieldScore(contributorDict:dict, year:str, insert:bool):
                                 sub_repo_sum.append(best_repo_v2)
                                 del repo_score_sum_list[0]
                                 repo_score_sum_list.append(repo_score_best_sum)
+                            repo_best["sum"] = best_repo_v2
                         repo_score_best_sum = repo_score_sum
                     elif repo_score_sum_list[-1] < repo_score_sum :
                         if len(repo_score_sum_list) == 2 :
@@ -414,17 +429,45 @@ def yieldScore(contributorDict:dict, year:str, insert:bool):
                             repo_score_sum_list.insert(0, repo_score_sum)
                     print("repo score",repo_score_sub, repo_score_add, repo_score_sum)
                     print("repo list",repo_score_sub_list, repo_score_add_list, repo_score_sum_list)
-            best_repo_v2["score_other_repo_sub"] = min([sum(repo_score_sub_list), 1])
-            best_repo_v2["score_other_repo_add"] = min([sum(repo_score_add_list), 1]) #addtion
-            
-            best_repo_v2["score_other_repo_sum"] = min([sum(repo_score_sum_list), 1]) #addtion+deletion
-            best_repo_v2["additional_score_sub"] = float(best_repo_v2["additional_score_sub"]) + float(best_repo_v2["score_other_repo_sub"])
-            best_repo_v2["additional_score_add"] = float(best_repo_v2["additional_score_add"]) + float(best_repo_v2["score_other_repo_add"])
-            best_repo_v2["additional_score_sum"] = float(best_repo_v2["additional_score_sum"]) + float(best_repo_v2["score_other_repo_sum"])
+            repo_best["score_star"] = score_star
+            repo_best["score_fork"] = score_fork
+            repo_best["sub"]["score_other_repo_sub"] = min([sum(repo_score_sub_list), 1])
+            repo_best["add"]["score_other_repo_add"] = min([sum(repo_score_add_list), 1])
+            repo_best["sum"]["score_other_repo_sum"] = min([sum(repo_score_sum_list), 1])
+            print(repo_score_sub_list, repo_score_add_list, repo_score_sum_list)
+            print("score_other",repo_best["sub"]["score_other_repo_sub"],repo_best["add"]["score_other_repo_add"],repo_best["sum"]["score_other_repo_sum"])
+            repo_best["sub"]["additional_score_sub"] = float(score_star) + float(score_fork) + float(repo_best["sub"]["score_other_repo_sub"])
+            repo_best["add"]["additional_score_add"] = float(score_star) + float(score_fork) + float(repo_best["add"]["score_other_repo_add"])
+            repo_best["sum"]["additional_score_sum"] = float(score_star) + float(score_fork) + float(repo_best["sum"]["score_other_repo_sum"])
+            try: 
+                repo_best["sub"]["repo_score_sub"] = float(repo_score_best_sub) + float(repo_best["sub"]["score_50C"]) + float(repo_best["sub"]["score_pr_issue"]) + float(repo_best["sub"]["guideline_score"])
+            except Exception as e:
+                repo_best["sub"]["score_10000L_sub"] = max([0,repo["commit_line_score_sub"]])
+                repo_best["sub"]["score_50C"] = repo["commit_score"]
+                repo_best["sub"]["score_pr_issue"] = repo["pr_issue_score"]
+                repo_best["sub"]["guideline_score"] = repo["guidline_score"]
+                repo_best["sub"]["repo_score_sub"] = float(repo_score_best_sub) + float(repo_best["sub"]["score_50C"]) + float(repo_best["sub"]["score_pr_issue"]) + float(repo_best["sub"]["guideline_score"])
 
-            best_repo_v2["repo_score_sub"] = float(best_repo_v2["score_10000L_sub"]) + float(best_repo_v2["score_50C"]) + float(best_repo_v2["score_pr_issue"]) + float(best_repo_v2["guideline_score"])
-            best_repo_v2["repo_score_add"] = float(best_repo_v2["score_10000L_add"]) + float(best_repo_v2["score_50C"]) + float(best_repo_v2["score_pr_issue"]) + float(best_repo_v2["guideline_score"])
-            best_repo_v2["repo_score_sum"] = float(best_repo_v2["score_10000L_sum"]) + float(best_repo_v2["score_50C"]) + float(best_repo_v2["score_pr_issue"]) + float(best_repo_v2["guideline_score"])
+                print("sub ",e)
+            try: 
+                repo_best["add"]["repo_score_add"] = float(repo_score_best_add) + float(repo_best["add"]["score_50C"]) + float(repo_best["add"]["score_pr_issue"]) + float(repo_best["add"]["guideline_score"])
+            except Exception as e:
+                repo_best["add"]["score_10000L_add"] = repo["commit_line_score_add"]
+                repo_best["add"]["score_50C"] = repo["commit_score"]
+                repo_best["add"]["score_pr_issue"] = repo["pr_issue_score"]
+                repo_best["add"]["guideline_score"] = repo["guidline_score"]
+                repo_best["add"]["repo_score_add"] = float(repo_score_best_add) + float(repo_best["add"]["score_50C"]) + float(repo_best["add"]["score_pr_issue"]) + float(repo_best["add"]["guideline_score"])
+                print("add ",e)
+
+            try:
+                repo_best["sum"]["repo_score_sum"] = float(repo_score_best_sum) + float(repo_best["sum"]["score_50C"]) + float(repo_best["sum"]["score_pr_issue"]) + float(repo_best["sum"]["guideline_score"])
+            except Exception as e:
+                repo_best["sum"]["score_10000L_sum"] = repo["commit_line_score_sum"]
+                repo_best["sum"]["score_50C"] = repo["commit_score"]
+                repo_best["sum"]["score_pr_issue"] = repo["pr_issue_score"]
+                repo_best["sum"]["guideline_score"] = repo["guidline_score"]
+                repo_best["sum"]["repo_score_sum"] = float(repo_score_best_sum) + float(repo_best["sum"]["score_50C"]) + float(repo_best["sum"]["score_pr_issue"]) + float(repo_best["sum"]["guideline_score"])
+                print("sum ",e)
 
             resultDict["github_id"] = overview["github_id"]
             resultDict["excellent_contributor_score"] = contributorDict[overview["github_id"]].excellent_contributor_score
@@ -439,13 +482,15 @@ def yieldScore(contributorDict:dict, year:str, insert:bool):
             scoreList.append(resultDict)
             resultDict["pr_count"] = contributorDict[overview["github_id"]].contribute_pr_count
             resultDict["issue_count"] = contributorDict[overview["github_id"]].contribute_issue_count
+
+            print("score10000", float(round(repo_best["sub"]["score_10000L_sub"], 3)), float(round(repo_best["add"]["score_10000L_add"],3)), float(round(repo_best["sum"]["score_10000L_sum"], 3)))
             if(insert) :
                 try:
                     cursor = githubDB.cursor(pymysql.cursors.DictCursor)
                     insert_sql = '''INSERT INTO github_score(yid, github_id, year, excellent_contributor, best_repo, guideline_score, code_score, other_project_score, contributor_score, star_score, contribution_score, star_count, commit_count, pr_count, issue_count,star_owner_count, fork_owner_count, score_10000L_sub, score_10000L_add, score_10000L_sum, score_50C, score_pr_issue, guideline_score_v2, repo_score_sub, repo_score_add, repo_score_sum, score_star, score_fork, score_other_repo_sub, score_other_repo_add, score_other_repo_sum, additional_score_sub, additional_score_add, additional_score_sum) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'''
-                    insert_arg = [str(year+resultDict["github_id"]), str(resultDict["github_id"]), int(year), int(resultDict["excellent_contributor_score"]), str(best_repo["best_repo"]), float(best_repo["guideline_score"]), float(best_repo["code_score"]), float(best_repo["other_project_score"]), float(resultDict["contributor_activity_score"]), float(resultDict["star_score"]), float(resultDict["contribution_score"]), int(resultDict["total_star_count"]), int(resultDict["total_commit_count"]),int(resultDict["pr_count"]),int(resultDict["issue_count"]), int(best_repo_v2["star_count"]), int(best_repo_v2["fork_count"]),float(round(best_repo_v2["score_10000L_sub"],3)),float(round(best_repo_v2["score_10000L_add"],3)),float(round(best_repo_v2["score_10000L_sum"],3)), float(round(best_repo_v2["score_50C"],3)), float(round(best_repo_v2["score_pr_issue"],3)), float(round(best_repo_v2["guideline_score"],3)), float(round(best_repo_v2["repo_score_sub"],3)),float(round(best_repo_v2["repo_score_add"],3)),float(round(best_repo_v2["repo_score_sum"],3)), float(round(best_repo_v2["score_star"],3)), float(round(best_repo_v2["score_fork"],3)), float(round(best_repo_v2["score_other_repo_sub"],3)), float(round(best_repo_v2["score_other_repo_add"],3)), float(round(best_repo_v2["score_other_repo_sum"],3)), float(round(best_repo_v2["additional_score_sub"],3)), float(round(best_repo_v2["additional_score_add"],3)), float(round(best_repo_v2["additional_score_sum"],3))]
+                    insert_arg = [str(year+resultDict["github_id"]), str(resultDict["github_id"]), int(year), int(resultDict["excellent_contributor_score"]), str(best_repo["best_repo"]), float(best_repo["guideline_score"]), float(best_repo["code_score"]), float(best_repo["other_project_score"]), float(resultDict["contributor_activity_score"]), float(resultDict["star_score"]), float(resultDict["contribution_score"]), int(resultDict["total_star_count"]), int(resultDict["total_commit_count"]), int(resultDict["pr_count"]), int(resultDict["issue_count"]), int(star_own_count), int(fork_own_count), float(round(repo_best["sub"]["score_10000L_sub"], 3)), float(round(repo_best["add"]["score_10000L_add"],3)), float(round(repo_best["sum"]["score_10000L_sum"], 3)), float(round(repo_best["sum"]["score_50C"], 3)), float(round(repo_best["sum"]["score_pr_issue"],3)), float(round(repo_best["sum"]["guideline_score"],3)), float(round(repo_best["sub"]["repo_score_sub"],3)),float(round(repo_best["add"]["repo_score_add"],3)),float(round(repo_best["sum"]["repo_score_sum"],3)), float(round(score_star, 3)), float(round(score_fork, 3)), float(round(repo_best["sub"]["score_other_repo_sub"],3)), float(round(repo_best["add"]["score_other_repo_add"],3)), float(round(repo_best["sum"]["score_other_repo_sum"],3)), float(round(repo_best["sub"]["additional_score_sub"],3)), float(round(repo_best["add"]["additional_score_add"],3)), float(round(repo_best["sum"]["additional_score_sum"],3))]
                     
-                    print("#insert_sql ",insert_sql, "#insert_arg ", insert_arg)
+                    #print("#insert_sql ",insert_sql, "#insert_arg ", insert_arg)
                     cursor.execute(insert_sql, insert_arg)
                     githubDB.commit()
                     time.sleep(0.1)

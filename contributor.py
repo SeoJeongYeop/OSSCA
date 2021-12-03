@@ -652,17 +652,24 @@ class Contributor:
                     
                 repo_score_best_v2 = repo_score
                 best_repo_v2 = retJson
-            
+        
         if bool(best_repo_v2) :
             #총합에서 best repo의 스타수와 포크수를 제한다.
             best_repo_v2["score_star"] = min([math.log10(total_star-best_repo_v2["star_count"]+1),2])
             if(total_star-best_repo_v2["star_count"] >= 100000):
                 best_repo_v2["score_star"] = 5
             best_repo_v2["score_fork"] = min([(total_fork-best_repo_v2["fork_count"])*0.2,1])
+
             best_repo_v2["score_other_repo"] = min([sum(repo_score_sub_v2), 1])
             best_repo_v2["score_other_repo"] = 0 # x
             self.repo_additional_score_v2 = best_repo_v2["score_star"] + best_repo_v2["score_fork"] + best_repo_v2["score_other_repo"]
+        else:
+            best_repo_v2["score_star"] = 0
+            best_repo_v2["score_fork"] = 0
+        best_repo_v2["star_own_count"] = total_star
+        best_repo_v2["fork_own_count"] = total_fork
         
+
         best_repo_v2["score_10000L"] = 0 # x -
         best_repo_v2["score_10000L_sub"] = 0 # x -
         best_repo_v2["score_10000L_add"] = 0 # x -
