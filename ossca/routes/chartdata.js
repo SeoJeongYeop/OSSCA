@@ -6,10 +6,10 @@ router.get("/", (req, res, next) => {
   let query = `SELECT gs.github_id, gs.year, gs.excellent_contributor, 
 round(gs.guideline_score+gs.code_score+gs.other_project_score,1) as owner_score, 
 gs.contributor_score, round(gs.star_score+gs.contribution_score,1) as additional_score,  
-gs.best_repo, gs.star_count, gs.commit_count, gs.pr_count, gs.issue_count, st.id, st.dept,
+gs.best_repo, gs.star_count, gs.commit_count, st.id, st.dept,
 gs.star_owner_count, gs.fork_owner_count, 
-round(gs.repo_score_sub+gs.additional_score_sub,3) as total_score_sub, 
-round(gs.repo_score_sub+gs.additional_score_sum,3) as total_score_sum
+least(round(gs.repo_score_sub+gs.additional_score_sub,3), 5) as total_score_sub, 
+least(round(gs.repo_score_sub+gs.additional_score_sum,3), 5) as total_score_sum
 FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
 
   console.log(query);
