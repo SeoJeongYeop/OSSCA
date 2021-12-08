@@ -2,36 +2,54 @@ var express = require('express');
 const DB = require('./database');
 var router = express.Router();
 
+
+function SortScore(a, b){
+  console.log('A', a.name, a.total_score, a.year)
+  console.log('B', b, b.name, b.total_score, b.year)
+  if(a.year == b.year){
+    return b.total_score - a.total_score;
+  }
+  return a.year - b.year
+}
+
 router.get("/", function (req, res, next) {
   const query = `call ScoreTable();`;
   DB("GET", query, []).then(function (result, error) {
     if (error) {
       console.log(error);
     }
-    result.row = result.row[0];
-    for(i = 0; i < result.row.length; i++){
-      if(result.row[i].commits == null)
-        result.row[i].commits = 0;
-      if(result.row[i].issues == null)
-        result.row[i].issues = 0;
-      if(result.row[i].pulls == null)
-        result.row[i].pulls = 0;
-      if(result.row[i].repos == null)
-        result.row[i].repos = 0;
-      if(result.row[i].commit_lines == null)
-        result.row[i].commit_lines = 0;
-      if(result.row[i].year != prev_year){
-        prev_year = result.row[i].year;
+    console.log(result.row.length);
+    merged = []
+    for(i = 0; i < result.row.length - 1; i++){
+      console.log(result.row[i]);
+      merged = merged.concat(result.row[i])
+    }
+    prev_year = 0;
+    rank = 0;
+    merged.sort(SortScore);
+    console.log(merged.slice(0, 5));
+    for(i = 0; i < merged.length; i++){
+      if(merged[i].commit_cnt == null)
+        merged[i].commit_cnt = 0;
+      if(merged[i].issue_cnt == null)
+        merged[i].issue_cnt = 0;
+      if(merged[i].pr_cnt == null)
+        merged[i].pr_cnt = 0;
+      if(merged[i].repo_cnt == null)
+        merged[i].repo_cnt = 0;
+      if(merged[i].commit_line == null)
+        merged[i].commit_line = 0;
+      if(merged[i].year != prev_year){
+        prev_year = merged[i].year;
         rank = 1;
       }
-      result.row[i].rank = rank;
+      merged[i].rank = rank;
       rank += 1;
     }
-    console.log(result.row.length);
     res.render("user", {
       title: "User",
-      table: result.row,
-      size: result.row.length,
+      table: merged,
+      size: merged.length,
     });
   });
 });
