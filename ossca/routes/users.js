@@ -35,6 +35,7 @@ router.get("/", function (req, res, next) {
     });
   });
 });
+
 /* GET users listing. */
 router.get('/:student_id', function(req, res) {
   const query = `SELECT * FROM student_tab A, github_score B WHERE A.id = '` + req.params.student_id + `' AND A.github_id = B.github_id`; 

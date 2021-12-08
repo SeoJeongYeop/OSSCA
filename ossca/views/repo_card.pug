@@ -1,41 +1,45 @@
 mixin owned_repo_card(repo)
   .card.col-6.repo-card
     .card-body
-      a(href='https://github.com/'+repo.github_id+'/'+repo.repo_name, style='text-decoration: none;')
-        h4.card-title.fw-bold.text-body #{repo.repo_name}
-        h6.text-muted #{repo.date.toLocaleDateString()}
+      a(href='https://github.com/'+repo[0].github_id+'/'+repo[0].repo_name, style='text-decoration: none;')
+        h4.card-title.fw-bold.text-body #{repo[0].repo_name}
       table.table.text-center
         thead
           tr
+            th Year
             th Commits
             th Issues
             th Pull Requests
-        tbody 
-          tr 
-            td #{repo.commit_cnt}
-            td #{repo.issue_cnt}
-            td #{repo.pr_cnt}
+        tbody
+          -for(i = 0; i < repo.length; i++)
+            tr 
+              td #{repo[i].year}
+              td #{repo[i].commit_cnt}
+              td #{repo[i].issue_cnt}
+              td #{repo[i].pr_cnt}
 
 mixin contr_repo_card(repo)
   .card.col-6.repo-card
     .card-body
-      a(href='https://github.com/'+repo.github_id+'/'+repo.repo_name, style='text-decoration: none;')
-        h4.card-title.fw-bold.text-body #{repo.github_id+'/'+repo.repo_name}
-        h6.text-muted #{repo.date.toLocaleDateString()}
+      a(href='https://github.com/'+repo[0].github_id+'/'+repo[0].repo_name, style='text-decoration: none;')
+        h4.card-title.fw-bold.text-body #{repo[0].github_id}/#{repo[0].repo_name}
       table.table.text-center
         thead
           tr
+            th Year
             th Commits
             th Issues
             th Pull Requests
-        tbody 
-          tr 
-            td #{repo.commit_cnt}
-            td #{repo.issue_cnt}
-            td #{repo.pr_cnt}
+        tbody
+          -for(i = 0; i < repo.length; i++)
+            tr 
+              td #{repo[i].year}
+              td #{repo[i].commit_cnt}
+              td #{repo[i].issue_cnt}
+              td #{repo[i].pr_cnt}
 
 .d-flex.flex-wrap
-  -for(let i = 0; i < repos.length; i++)
+  -for(i in repos)
     -if(type == 'owned')
       +owned_repo_card(repos[i])
     -else

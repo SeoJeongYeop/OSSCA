@@ -5,7 +5,8 @@ $(document).ready(function () {
         targ = $this.attr('href');
     if($this.attr('data-load') == 'false'){
       $.get(loadurl, function(data) {
-          $(targ).html(data);
+        console.log(data);
+        $(targ).html(data);
       });
       $this.attr('data-load', 'true')
     }
