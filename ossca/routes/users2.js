@@ -3,25 +3,14 @@ const DB = require('./database');
 var router = express.Router();
 
 router.get("/", function (req, res, next) {
-  const query = `call ScoreTable2();`;
+  const query = `SELECT * FROM score_table_sub ORDER BY year asc, total_score desc;`;
   DB("GET", query, []).then(function (result, error) {
     if (error) {
       console.log(error);
     }
-    result.row = result.row[0];
-    rank = 0;
     prev_year = 0;
+    rank = 0;
     for(i = 0; i < result.row.length; i++){
-      if(result.row[i].commits == null)
-        result.row[i].commits = 0;
-      if(result.row[i].issues == null)
-        result.row[i].issues = 0;
-      if(result.row[i].pulls == null)
-        result.row[i].pulls = 0;
-      if(result.row[i].repos == null)
-        result.row[i].repos = 0;
-      if(result.row[i].commit_lines == null)
-        result.row[i].commit_lines = 0;
       if(result.row[i].year != prev_year){
         prev_year = result.row[i].year;
         rank = 1;
@@ -29,8 +18,7 @@ router.get("/", function (req, res, next) {
       result.row[i].rank = rank;
       rank += 1;
     }
-    console.log(result.row.length);
-    res.render("user2", {
+    res.render("user", {
       title: "User",
       table: result.row,
       size: result.row.length,
