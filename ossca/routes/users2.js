@@ -18,7 +18,7 @@ router.get("/", function (req, res, next) {
       result.row[i].rank = rank;
       rank += 1;
     }
-    res.render("user", {
+    res.render("user2", {
       title: "User",
       table: result.row,
       size: result.row.length,
