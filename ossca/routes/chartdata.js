@@ -169,7 +169,7 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
           scoreSubDist[idx1][4] += 1;
         } else if (Row.total_score_sub < 3) {
           scoreSubDist[idx1][5] += 1;
-        } else if (Row.total_score < 3.5) {
+        } else if (Row.total_score_sub < 3.5) {
           scoreSubDist[idx1][6] += 1;
           scoreSubMore3[idx1] += 1;
         } else if (Row.total_score_sub < 4) {
@@ -182,7 +182,7 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
           scoreSubDist[idx1][9] += 1;
           scoreSubMore3[idx1] += 1;
         }
-        
+
         if (Row.total_score_sum < 0.5) {
           scoreSumDist[idx1][0] += 1;
         } else if (Row.total_score_sum < 1) {
@@ -195,7 +195,7 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
           scoreSumDist[idx1][4] += 1;
         } else if (Row.total_score_sum < 3) {
           scoreSumDist[idx1][5] += 1;
-        } else if (Row.total_score < 3.5) {
+        } else if (Row.total_score_sum < 3.5) {
           scoreSumDist[idx1][6] += 1;
           scoreSumMore3[idx1] += 1;
         } else if (Row.total_score_sum < 4) {
@@ -204,7 +204,7 @@ FROM github_score as gs JOIN student_tab as st ON gs.github_id = st.github_id;`;
         } else if (Row.total_score_sum < 4.5) {
           scoreSumDist[idx1][8] += 1;
           scoreSumMore3[idx1] += 1;
-        } else{
+        } else {
           scoreSumDist[idx1][9] += 1;
           scoreSumMore3[idx1] += 1;
         }

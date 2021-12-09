@@ -308,22 +308,24 @@ window.onload = function () {
                   score_sum,
                 }))(obj);
 
-                if (Number(picked[`score${scoreList[scoreIdx]}`]) < 3) return;
-                data.push({
-                  x: String(year),
-                  y: picked[`score${scoreList[scoreIdx]}`],
-                  tooltip: picked["github_id"],
-                });
+                if (Number(picked[`score${scoreList[scoreIdx]}`]) >= 3) {
+                  data.push({
+                    x: String(year),
+                    y: picked[`score${scoreList[scoreIdx]}`],
+                    tooltip: picked["github_id"],
+                  });
+                }
               });
             }
             overviewChart[0] = makeChart(
               ctxOverview[0],
-              "scatter",
+              "line",
               "score",
               ["2019", "2020", "2021"],
               data,
               bsPrimary,
               {
+                borderColor: "rgba(255, 255, 255, 0)",
                 plugins: {
                   legend: {
                     display: false,
@@ -341,15 +343,9 @@ window.onload = function () {
                 },
                 scales: {
                   x: {
-                    offset: false,
-                    grid: {
-                      offset: false,
-                    },
                     ticks: {
                       stepSize: 1,
                     },
-                    max: 2021,
-                    min: 2019,
                   },
                   y: {
                     max: 5,
@@ -447,23 +443,25 @@ window.onload = function () {
                 score_sub,
                 score_sum,
               }))(obj);
-              if (Number(picked[`score${scoreList[scoreIdx]}`]) < 3) return;
-              data.push({
-                x: String(year),
-                y: picked[`score${scoreList[scoreIdx]}`],
-                tooltip: picked["github_id"],
-                order: 1,
-              });
+              if (Number(picked[`score${scoreList[scoreIdx]}`]) >= 3) {
+                data.push({
+                  x: String(year),
+                  y: picked[`score${scoreList[scoreIdx]}`],
+                  tooltip: picked["github_id"],
+                  order: 1,
+                });
+              }
             });
           }
           overviewChart[0] = makeChart(
             ctxOverview[0],
-            "scatter",
+            "line",
             "score",
             ["2019", "2020", "2021"],
             data,
             bsPrimary,
             {
+              borderColor: "rgba(255, 255, 255, 0)",
               plugins: {
                 legend: {
                   display: false,
@@ -481,15 +479,9 @@ window.onload = function () {
               },
               scales: {
                 x: {
-                  offset: false,
-                  grid: {
-                    offset: false,
-                  },
                   ticks: {
                     stepSize: 1,
                   },
-                  max: 2021,
-                  min: 2019,
                 },
                 y: {
                   max: 5,
@@ -506,22 +498,24 @@ window.onload = function () {
                 github_id,
                 commit,
               }))(obj);
-              if (Number(picked["commit"]) < 3) return;
-              commitDataset.push({
-                x: String(year),
-                y: picked["commit"],
-                tooltip: picked["github_id"],
-              });
+              if (Number(picked["commit"]) > 0) {
+                commitDataset.push({
+                  x: String(year),
+                  y: picked["commit"],
+                  tooltip: picked["github_id"],
+                });
+              }
             });
           }
           overviewChart[1] = makeChart(
             ctxOverview[1],
-            "scatter",
+            "line",
             "commit",
             ["2019", "2020", "2021"],
             commitDataset,
             bsPrimary,
             {
+              borderColor: "rgba(255, 255, 255, 0)",
               plugins: {
                 legend: {
                   display: false,
@@ -539,11 +533,6 @@ window.onload = function () {
               },
               scales: {
                 x: {
-                  type: "linear",
-                  offset: false,
-                  grid: {
-                    offset: false,
-                  },
                   ticks: {
                     stepSize: 1,
                   },
@@ -562,22 +551,24 @@ window.onload = function () {
                 github_id,
                 star,
               }))(obj);
-              if (Number(picked["star"]) < 3) return;
-              starDataset.push({
-                x: String(year),
-                y: picked["star"],
-                tooltip: picked["github_id"],
-              });
+              if (Number(picked["star"]) > 0) {
+                starDataset.push({
+                  x: String(year),
+                  y: picked["star"],
+                  tooltip: picked["github_id"],
+                });
+              }
             });
           }
           overviewChart[2] = makeChart(
             ctxOverview[2],
-            "scatter",
+            "line",
             "star",
             ["2019", "2020", "2021"],
             starDataset,
             bsPrimary,
             {
+              borderColor: "rgba(255, 255, 255, 0)",
               plugins: {
                 legend: {
                   display: false,
@@ -595,11 +586,6 @@ window.onload = function () {
               },
               scales: {
                 x: {
-                  type: "linear",
-                  offset: false,
-                  grid: {
-                    offset: false,
-                  },
                   ticks: {
                     stepSize: 1,
                   },
@@ -623,12 +609,13 @@ window.onload = function () {
           }
           overviewChart[3] = makeChart(
             ctxOverview[3],
-            "scatter",
+            "line",
             "repo",
             ["2019", "2020", "2021"],
             repoDataset,
             bsPrimary,
             {
+              borderColor: "rgba(255, 255, 255, 0)",
               plugins: {
                 legend: {
                   display: false,
@@ -646,11 +633,6 @@ window.onload = function () {
               },
               scales: {
                 x: {
-                  type: "linear",
-                  offset: false,
-                  grid: {
-                    offset: false,
-                  },
                   ticks: {
                     stepSize: 1,
                   },
