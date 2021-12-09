@@ -2,16 +2,6 @@ var express = require('express');
 const DB = require('./database');
 var router = express.Router();
 
-
-function SortScore(a, b){
-  console.log('A', a.name, a.total_score, a.year)
-  console.log('B', b, b.name, b.total_score, b.year)
-  if(a.year == b.year){
-    return b.total_score - a.total_score;
-  }
-  return a.year - b.year
-}
-
 router.get("/", function (req, res, next) {
   const query = `SELECT * FROM score_table_sum ORDER BY year asc, total_score desc;`;
   DB("GET", query, []).then(function (result, error) {
