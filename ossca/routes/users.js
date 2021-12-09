@@ -13,43 +13,25 @@ function SortScore(a, b){
 }
 
 router.get("/", function (req, res, next) {
-  const query = `call ScoreTable();`;
+  const query = `SELECT * FROM score_table_sum ORDER BY year asc, total_score desc;`;
   DB("GET", query, []).then(function (result, error) {
     if (error) {
       console.log(error);
     }
-    console.log(result.row.length);
-    merged = []
-    for(i = 0; i < result.row.length - 1; i++){
-      console.log(result.row[i]);
-      merged = merged.concat(result.row[i])
-    }
     prev_year = 0;
     rank = 0;
-    merged.sort(SortScore);
-    console.log(merged.slice(0, 5));
-    for(i = 0; i < merged.length; i++){
-      if(merged[i].commit_cnt == null)
-        merged[i].commit_cnt = 0;
-      if(merged[i].issue_cnt == null)
-        merged[i].issue_cnt = 0;
-      if(merged[i].pr_cnt == null)
-        merged[i].pr_cnt = 0;
-      if(merged[i].repo_cnt == null)
-        merged[i].repo_cnt = 0;
-      if(merged[i].commit_line == null)
-        merged[i].commit_line = 0;
-      if(merged[i].year != prev_year){
-        prev_year = merged[i].year;
+    for(i = 0; i < result.row.length; i++){
+      if(result.row[i].year != prev_year){
+        prev_year = result.row[i].year;
         rank = 1;
       }
-      merged[i].rank = rank;
+      result.row[i].rank = rank;
       rank += 1;
     }
     res.render("user", {
       title: "User",
-      table: merged,
-      size: merged.length,
+      table: result.row,
+      size: result.row.length,
     });
   });
 });
