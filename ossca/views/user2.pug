@@ -9,21 +9,27 @@ block content
       thead.table-light
         tr 
           th rank
-          th name 
+          th 이름
+          th 학과 
+          th 재/휴학 
+          th 전공구분
           th github id 
           th year 
           th total score
           th commits
           th commit lines
           th issues
-          th pull requests
-          th repositories
+          th pulls
+          th repo
       tbody
         -for(let i=0; i<size;i++)
           tr
             td.rank #{table[i].rank}
             td
-              a(href="user2/"+table[i].id) #{table[i].github_id}
+              a(href="user/"+table[i].id) #{table[i].github_id}
+            td #{table[i].dept}
+            td #{table[i].absence ? "휴학": "재학"}
+            td #{table[i].plural_major ? "복수전공" : "원전공"}
             td #{table[i].name}
             td.ns= table[i].year
             td.sc= table[i].total_score
