@@ -82,6 +82,13 @@ a.nav-link {
 
 .form-switch {
   padding-top: 9px;
+  flex-basis: 150px;
+}
+.d-flex.text-lg > .btn-toolbar {
+  margin-right: 20px;
+}
+.d-flex.text-lg > .dropdown {
+  margin-right: 30px;
 }
 .form-check-label {
   font-family: "Noto Sans KR", sans-serif;
@@ -91,4 +98,7 @@ a.nav-link {
 .bold {
   font-weight: bold;
   color: black;
+}
+.none {
+  display: none;
 }

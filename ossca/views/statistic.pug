@@ -4,11 +4,24 @@ block vars
   - var menu='home'
   
 block content
-  .btn-toolbar(role="toolbar", aria-label="Toolbar with button groups")
-    .btn-group.me-2(role="group", aria-label="First group")
-      button.btn.btn-primary.btn-score(type="button") 1 
-      button.btn.btn-outline-primary.btn-score(type="button") 2
-      button.btn.btn-outline-primary.btn-score(type="button") 3
+  .d-flex.text-lg
+    .btn-toolbar(role="toolbar", aria-label="Toolbar with button groups")
+      .btn-group.me-2(role="group", aria-label="First group")
+        button.btn.btn-primary.btn-score(type="button") 1 
+        button.btn.btn-outline-primary.btn-score(type="button") 2
+        button.btn.btn-outline-primary.btn-score(type="button") 3
+    .form-check.form-switch 
+        input#absenceSwitch.form-check-input(type="checkbox", role="switch" checked)
+        label.form-check-label(for="absenceSwitch")
+          span.bold 휴학생 
+          span.switch-toggle-absence.none 미포함 
+          span.switch-toggle-absence.bold 포함 
+    .form-check.form-switch 
+      input#majorSwitch.form-check-input(type="checkbox", role="switch" checked)
+      label.form-check-label(for="majorSwitch")
+        span.bold 복수전공 
+        span.switch-toggle-major.none 미포함 
+        span.switch-toggle-major.bold 포함 
   .row.pt-2.mb-2
     .col-my-p20.ps-
       .card.p-1
@@ -45,6 +58,7 @@ block content
       label.form-check-label(for="totalSwitch")
         span.switch-toggle 개별 
         span.switch-toggle.bold 합계
+    
   #overviewChart.row.pt-2
     .col-md-3
       .card.p-2
